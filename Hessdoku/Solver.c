@@ -18,15 +18,15 @@ bool checkingAccuracy(T_Grid grid)
 	{
 		for (int y = 0; y < 9; y++)
 		{
-			if (grid[x][y].value != 0)
+			if (grid[x][y]->value != 0)
 			{
-				if (witness[(grid[x][y].value) - 1] == true)
+				if (witness[(grid[x][y]->value) - 1] == true)
 				{
 					return false;
 				}
 				else
 				{
-					witness[(grid[x][y].value) - 1] = true;
+					witness[(grid[x][y]->value) - 1] = true;
 				}
 			}
 		}
@@ -38,15 +38,15 @@ bool checkingAccuracy(T_Grid grid)
 	{
 		for (int x = 0; x < 9; x++)
 		{
-			if (grid[x][y].value != 0)
+			if (grid[x][y]->value != 0)
 			{
-				if (witness[(grid[x][y].value) - 1] == true)
+				if (witness[(grid[x][y]->value) - 1] == true)
 				{
 					return false;
 				}
 				else
 				{
-					witness[(grid[x][y].value) - 1] = true;
+					witness[(grid[x][y]->value) - 1] = true;
 				}
 			}
 		}
@@ -64,13 +64,16 @@ bool checkingAccuracy(T_Grid grid)
 			{
 				for (int y = 0; y < 3; y++)
 				{
-					if (witness[(grid[x + nextX][y + nextY].value) - 1] == true)
+					if (grid[x][y]->value != 0)
 					{
-						return false;
-					}
-					else
-					{
-						witness[(grid[x][y].value) - 1] = true;
+						if (witness[(grid[x + nextX][y + nextY]->value) - 1] == true)
+						{
+							return false;
+						}
+						else
+						{
+							witness[(grid[x][y]->value) - 1] = true;
+						}
 					}
 				}
 			}

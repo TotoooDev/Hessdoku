@@ -8,7 +8,13 @@
  */
 typedef struct T_Cell
 {
-    
+    bool* notes;
+    unsigned char value : 4;
 } T_Cell;
+
+/**
+ * @author Phileas
+ */
+T_Cell createCell(value);
 
 #endif

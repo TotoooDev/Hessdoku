@@ -3,7 +3,7 @@
 
 typedef struct Cell
 {
-
+    
 } T_Cell;
 
 #endif

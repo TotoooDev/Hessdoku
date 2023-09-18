@@ -1,7 +1,10 @@
 #ifndef CELL_H
 #define CELL_H
 
-typedef struct Cell
+/**
+ * A simple type representing a cell of the sudoku grid.
+ */
+typedef struct T_Cell
 {
     
 } T_Cell;

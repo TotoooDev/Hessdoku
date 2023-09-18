@@ -1,9 +1,8 @@
 #ifndef GRID_H
 #define GRID_H
 
-typedef struct Grid
-{
+#include <Cell.h>
 
-} T_Grid;
+typedef T_Cell** T_Grid;
 
 #endif

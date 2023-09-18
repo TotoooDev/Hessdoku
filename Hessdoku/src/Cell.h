@@ -1,7 +1,7 @@
 #ifndef CELL_H
 #define CELL_H
 
-typedef struct Cell
+typedef struct T_Cell
 {
 
 } T_Cell;

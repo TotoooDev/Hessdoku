@@ -50,3 +50,20 @@ void displayGridToConsole(T_Grid grid, int size) {
     printf("#");
 
 }
+
+T_Grid generateGrid(int sizeX, int sizeY)
+{
+    T_Cell** grid = malloc(sizeX * sizeof(T_Cell*));
+    for (int x = 0; x < sizeX; x++)
+    {
+        grid[x] = malloc(sizeY * sizeof (T_Cell));
+
+        // initializing the new cells
+        for (int y = 0; y < sizeY; y++)
+        {
+            grid[x][y] = createCell(0);
+        }
+    }
+
+    return grid;
+}

@@ -2,12 +2,14 @@
 #define GAME_H
 
 #include <Grid.h>
+#include <Solver.h>
 
 /**
  * A structure to represent the game
  *
  * @member grid The grid of the game, usually 9x9 cells
  */
+
 typedef struct Game
 {
     T_Grid grid;

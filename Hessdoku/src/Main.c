@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <Cell.h>
+#include <Game.h>
 
 int main(int argc, char* argv[])
 {

@@ -28,4 +28,9 @@ void addCell(T_Grid grid, unsigned char x, unsigned char y, T_Cell* cell);
  */
 void removeCell(T_Grid grid, unsigned char x, unsigned char y);
 
+/**
+ * @author Phileas
+ */
+T_Grid generateGrid(int sizeX, int sizeY);
+
 #endif

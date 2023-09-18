@@ -17,10 +17,17 @@ typedef struct Game
 
 /**
  * Allocates a game structure with its grid.
-
+ *
  * @returns The newly created game
  * @author Toto
  */
 T_Game* createGame(int sizeX, int sizeY);
+
+/**
+ * Destroys a game structure.
+ *
+ * @author Toto
+ */
+void destroyGame(T_Game* game);
 
 #endif

@@ -9,3 +9,11 @@ T_Game* createGame(int sizeX, int sizeY)
 
     return game;
 }
+
+void destroyGame(T_Game* game)
+{
+    // oh no memory leak
+    // free the grid here
+
+    free(game);
+}

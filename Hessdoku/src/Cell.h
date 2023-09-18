@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 
+
 /**
  * A simple type representing a cell of the sudoku grid.
  *

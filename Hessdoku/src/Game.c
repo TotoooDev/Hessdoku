@@ -1,4 +1,5 @@
 #include <Game.h>
+#include <stdlib.h>
 
 T_Game* createGame(int sizeX, int sizeY)
 {

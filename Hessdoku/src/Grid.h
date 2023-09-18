@@ -34,4 +34,13 @@ void removeCell(T_Grid grid, unsigned char x, unsigned char y);
  */
 T_Grid generateGrid(int sizeX, int sizeY);
 
+/**
+ * Displays the given grid in a verry pretty way in the console.
+ *
+ * @param grid The grid to display
+ * @param size The size of the grid (square)
+ * @author Baptiste
+ */
+void displayGridToConsole(T_Grid grid, int size);
+
 #endif

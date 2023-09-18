@@ -47,13 +47,13 @@ void displayGridToConsole(T_Grid grid, int size)
         for(int k = 0; k < size; k++) {
             printf(k%3 == 0 ? "#" : "|");
 
-            if(grid[i][k].value == 0) 
+            if(grid[i][k]->value == 0) 
             {
                 printf("   ");
             } 
             else 
             {
-                printf(" %hu ", grid[i][k].value);
+                printf(" %hu ", grid[i][k]->value);
             }
 
         }

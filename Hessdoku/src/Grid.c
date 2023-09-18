@@ -28,15 +28,13 @@ void removeCell(T_Grid grid, unsigned char x, unsigned char y)
     }
 
     grid[x][y] = NULL;
+}
 
-/**
- * Displays the given grid in a verry pretty way in the console.
- *
- * @param grid The grid to display
- * @param size The size of the grid (square)
- * @author Baptiste
- */
-void displayGridToConsole(T_Grid grid, int size) {
+
+void displayGridToConsole(T_Grid grid, int size) 
+{
+
+    if(size%3!=0) LOG("Display in console is not optimized for values that aren't multiple of 3.");
 
     for(int i = 0; i < size; i++) 
     {

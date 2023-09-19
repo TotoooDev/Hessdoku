@@ -2,6 +2,7 @@
 #define CELL_H
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 
@@ -18,8 +19,22 @@ typedef struct T_Cell
 } T_Cell;
 
 /**
+ * Allocates, initialize and returns a Sudoku grid cell.
+ * 
+ * @param value The cell's value. It must be contained in 4 bits
+ * 
  * @author Phileas
  */
-T_Cell createCell(value);
+T_Cell *createCell(unsigned char value);
+
+
+/**
+ * Frees the cell in parameter.
+ *
+ * @param cell a pointer to the cell that must be fred
+ *
+ * @author Phileas
+ */
+void freeCell(T_Cell* cell);
 
 #endif

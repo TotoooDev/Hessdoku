@@ -1,6 +1,37 @@
 #include <Grid.h>
 #include <Log.h>
 
+T_Grid generateGrid(int sizeX, int sizeY)
+{
+    LOG("%d", sizeX * sizeof(T_Cell**));
+    T_Cell* ** grid = malloc(sizeX * sizeof(T_Cell**));
+    for (int x = 0; x < sizeX; x++)
+    {
+         grid[x] = malloc(sizeY * sizeof(T_Cell*));
+
+        // initializing the new cells
+        for (int y = 0; y < sizeY; y++)
+        {
+            grid[x][y] = createCell(0);
+        }
+    }
+
+    return grid;
+}
+
+// TODO: tests
+T_Grid freeGrid(T_Grid grid, int sizeX, int sizeY) {
+    for (int x = 0; x < sizeX; x++)
+    {
+        for (int y = 0; y < sizeY; y++)
+        {
+            freeCell(grid[x][y]);
+        }
+        free(grid[x]);
+    }
+    free(grid);
+}
+
 void addCell(T_Grid grid, unsigned char x, unsigned char y, T_Cell* cell)
 {
     if (!cell)
@@ -19,6 +50,7 @@ void addCell(T_Grid grid, unsigned char x, unsigned char y, T_Cell* cell)
     grid[x][y] = cell;
 }
 
+// FIXME : creates a memory leak ! A cell must be fred. If the goal is to set the value to 0, the 
 void removeCell(T_Grid grid, unsigned char x, unsigned char y)
 {
     if (!grid[x][y])
@@ -75,21 +107,4 @@ void displayGridToConsole(T_Grid grid, int size)
     }
     printf("#");
 
-}
-
-T_Grid generateGrid(int sizeX, int sizeY)
-{
-    T_Cell** grid = malloc(sizeX * sizeof(T_Cell*));
-    for (int x = 0; x < sizeX; x++)
-    {
-        grid[x] = malloc(sizeY * sizeof (T_Cell));
-
-        // initializing the new cells
-        for (int y = 0; y < sizeY; y++)
-        {
-            grid[x][y] = createCell(0);
-        }
-    }
-
-    return grid;
 }

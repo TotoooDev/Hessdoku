@@ -4,7 +4,29 @@
 #include <Cell.h>
 
 
-typedef T_Cell*** T_Grid;
+typedef T_Cell* ** T_Grid;
+
+/**
+ * Allocates a grid and fills it by default cells (value : 0 : empty)
+ *
+ * @param sizeX The size of the columns of the grid
+ * @param sizeY The size of the lines of the grid
+ *
+ * @author Phileas
+ */
+T_Grid generateGrid(int sizeX, int sizeY);
+
+
+/**
+ * Frees the grid
+ *
+ * @param grid The grid to be fred
+ * @param sizeX The size of the columns of the grid
+ * @param sizeY The size of the lines of the grid
+ *
+ * @author Phileas
+ */
+T_Grid freeGrid(T_Grid grid, int sizeX, int sizeY);
 
 /**
  * Add a cell into the grid.
@@ -28,11 +50,6 @@ void addCell(T_Grid grid, unsigned char x, unsigned char y, T_Cell* cell);
  * @author Toto
  */
 void removeCell(T_Grid grid, unsigned char x, unsigned char y);
-
-/**
- * @author Phileas
- */
-T_Grid generateGrid(int sizeX, int sizeY);
 
 /**
  * Displays the given grid in a verry pretty way in the console.

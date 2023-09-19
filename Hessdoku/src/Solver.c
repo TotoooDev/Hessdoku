@@ -1,7 +1,7 @@
 #include <Solver.h>
 
 
-void resetWitness(bool w[9])
+void resetWitness(bool * w)
 {
 	for (int i = 0; i < 9; i++)
 	{
@@ -79,6 +79,7 @@ bool checkingAccuracy(T_Grid grid)
 			}
 			nextY += 3;
 		}
+		nextY = 0;
 		nextX += 3;
 	}
 

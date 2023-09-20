@@ -17,12 +17,6 @@ void test_resetWitness()
 	printf("\n");
 }
 
-void aff_witness(bool * w) {
-	
-	for (int i = 0; i < 9; i++) {
-		printf("%d ", w[i]);
-	}
-}
 
 void test_checkingAccuracy() {
 

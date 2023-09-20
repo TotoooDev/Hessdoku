@@ -9,6 +9,13 @@ void resetWitness(bool * w)
 	}
 }
 
+void aff_witness(bool* w) {
+
+	for (int i = 0; i < 9; i++) {
+		printf("%d ", w[i]);
+	}
+}
+
 bool checkingAccuracy(T_Grid grid)
 {
 	bool witness[9] = { false, false, false, false, false, false, false, false, false };
@@ -40,6 +47,7 @@ bool checkingAccuracy(T_Grid grid)
 		{
 			if (grid[x][y]->value != 0)
 			{
+
 				if (witness[(grid[x][y]->value) - 1] == true)
 				{
 					return false;
@@ -64,7 +72,7 @@ bool checkingAccuracy(T_Grid grid)
 			{
 				for (int y = 0; y < 3; y++)
 				{
-					if (grid[x][y]->value != 0)
+					if (grid[x + nextX][y + nextY]->value != 0)
 					{
 						if (witness[(grid[x + nextX][y + nextY]->value) - 1] == true)
 						{
@@ -72,7 +80,7 @@ bool checkingAccuracy(T_Grid grid)
 						}
 						else
 						{
-							witness[(grid[x][y]->value) - 1] = true;
+							witness[(grid[x + nextX][y + nextY]->value) - 1] = true;
 						}
 					}
 				}

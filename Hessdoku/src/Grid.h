@@ -61,4 +61,15 @@ void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y);
  */
 void displayGridToConsole(T_Grid grid, int size);
 
+/**
+ * Displays the notes for a given sudoku grid in the console.
+ *
+ * @param grid Where the notes are
+ * @param size The size of the grid
+ * 
+ * @author Baptiste
+ */
+void displayNotesToConsole(T_Grid grid, int size);
+
+
 #endif

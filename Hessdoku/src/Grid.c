@@ -107,4 +107,21 @@ void displayGridToConsole(T_Grid grid, int size)
     }
     printf("#");
 
+}}
+void displayNotesToConsole(T_Grid grid, int size)
+{
+
+    for (int x = 0; x < size; x++)
+    {
+        for (int y = 0; y < size; y++)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                printf(grid[x][y]->notes[i] == 0 ? " " : "%d", i + 1);
+            }
+            printf("|");
+        }
+        printf("\n");
+    }
+
 }

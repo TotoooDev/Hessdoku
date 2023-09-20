@@ -29,16 +29,16 @@ T_Grid generateGrid(int sizeX, int sizeY);
 T_Grid freeGrid(T_Grid grid, int sizeX, int sizeY);
 
 /**
- * Add a cell into the grid.
+ * Change the value of a cell. If the new value is 0, the cell is treatde as empty.
  *
- * @param grid The grid in which the cell will be added
- * @param x The x position of the new cell
- * @param y The y position of the new cell
- * @param cell The cell to be added
+ * @param grid The grid of the modified cell
+ * @param x The x position of the cell
+ * @param y The y position of the cell
+ * @param value The new value of the cell
  *
  * @author Toto
  */
-void addCell(T_Grid grid, unsigned char x, unsigned char y, T_Cell* cell);
+void setCell(T_Grid grid, unsigned char x, unsigned char y, char value);
 
 /**
  * Remove a cell from the grid. This does not free the cell.
@@ -49,7 +49,7 @@ void addCell(T_Grid grid, unsigned char x, unsigned char y, T_Cell* cell);
  *
  * @author Toto
  */
-void removeCell(T_Grid grid, unsigned char x, unsigned char y);
+void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y);
 
 /**
  * Displays the given grid in a verry pretty way in the console.

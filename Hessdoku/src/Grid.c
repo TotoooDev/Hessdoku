@@ -32,36 +32,25 @@ T_Grid freeGrid(T_Grid grid, int sizeX, int sizeY) {
     free(grid);
 }
 
-void addCell(T_Grid grid, unsigned char x, unsigned char y, T_Cell* cell)
-{
-    if (!cell)
-    {
-        LOG("Trying to add a NULL cell at %d,%d!\n", x, y);
-        LOG("If you want to remove a cell, use removeCell instead.\n");
-        return;
-    }
-
-    if (grid[x][y])
-    {
-        LOG("A cell already exists at %d,%d!", x, y);
-        return;
-    }
-
-    grid[x][y] = cell;
-}
-
-// FIXME : creates a memory leak ! A cell must be fred. If the goal is to set the value to 0, the 
-void removeCell(T_Grid grid, unsigned char x, unsigned char y)
+void setCell(T_Grid grid, unsigned char x, unsigned char y, char value)
 {
     if (!grid[x][y])
     {
-        LOG("Trying to remove a cell a %d,%d but there was no cell there!", x, y);
+        LOG("Trying to modify NULL cell at %d,%d!", x, y);
         return;
     }
-
-    grid[x][y] = NULL;
+    grid[x][y]->value = value;
 }
 
+void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y, char value)
+{
+    if (!grid[x][y])
+    {
+        LOG("Trying to modify NULL cell at %d,%d!", x, y);
+        return;
+    }
+    grid[x][y]->value = 0;
+}
 
 void displayGridToConsole(T_Grid grid, int size) 
 {

@@ -42,7 +42,7 @@ void setCell(T_Grid grid, unsigned char x, unsigned char y, char value)
     grid[x][y]->value = value;
 }
 
-void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y, char value)
+void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y)
 {
     if (!grid[x][y])
     {

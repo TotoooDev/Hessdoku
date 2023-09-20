@@ -52,7 +52,7 @@ void setCell(T_Grid grid, unsigned char x, unsigned char y, char value);
 void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y);
 
 /**
- * Displays the given grid in a verry pretty way in the console.
+ * Displays the given grid in a very pretty way in the console.
  *
  * @param grid The grid to display
  * @param size The size of the grid (square)
@@ -64,7 +64,7 @@ void displayGridToConsole(T_Grid grid, int size);
 /**
  * Displays the notes for a given sudoku grid in the console.
  *
- * @param grid Where the notes are
+ * @param grid The grid that contains the notes
  * @param size The size of the grid
  * 
  * @author Baptiste

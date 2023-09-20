@@ -5,9 +5,7 @@
 
 int main(int argc, char* argv[])
 {
-    printf("Hello world!\n");
-
-    generateGrid(9, 9);
+    T_Game* game = createGame(9, 9);
 
     return 0;
 }

@@ -41,7 +41,7 @@ T_Grid freeGrid(T_Grid grid, int sizeX, int sizeY);
 void setCell(T_Grid grid, unsigned char x, unsigned char y, char value);
 
 /**
- * Remove a cell from the grid. This does not free the cell.
+ * Changes the cell's value to 0 (empty)
  *
  * @param grid The grid the cell will be removed from
  * @param x The x position of the cell

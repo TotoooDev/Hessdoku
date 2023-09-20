@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
 {
     printf("Hello world!\n");
 
-    //main_test();
+    generateGrid(9, 9);
 
     return 0;
 }

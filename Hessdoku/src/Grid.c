@@ -96,7 +96,8 @@ void displayGridToConsole(T_Grid grid, int size)
     }
     printf("#");
 
-}}
+}
+
 void displayNotesToConsole(T_Grid grid, int size)
 {
 

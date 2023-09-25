@@ -14,8 +14,7 @@
  */
 typedef struct T_Cell
 {
-    bool* notes;
-    unsigned char value : 4;
+    unsigned int notes : 9;
 } T_Cell;
 
 /**

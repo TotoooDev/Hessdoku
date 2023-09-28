@@ -7,7 +7,7 @@ bool allVerif(T_Grid grid, int minX, int maxX, int minY, int maxY)
 	{
 		for (int j = minY; j < maxY; j++)
 		{
-			if (!verifCell(baton, getValue(grid[i][j])))
+			if (!cellVerif(baton, getValue(grid[i][j])))
 			{
 				return false;
 			}

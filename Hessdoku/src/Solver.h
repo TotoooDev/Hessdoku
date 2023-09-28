@@ -3,6 +3,17 @@
 
 #include <Grid.h>
 
+
+bool cellVerif(bool* baton, int val);
+
+bool gridVerif(T_Grid grid, int minX, int maxX, int minY, int maxY);
+
+
+
+
+//PREVIOUS CODE
+
+
 /**
  * Reset a table to false
  * 
@@ -12,7 +23,7 @@
  * 
  * @author Marie
  */
-void resetWitness(bool *w);
+//void resetWitness(bool *w);
 
 
 /**
@@ -22,7 +33,7 @@ void resetWitness(bool *w);
 * 
 * @author Marie
 */
-void aff_witness(bool* w);
+//void aff_witness(bool* w);
 
 
 /**
@@ -34,6 +45,6 @@ void aff_witness(bool* w);
 * 
 * @author Marie
 */
-bool checkingAccuracy(T_Grid grid);
+//bool checkingAccuracy(T_Grid grid);
 
 #endif

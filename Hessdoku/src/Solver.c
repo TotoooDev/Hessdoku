@@ -1,10 +1,8 @@
 #include <Solver.h>
 
-
-
 bool allVerif(T_Grid grid, int minX, int maxX, int minY, int maxY)
 {
-	bool baton[(minX - minY + 1) * (maxX - maxY + 1)];
+	bool baton[GRID_SIZE - 1];
 	for (int i = minX; i < maxX; i++)
 	{
 		for (int j = minY; j < maxY; j++)
@@ -71,7 +69,7 @@ bool gridVerif(T_Grid grid)
 
 
 
-//PREVIOUS CODE MAKE WITH MY FUCKING HAND AND NOT YOUR THINGS WHISH IS NOT FUNNY
+//PREVIOUS CODE
 
 
 /*void resetWitness(bool* w)

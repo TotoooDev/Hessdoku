@@ -2,6 +2,7 @@
 #define GRID_H
 
 #include <Cell.h>
+#include <Macros.h>
 
 
 typedef T_Cell* ** T_Grid;

@@ -10,7 +10,7 @@ T_Game* createGame(int sizeX, int sizeY)
     setCell(game->grid, 5, 6, 9);
     displayGridToConsole(game->grid, 9);
     
-    const gridValidity = checkingAccuracy(game->grid);
+    const gridValidity = gridVerif(game->grid);
     printf("\n");
     if (gridValidity == true) 
     {

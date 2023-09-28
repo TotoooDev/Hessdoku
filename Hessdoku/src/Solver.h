@@ -6,7 +6,7 @@
 
 bool cellVerif(bool* baton, int val);
 
-bool gridVerif(T_Grid grid, int minX, int maxX, int minY, int maxY);
+bool gridVerif(T_Grid grid);
 
 
 

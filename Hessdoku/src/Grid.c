@@ -57,21 +57,19 @@ void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y)
     setValueOfCell(grid[x][y], 0);
 }
 
-void displayGridToConsole(T_Grid grid, int size) 
+void displayGridToConsole(T_Grid grid, const int size) 
 {
 
-    if(size%3!=0) LOG("Display in console is not optimized for values that aren't multiple of 3.");
-
-    for(int i = 0; i < size; i++) 
+    for(int i = 0; i < size; i++)
     {
-        if(i%3 == 0) 
+        if(i % SQRT_GRID_SIZE == 0)
         {
             for(int k = 0; k < size; k++) printf("####");
             printf("#\n");
         }
 
         for(int k = 0; k < size; k++) {
-            printf(k%3 == 0 ? "#" : "|");
+            printf(k % SQRT_GRID_SIZE == 0 ? "#" : "|");
 
             if(getValue(grid, i, k) == 0) 
             {
@@ -79,19 +77,19 @@ void displayGridToConsole(T_Grid grid, int size)
             } 
             else 
             {
-                printf(" %hu ", getValue(grid, i, k));
+                printf("%2hu ", getValue(grid, i, k));
             }
 
         }
         printf("#\n");
 
-        for(int k = 0; k < size && i%3!=2; k++) 
+        for (int k = 0; k < size && i % SQRT_GRID_SIZE != (SQRT_GRID_SIZE - 1); k++)
         {
-            printf(k%3 == 0 ? "#" : "+");
+            printf(k % SQRT_GRID_SIZE == 0 ? "#" : "+");
             printf("---");
 
         }
-        if(i%3!=2) printf("#\n");
+        if(i % SQRT_GRID_SIZE != (SQRT_GRID_SIZE-1)) printf("#\n");
     }
 
     // Ending line

@@ -19,7 +19,8 @@ T_Grid generateGrid(int sizeX, int sizeY)
 }
 
 // TODO: tests
-T_Grid freeGrid(T_Grid grid, int sizeX, int sizeY) {
+T_Grid freeGrid(T_Grid grid, int sizeX, int sizeY) 
+{
     for (int x = 0; x < sizeX; x++)
     {
         for (int y = 0; y < sizeY; y++)
@@ -31,6 +32,11 @@ T_Grid freeGrid(T_Grid grid, int sizeX, int sizeY) {
     free(grid);
 }
 
+unsigned int getValue(T_Grid grid, int x, int y)
+{
+    return getValueOfCell(grid[x][y]);
+}
+
 void setCell(T_Grid grid, unsigned char x, unsigned char y, char value)
 {
     if (!grid[x][y])
@@ -38,7 +44,7 @@ void setCell(T_Grid grid, unsigned char x, unsigned char y, char value)
         LOG("Trying to modify NULL cell at %d,%d!", x, y);
         return;
     }
-    grid[x][y]->value = value;
+    setValueOfCell(grid[x][y], value);
 }
 
 void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y)
@@ -48,7 +54,7 @@ void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y)
         LOG("Trying to modify NULL cell at %d,%d!", x, y);
         return;
     }
-    grid[x][y]->value = 0;
+    setValueOfCell(grid[x][y], 0);
 }
 
 void displayGridToConsole(T_Grid grid, int size) 
@@ -67,13 +73,13 @@ void displayGridToConsole(T_Grid grid, int size)
         for(int k = 0; k < size; k++) {
             printf(k%3 == 0 ? "#" : "|");
 
-            if(grid[i][k]->value == 0) 
+            if(getValue(grid, i, k) == 0) 
             {
                 printf("   ");
             } 
             else 
             {
-                printf(" %hu ", grid[i][k]->value);
+                printf(" %hu ", getValue(grid, i, k));
             }
 
         }
@@ -104,10 +110,7 @@ void displayNotesToConsole(T_Grid grid, int size)
     {
         for (int y = 0; y < size; y++)
         {
-            for (int i = 0; i < 9; i++)
-            {
-                printf(grid[x][y]->notes[i] == 0 ? " " : "%d", i + 1);
-            }
+            printf("%d\n", grid[x][y]->notes);
             printf("|");
         }
         printf("\n");

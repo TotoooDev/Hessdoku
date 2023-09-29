@@ -22,9 +22,9 @@ typedef struct T_Cell
  * 
  * @param value The cell's value. It must be contained in 4 bits
  * 
- * @author Phileas
+ * @author Phileas, Baptiste
  */
-T_Cell *createCell(unsigned char value);
+T_Cell *createCell();
 
 
 /**
@@ -35,5 +35,48 @@ T_Cell *createCell(unsigned char value);
  * @author Phileas
  */
 void freeCell(T_Cell* cell);
+
+/**
+ * Adds a specific note to a cell. This function probably won't be used in this program, but it exists nonetheless. 
+ * 
+ * @param cell The cell where to add the note.
+ * @param noteValue The note's value to add.
+ * 
+ * @author Baptiste
+ */
+void setNoteCell(T_Cell* cell, unsigned int noteValue);
+
+/**
+ * Removes a specific note to a cell.
+ *
+ * @param cell The cell where to remove the note.
+ * @param noteValue The note's value to remove.
+ * 
+ * @author Baptiste
+ */
+void unsetNoteCell(T_Cell* cell, unsigned int noteValue);
+
+/**
+ * Returns the value of a cell. 
+ * Note: the value of a cell is defined when there's a single note in a cell. 
+ * 
+ * @param cell The cell where to get the value from
+ * 
+ * @returns Returns the value of the cell if defined. Returns 0 otherwise.
+ * 
+ * @author Baptiste
+ */
+unsigned int getValueOfCell(T_Cell* cell);
+
+
+/**
+ * Sets the value of a cell to a specific value.
+ * 
+ * @param cell The cell where to edit the value
+ * @param value The new value of the cell
+ * 
+ * @author Baptiste
+ */
+void setValueOfCell(T_Cell* cell, unsigned int value);
 
 #endif

@@ -1,21 +1,61 @@
 #include <Cell.h>
 #include <Log.h>
+#include <Macros.h>
 
-// TODO: test this !!!
-T_Cell *createCell(unsigned char value) {
-	// As the number of bits can only be specified in the struct, this function prints a warning if the size of value is too big
-	if (value > 9) {
-		LOG("An error has occured : a cell's value must be smaller than 10. Value provided : %c", value);
-	}
+T_Cell* createCell()
+{
+    T_Cell* newCell = (T_Cell*)malloc(sizeof(T_Cell));
+    if (newCell == NULL) exit(1);
 
-	// Allocating the new cell
-	T_Cell* newCell = malloc(sizeof (T_Cell));
-	newCell->notes = value;		// FIXME : handle the NULL case (assertion ?)
+    // Shifts 1 n times and sutracts one to get n times 1
+    newCell->notes = (1 << GRID_SIZE) - 1;
 
-	return newCell;
+    return newCell;
 }
 
-// TODO: test this function
-void freeCell(T_Cell *cell) {
-	free(cell);
+void freeCell(T_Cell* cell)
+{
+    free(cell);
+}
+
+void setNoteCell(T_Cell* cell, unsigned int noteValue)
+{
+    // Set the flag at the specified index to 1 using bitwise OR
+    cell->notes |= (1 << (noteValue - 1));
+}
+
+void unsetNoteCell(T_Cell* cell, unsigned int noteValue) {
+    // Clear the flag at the specified index by performing a bitwise AND with the complement of the flag
+    cell->notes &= ~(1 << (noteValue - 1));
+}
+
+void setValueOfCell(T_Cell* cell, unsigned int value)
+{
+    // 
+    cell->notes = 0 << (GRID_SIZE - value - 1);
+    // We place the bit 
+    cell->notes++;
+    // And we shift it to its proper location
+    cell->notes = cell->notes << (value - 1);
+}
+
+static unsigned char isPowerOfTwo(unsigned int n)
+{
+    return n && (!(n & (n - 1)));
+}
+
+unsigned int getValueOfCell(T_Cell* cell)
+{
+    if (!isPowerOfTwo(cell->notes)) return 0;           // A number's binary representation contains 
+                                                        //a single bit set when the number is a power of two
+    unsigned i = 1, pos = 1;
+
+    while (!(i & cell->notes))                          // We shift through the bits and stop whenever we find a bit set
+    {                                                   // i & cell->notes will be non-zero when i and cell->notes have a set bit at the same position
+        i = i << 1;
+        ++pos;                                          // We increment the counter, to keep track of our position
+    }
+
+    return pos;
+
 }

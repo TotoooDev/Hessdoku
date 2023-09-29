@@ -51,6 +51,8 @@ T_Game* createGame(int sizeX, int sizeY)
 
     displayGridToConsole(game->grid, GRID_SIZE);
 
+    displayNotesToConsole(game->grid);
+
     const gridValidity = gridVerif(game->grid);
     printf("\n");
     if (gridValidity == true) 

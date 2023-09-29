@@ -57,18 +57,18 @@ void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y)
     setValueOfCell(grid[x][y], 0);
 }
 
-void displayGridToConsole(T_Grid grid, const int size) 
+void displayGridToConsole(T_Grid grid) 
 {
 
-    for(int i = 0; i < size; i++)
+    for(int i = 0; i < GRID_SIZE; i++)
     {
         if(i % SQRT_GRID_SIZE == 0)
         {
-            for(int k = 0; k < size; k++) printf("####");
+            for(int k = 0; k < GRID_SIZE; k++) printf("####");
             printf("#\n");
         }
 
-        for(int k = 0; k < size; k++) {
+        for(int k = 0; k < GRID_SIZE; k++) {
             printf(k % SQRT_GRID_SIZE == 0 ? "#" : "|");
 
             if(getValue(grid, i, k) == 0) 
@@ -83,7 +83,7 @@ void displayGridToConsole(T_Grid grid, const int size)
         }
         printf("#\n");
 
-        for (int k = 0; k < size && i % SQRT_GRID_SIZE != (SQRT_GRID_SIZE - 1); k++)
+        for (int k = 0; k < GRID_SIZE && i % SQRT_GRID_SIZE != (SQRT_GRID_SIZE - 1); k++)
         {
             printf(k % SQRT_GRID_SIZE == 0 ? "#" : "+");
             printf("---");
@@ -93,7 +93,7 @@ void displayGridToConsole(T_Grid grid, const int size)
     }
 
     // Ending line
-    for(int k = 0; k < size; k++) 
+    for(int k = 0; k < GRID_SIZE; k++)
     {
         printf("####");
     }
@@ -101,15 +101,14 @@ void displayGridToConsole(T_Grid grid, const int size)
 
 }
 
-void displayNotesToConsole(T_Grid grid, int size)
+void displayNotesToConsole(T_Grid grid)
 {
 
-    for (int x = 0; x < size; x++)
+    for (int x = 0; x < GRID_SIZE; x++)
     {
-        for (int y = 0; y < size; y++)
+        for (int y = 0; y < GRID_SIZE; y++)
         {
-            printf("%d\n", grid[x][y]->notes);
-            printf("|");
+            printf("%3d ", grid[x][y]->notes);
         }
         printf("\n");
     }

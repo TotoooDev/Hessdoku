@@ -47,12 +47,19 @@ T_Game* createGame(int sizeX, int sizeY)
     setCell(game->grid, 7, 8, 5);
     setCell(game->grid, 8, 8, 3);
 
+    //test erreur ligne
+    //setCell(game->grid, 5, 4, 4);
+
+    //test erreur colonne
+    //setCell(game->grid, 6, 8, 6);
+
+    //test erreur carre
+    //setCell(game->grid, 8, 4, 5); //NOPE
 
 
     displayGridToConsole(game->grid, GRID_SIZE);
 
     const gridValidity = gridVerif(game->grid);
-    printf("\n");
     if (gridValidity == true) 
     {
         printf("The grid is valid.");

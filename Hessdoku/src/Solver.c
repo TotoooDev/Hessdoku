@@ -1,13 +1,21 @@
 #include <Solver.h>
 
-bool allVerif(T_Grid grid, int minX, int maxX, int minY, int maxY)
+void createBaton(unsigned char* b)
 {
-	bool baton[GRID_SIZE - 1];
+	for (int i = 0; i < GRID_SIZE; i++)
+	{
+		b[i] = 0;
+	}
+}
+
+bool allVerif(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char * baton)
+{
 	for (int i = minX; i < maxX; i++)
 	{
 		for (int j = minY; j < maxY; j++)
 		{
-			if (!cellVerif(baton, getValue(grid[i][j])))
+			
+			if (!cellVerif(baton, getValue(grid, i, j)))
 			{
 				return false;
 			}
@@ -16,51 +24,83 @@ bool allVerif(T_Grid grid, int minX, int maxX, int minY, int maxY)
 	return true;
 }
 
-bool cellVerif(bool* baton, int val)
+bool cellVerif(unsigned char * baton, int val)
 {
-	if (baton[val != 0])
+	if (val != 0)
 	{
-		return false;
+		if (baton[val-1] != 0)
+		{
+			return false;
+		}
+		else
+		{
+			baton[val-1] = 1;
+			return true;
+		}
 	}
-	else
+	return true;
+}
+
+bool lineVerif(T_Grid grid)
+{
+	unsigned char* baton = malloc(GRID_SIZE * sizeof(unsigned char));
+	createBaton(baton);
+	for (int i = 0; i < GRID_SIZE; i++)
 	{
-		baton[val] = 1;
-		return true;
+		if (!allVerif(grid, i, i+1, 0, GRID_SIZE, baton))
+		{
+			return false;
+		}
+		createBaton(baton);
 	}
+	return true;
 }
 
-bool lineVerif(T_Grid grid, int X, int Y)
+bool columnVerif(T_Grid grid)
 {
-	return allVerif(grid, X, X + GRID_SIZE - 1, Y, Y + GRID_SIZE - 1);
-}
-
-bool columnVerif(T_Grid grid, int X, int Y)
-{
-	return allVerif(grid, Y, Y + GRID_SIZE - 1, X, X + GRID_SIZE - 1);
-}
-
-bool squareVerif(T_Grid grid, int X, int Y)
-{
-	int Y2 = Y;
-	for (int k = 0; k = GRID_SIZE; k++)
+	unsigned char* baton = malloc(GRID_SIZE * sizeof(unsigned char));
+	createBaton(baton);
+	for (int i = 0; i < GRID_SIZE; i++)
 	{
-		if (!allVerif(grid, X, X + SQRT_GRID_SIZE - 1, Y, Y + SQRT_GRID_SIZE - 1))
+		if (!allVerif(grid, 0, GRID_SIZE, i, i+1, baton))
+		{
+			return false;
+		}
+		createBaton(baton);
+	}
+	return true;
+}
+
+bool squareVerif(T_Grid grid)
+{
+	unsigned char* baton = malloc(GRID_SIZE * sizeof(unsigned char));
+	createBaton(baton);
+	int X = 0;
+	int Y = 0;
+	for (int k = 0; k < GRID_SIZE; k++)
+	{
+		if (!allVerif(grid, X, X + SQRT_GRID_SIZE, Y, Y + SQRT_GRID_SIZE, baton))
 		{
 			return false;
 		}
 		Y += SQRT_GRID_SIZE;
 		if (Y == GRID_SIZE)
 		{
-			Y = Y2;
+			Y = 0;
 			X += SQRT_GRID_SIZE;
 		}
+		if (X == GRID_SIZE)
+		{
+			X = 0;
+		}
+		createBaton(baton);
 	}
 	return true;
 }
 
 bool gridVerif(T_Grid grid)
 {
-	return (lineVerif(grid, 0, 0) && columnVerif(grid, 0, 0) && squareVerif(grid, 0, 0));
+	return (lineVerif(grid) && columnVerif(grid) && squareVerif(grid));
 }
 
 

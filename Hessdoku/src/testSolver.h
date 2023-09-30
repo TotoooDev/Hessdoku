@@ -4,12 +4,19 @@
 #include <Solver.h>
 
 
+
+
+
+
+//PREVIOUS CODE
+
+
 /**
 * Test if function resetWitness is working
 *
 * @author Marie
 */
-void test_resetWitness();
+//void test_resetWitness();
 
 
 /**
@@ -17,7 +24,7 @@ void test_resetWitness();
 *
 * @author Marie
 */
-void test_checkingAccuracy();
+//void test_checkingAccuracy();
 
 
 /**
@@ -25,7 +32,7 @@ void test_checkingAccuracy();
 *
 * @author Marie
 */
-void aff_grid(T_Grid g);
+//void aff_grid(T_Grid g);
 
 
 /**
@@ -33,6 +40,6 @@ void aff_grid(T_Grid g);
 *
 * @author Marie
 */
-void main_test();
+//void main_test();
 
 #endif

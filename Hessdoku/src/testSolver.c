@@ -1,5 +1,20 @@
 #include <testSolver.h>
 
+
+
+
+
+
+
+
+
+
+
+//PREVIOUS TEST
+
+
+
+/*
 void test_resetWitness()
 {
 	printf("\n--------------------\n");
@@ -93,3 +108,4 @@ void main_test() {
 
 	printf("\n");
 }
+*/

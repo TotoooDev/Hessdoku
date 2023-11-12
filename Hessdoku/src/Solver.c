@@ -105,8 +105,54 @@ bool gridVerif(T_Grid grid)
 
 
 
+void removeNotesInGridByZones(T_Grid grid)
+{
+	for (int x = 0; x < GRID_SIZE; x++)
+	{
+		for (int y = 0; y < GRID_SIZE; y++) 
+		{
+			T_Cell* currentCell = grid[x][y];
+			unsigned int currentValue = getValueOfCell(currentCell);
+			T_Cell* tempCell;
+			
+			if (currentValue != 0)
+			{
+				for (int k = 0; k < GRID_SIZE; k++)						// Checking for lines
+				{
+					tempCell = grid[x][k];
+					if (tempCell != currentCell)
+					{
+						unsetNoteCell(tempCell, currentValue);
+					}
+				}
 
+				for (int i = 0; i < GRID_SIZE; i++)						// Checking for columns
+				{
+					tempCell = grid[i][y];
+					if (tempCell != currentCell)
+					{
+						unsetNoteCell(tempCell, currentValue);
+					}
+				}
 
+				int boxRow = x / SQRT_GRID_SIZE * SQRT_GRID_SIZE;
+				int boxCol = y / SQRT_GRID_SIZE * SQRT_GRID_SIZE;
+				for (int m = 0; m < SQRT_GRID_SIZE; m++)				// Checking for blocks
+				{
+					for (int n = 0; n < SQRT_GRID_SIZE; n++)
+					{
+						tempCell = grid[boxRow + m][boxCol + n];
+						if (tempCell != currentCell)
+						{
+							unsetNoteCell(tempCell, currentValue);
+						}
+					}
+				}
+			}
+
+		}
+	}
+}
 
 
 //PREVIOUS CODE

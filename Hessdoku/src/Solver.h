@@ -97,8 +97,14 @@ bool squareVerif(T_Grid grid);
  */
 bool gridVerif(T_Grid grid);
 
-
-
+/**
+ * Applies the rules #1, 2 and 3 of the Sudoku Solving process.
+ * 
+ * @param grid : the sudoku grid
+ * 
+ * @author Baptiste
+ */
+void removeNotesInGridByZones(T_Grid grid);
 
 
 //PREVIOUS CODE

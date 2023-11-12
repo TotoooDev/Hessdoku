@@ -108,7 +108,15 @@ void displayNotesToConsole(T_Grid grid)
     {
         for (int y = 0; y < GRID_SIZE; y++)
         {
-            printf("%3d ", grid[x][y]->notes);
+            for (unsigned int i = 1; i <= 9; ++i) {
+                if ((grid[x][y]->notes & (1 << (i - 1))) != 0) {
+                    printf("%d", i);
+                }
+                else {
+                    printf(" ");
+                }
+            }
+            printf(" | ");
         }
         printf("\n");
     }

@@ -103,55 +103,81 @@ bool gridVerif(T_Grid grid)
 	return (lineVerif(grid) && columnVerif(grid) && squareVerif(grid));
 }
 
-
-
-void removeNotesInGridByZones(T_Grid grid)
+bool removeNotesInGridByRows(T_Grid grid, T_Cell* currentCell, unsigned int currentValue, int x, int y)
 {
+	bool hasChanged = false;
+	T_Cell* tempCell;
+
+	for (int k = 0; k < GRID_SIZE; k++)						// Checking for lines
+	{
+		tempCell = grid[x][k];
+		if (tempCell == currentCell) continue;
+
+		hasChanged |= unsetNoteCell(tempCell, currentValue);
+	}
+
+	return hasChanged;
+}
+
+bool removeNotesInGridByColumns(T_Grid grid, T_Cell* currentCell, unsigned int currentValue, int x, int y)
+{
+	bool hasChanged = false;
+	T_Cell* tempCell;
+
+	for (int i = 0; i < GRID_SIZE; i++)
+	{
+		tempCell = grid[i][y];
+		if (tempCell == currentCell) continue;
+
+		hasChanged |= unsetNoteCell(tempCell, currentValue);
+	}
+
+	return hasChanged;
+}
+
+bool removeNotesInGridByBlocks(T_Grid grid, T_Cell* currentCell, unsigned int currentValue, int x, int y)
+{
+	bool hasChanged = false;
+	T_Cell* tempCell;
+
+	int boxRow = x / SQRT_GRID_SIZE * SQRT_GRID_SIZE;
+	int boxCol = y / SQRT_GRID_SIZE * SQRT_GRID_SIZE;
+	for (int m = 0; m < SQRT_GRID_SIZE; m++)
+	{
+		for (int n = 0; n < SQRT_GRID_SIZE; n++)
+		{
+			tempCell = grid[boxRow + m][boxCol + n];
+			if (tempCell == currentCell) continue;
+
+			hasChanged |= unsetNoteCell(tempCell, currentValue);
+		}
+	}
+
+	return hasChanged;
+}
+
+bool removeNotesInGridByZones(T_Grid grid)
+{
+	bool hasChanged = false;
+
 	for (int x = 0; x < GRID_SIZE; x++)
 	{
 		for (int y = 0; y < GRID_SIZE; y++) 
 		{
 			T_Cell* currentCell = grid[x][y];
 			unsigned int currentValue = getValueOfCell(currentCell);
-			T_Cell* tempCell;
 			
-			if (currentValue != 0)
-			{
-				for (int k = 0; k < GRID_SIZE; k++)						// Checking for lines
-				{
-					tempCell = grid[x][k];
-					if (tempCell != currentCell)
-					{
-						unsetNoteCell(tempCell, currentValue);
-					}
-				}
+			if (currentValue == 0) continue;
+			
+			hasChanged |= removeNotesInGridByColumns(grid, currentCell, currentValue, x, y);
 
-				for (int i = 0; i < GRID_SIZE; i++)						// Checking for columns
-				{
-					tempCell = grid[i][y];
-					if (tempCell != currentCell)
-					{
-						unsetNoteCell(tempCell, currentValue);
-					}
-				}
+			hasChanged |= removeNotesInGridByRows(grid, currentCell, currentValue, x, y);
 
-				int boxRow = x / SQRT_GRID_SIZE * SQRT_GRID_SIZE;
-				int boxCol = y / SQRT_GRID_SIZE * SQRT_GRID_SIZE;
-				for (int m = 0; m < SQRT_GRID_SIZE; m++)				// Checking for blocks
-				{
-					for (int n = 0; n < SQRT_GRID_SIZE; n++)
-					{
-						tempCell = grid[boxRow + m][boxCol + n];
-						if (tempCell != currentCell)
-						{
-							unsetNoteCell(tempCell, currentValue);
-						}
-					}
-				}
-			}
+			hasChanged |= removeNotesInGridByBlocks(grid, currentCell, currentValue, x, y);
 
 		}
 	}
+	return hasChanged;
 }
 
 

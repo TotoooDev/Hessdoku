@@ -102,9 +102,11 @@ bool gridVerif(T_Grid grid);
  * 
  * @param grid : the sudoku grid
  * 
+ * @return A boolean indicating wether the grid changed or not 
+ * 
  * @author Baptiste
  */
-void removeNotesInGridByZones(T_Grid grid);
+bool removeNotesInGridByZones(T_Grid grid);
 
 
 //PREVIOUS CODE

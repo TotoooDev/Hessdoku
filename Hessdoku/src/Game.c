@@ -85,12 +85,20 @@ T_Game* createGame(int sizeX, int sizeY)
     //test erreur carre
     //setCell(game->grid, 8, 4, 5); //NOPE
 
-
+    printf("Grid before solving algorithm :\n");
     displayGridToConsole(game->grid);
     displayNotesToConsole(game->grid);
 
-    removeNotesInGridByZones(game->grid);
+    /* MOVE THIS PIECE OF CODE TO THE APPROPRIATE PLACE */
+    bool hasChanged = true;
 
+    while (hasChanged)
+    {
+        hasChanged &= removeNotesInGridByZones(game->grid);
+    }
+    /* END OF MOVE */
+
+    printf("Grid after solving algorithm :\n");
     displayGridToConsole(game->grid);
     displayNotesToConsole(game->grid);
 

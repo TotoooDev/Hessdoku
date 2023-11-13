@@ -24,9 +24,11 @@ void setNoteCell(T_Cell* cell, unsigned int noteValue)
     cell->notes |= (1 << (noteValue - 1));
 }
 
-void unsetNoteCell(T_Cell* cell, unsigned int noteValue) {
+bool unsetNoteCell(T_Cell* cell, unsigned int noteValue) {
+    unsigned int prevValue = cell->notes;
     // Clear the flag at the specified index by performing a bitwise AND with the complement of the flag
     cell->notes &= ~(1 << (noteValue - 1));
+    return cell->notes != prevValue;
 }
 
 void setValueOfCell(T_Cell* cell, unsigned int value)

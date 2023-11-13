@@ -52,9 +52,11 @@ void setNoteCell(T_Cell* cell, unsigned int noteValue);
  * @param cell The cell where to remove the note.
  * @param noteValue The note's value to remove.
  * 
+ * @return A boolean indicating if the value changed
+ * 
  * @author Baptiste
  */
-void unsetNoteCell(T_Cell* cell, unsigned int noteValue);
+bool unsetNoteCell(T_Cell* cell, unsigned int noteValue);
 
 /**
  * Returns the value of a cell. 

@@ -95,6 +95,11 @@ T_Game* createGame(int sizeX, int sizeY)
     while (hasChanged)
     {
         hasChanged &= removeNotesInGridByZones(game->grid);
+
+        if (!hasChanged)
+        {
+            // Next algorithm step
+        }
     }
     /* END OF MOVE */
 

@@ -14,8 +14,7 @@ bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, un
 	{
 		for (int j = minY; j < maxY; j++)
 		{
-			
-			if (!checkValidityOfCell(baton, getValue(grid, i, j)))
+			if (!checkValidityOfCell(baton, getValueOfCell(grid[i][j])))
 			{
 				return false;
 			}

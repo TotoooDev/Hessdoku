@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <Game.h>
-#include <testSolver.h>
 
 void setGridToDemoGrid(T_Grid grid)
 {

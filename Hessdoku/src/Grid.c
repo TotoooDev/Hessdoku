@@ -19,7 +19,7 @@ T_Grid generateGrid(int sizeX, int sizeY)
 }
 
 // TODO: tests
-T_Grid freeGrid(T_Grid grid, int sizeX, int sizeY) 
+void freeGrid(T_Grid grid, int sizeX, int sizeY) 
 {
     for (int x = 0; x < sizeX; x++)
     {

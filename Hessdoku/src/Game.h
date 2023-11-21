@@ -28,6 +28,6 @@ T_Game* createGame(int sizeX, int sizeY);
  *
  * @author Toto
  */
-void destroyGame(T_Game* game, T_Grid grid);
+void destroyGame(T_Game* game);
 
 #endif

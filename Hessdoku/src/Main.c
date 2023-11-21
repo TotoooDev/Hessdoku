@@ -6,6 +6,6 @@
 int main(int argc, char* argv[])
 {
     T_Game* game = createGame(9, 9);
-
+    
     return 0;
 }

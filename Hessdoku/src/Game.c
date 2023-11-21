@@ -120,8 +120,8 @@ T_Game* createGame(int sizeX, int sizeY)
     return game;
 }
 
-void destroyGame(T_Game* game, T_Grid grid)
+void destroyGame(T_Game* game)
 {
-    freeGrid(grid, 9, 9);
+    freeGrid(game->grid, 9, 9);
     free(game);
 }

@@ -13,6 +13,7 @@
 typedef struct Game
 {
     T_Grid grid;
+    unsigned int sizeX, sizeY;
 } T_Game;
 
 /**

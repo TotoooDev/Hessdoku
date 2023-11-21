@@ -5,7 +5,7 @@
 
 void setGridToDemoGrid(T_Grid grid)
 {
-    int testGrid[9][9] = {
+    int testGrid[GRID_SIZE][GRID_SIZE] = {
         {2, 1, 3, 5, 9, 7, 0, 6, 0},
         {7, 0, 6, 0, 8, 1, 3, 2, 5},
         {0, 5, 4, 3, 0, 6, 9, 1, 7},
@@ -30,7 +30,7 @@ void setGridToDemoGrid(T_Grid grid)
 
 int main(int argc, char* argv[])
 {
-    T_Game* game = createGame(9, 9);
+    T_Game* game = createGame(GRID_SIZE, GRID_SIZE);
     setGridToDemoGrid(game->grid);
 
     /*

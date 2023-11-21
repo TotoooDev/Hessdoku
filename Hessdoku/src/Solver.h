@@ -29,7 +29,7 @@ void createBaton(unsigned char* b);
  *
  * @author Marie
  */
-bool allVerif(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char* baton);
+bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char* baton);
 
 
 /**
@@ -43,7 +43,7 @@ bool allVerif(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char
  *
  * @author Marie
  */
-bool cellVerif(unsigned char* baton, int val);
+bool checkValidityOfCell(unsigned char* baton, int val);
 
 
 /**
@@ -56,7 +56,7 @@ bool cellVerif(unsigned char* baton, int val);
  *
  * @author Marie
  */
-bool lineVerif(T_Grid grid);
+bool checkValidityOfLine(T_Grid grid);
 
 
 /**
@@ -69,7 +69,7 @@ bool lineVerif(T_Grid grid);
  *
  * @author Marie
  */
-bool columnVerif(T_Grid grid);
+bool checkValidityOfColumn(T_Grid grid);
 
 
 /**
@@ -82,7 +82,7 @@ bool columnVerif(T_Grid grid);
  *
  * @author Marie
  */
-bool squareVerif(T_Grid grid);
+bool checkValidityOfSquare(T_Grid grid);
 
 
 /**
@@ -95,7 +95,7 @@ bool squareVerif(T_Grid grid);
  *
  * @author Marie
  */
-bool gridVerif(T_Grid grid);
+bool checkValidityOfGrid(T_Grid grid);
 
 /**
  * Applies the rules #1, 2 and 3 of the Sudoku Solving process.

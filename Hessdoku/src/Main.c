@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
     displayGridToConsole(game->grid);
     displayNotesToConsole(game->grid);
 
-    const gridValidity = gridVerif(game->grid);
+    const gridValidity = checkValidityOfGrid(game->grid);
     if (gridValidity == true)
     {
         printf("The grid is valid.");

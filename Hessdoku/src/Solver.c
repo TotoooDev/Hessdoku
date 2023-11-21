@@ -8,14 +8,14 @@ void createBaton(unsigned char* b)
 	}
 }
 
-bool allVerif(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char * baton)
+bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char * baton)
 {
 	for (int i = minX; i < maxX; i++)
 	{
 		for (int j = minY; j < maxY; j++)
 		{
 			
-			if (!cellVerif(baton, getValue(grid, i, j)))
+			if (!checkValidityOfCell(baton, getValue(grid, i, j)))
 			{
 				return false;
 			}
@@ -24,7 +24,7 @@ bool allVerif(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char
 	return true;
 }
 
-bool cellVerif(unsigned char * baton, int val)
+bool checkValidityOfCell(unsigned char * baton, int val)
 {
 	if (val != 0)
 	{
@@ -41,13 +41,13 @@ bool cellVerif(unsigned char * baton, int val)
 	return true;
 }
 
-bool lineVerif(T_Grid grid)
+bool checkValidityOfLine(T_Grid grid)
 {
 	unsigned char* baton = malloc(GRID_SIZE * sizeof(unsigned char));
 	createBaton(baton);
 	for (int i = 0; i < GRID_SIZE; i++)
 	{
-		if (!allVerif(grid, i, i+1, 0, GRID_SIZE, baton))
+		if (!checkValidityOfRect(grid, i, i+1, 0, GRID_SIZE, baton))
 		{
 			return false;
 		}
@@ -56,13 +56,13 @@ bool lineVerif(T_Grid grid)
 	return true;
 }
 
-bool columnVerif(T_Grid grid)
+bool checkValidityOfColumn(T_Grid grid)
 {
 	unsigned char* baton = malloc(GRID_SIZE * sizeof(unsigned char));
 	createBaton(baton);
 	for (int i = 0; i < GRID_SIZE; i++)
 	{
-		if (!allVerif(grid, 0, GRID_SIZE, i, i+1, baton))
+		if (!checkValidityOfRect(grid, 0, GRID_SIZE, i, i+1, baton))
 		{
 			return false;
 		}
@@ -71,7 +71,7 @@ bool columnVerif(T_Grid grid)
 	return true;
 }
 
-bool squareVerif(T_Grid grid)
+bool checkValidityOfSquare(T_Grid grid)
 {
 	unsigned char* baton = malloc(GRID_SIZE * sizeof(unsigned char));
 	createBaton(baton);
@@ -79,7 +79,7 @@ bool squareVerif(T_Grid grid)
 	int Y = 0;
 	for (int k = 0; k < GRID_SIZE; k++)
 	{
-		if (!allVerif(grid, X, X + SQRT_GRID_SIZE, Y, Y + SQRT_GRID_SIZE, baton))
+		if (!checkValidityOfRect(grid, X, X + SQRT_GRID_SIZE, Y, Y + SQRT_GRID_SIZE, baton))
 		{
 			return false;
 		}
@@ -98,9 +98,9 @@ bool squareVerif(T_Grid grid)
 	return true;
 }
 
-bool gridVerif(T_Grid grid)
+bool checkValidityOfGrid(T_Grid grid)
 {
-	return (lineVerif(grid) && columnVerif(grid) && squareVerif(grid));
+	return (checkValidityOfLine(grid) && checkValidityOfColumn(grid) && checkValidityOfSquare(grid));
 }
 
 bool removeNotesInGridByRows(T_Grid grid, T_Cell* currentCell, unsigned int currentValue, int x, int y)

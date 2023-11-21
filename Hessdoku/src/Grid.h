@@ -29,7 +29,7 @@ T_Grid generateGrid(int sizeX, int sizeY);
  *
  * @author Phileas
  */
-T_Grid freeGrid(T_Grid grid, int sizeX, int sizeY);
+void freeGrid(T_Grid grid, int sizeX, int sizeY);
 
 /**
  * Change the value of a cell. If the new value is 0, the cell is treatde as empty.

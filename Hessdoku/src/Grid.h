@@ -4,7 +4,9 @@
 #include <Cell.h>
 #include <Macros.h>
 
-
+/**
+ * A matrix (double table) of pointers to cells.
+ */
 typedef T_Cell* ** T_Grid;
 
 /**

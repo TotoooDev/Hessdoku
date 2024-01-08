@@ -52,6 +52,7 @@ bool checkValidityOfLine(T_Grid grid)
 		}
 		createBaton(baton);
 	}
+	free(baton);
 	return true;
 }
 
@@ -67,6 +68,7 @@ bool checkValidityOfColumn(T_Grid grid)
 		}
 		createBaton(baton);
 	}
+	free(baton);
 	return true;
 }
 
@@ -94,6 +96,7 @@ bool checkValidityOfSquare(T_Grid grid)
 		}
 		createBaton(baton);
 	}
+	free(baton);
 	return true;
 }
 

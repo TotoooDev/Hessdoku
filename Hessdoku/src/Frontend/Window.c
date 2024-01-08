@@ -15,7 +15,7 @@ typedef struct T_Window
 
 void initSDL()
 {
-    ASSERT(SDL_Init(SDL_INIT_EVERYTHING) > 0, "Failed to initialize SDL! SDL error: %s", SDL_GetError());
+    ASSERT(SDL_Init(SDL_INIT_EVERYTHING) == 0, "Failed to initialize SDL! SDL error: %s", SDL_GetError());
 }
 
 void quitSDL()

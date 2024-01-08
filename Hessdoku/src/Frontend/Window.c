@@ -18,8 +18,16 @@ void initSDL()
     ASSERT(SDL_Init(SDL_INIT_EVERYTHING) > 0, "Failed to initialize SDL! SDL error: %s", SDL_GetError());
 }
 
+void quitSDL()
+{
+    SDl_Quit();
+}
+
 T_Window* createWindow(const char* title, int width, int height)
 {
+    if (NumWindows == 0)
+        initSDL();
+
     T_Window* window = (T_Window*)malloc(sizeof(T_Window));
 
     window->window = SDL_CreateWindow(
@@ -51,6 +59,10 @@ void freeWindow(T_Window* window)
     SDL_DestroyRenderer(window->renderer);
     SDL_DestroyWindow(window->window);
     free(window);
+
+    NumWindows--;
+    if (NumWindows == 0)
+        quitSDL();
 }
 
 void updateWindow(T_Window* window)

@@ -2,6 +2,7 @@
 #include <Log.h>
 #include <SDL2/SDL.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 static unsigned int NumWindows = 0;
 
@@ -9,6 +10,8 @@ typedef struct T_Window
 {
     SDL_Window* window;
     SDL_Renderer* renderer;
+
+    bool isOpen;
 } T_Window;
 
 void initSDL()
@@ -37,6 +40,8 @@ T_Window* createWindow(const char* title, int width, int height)
     );
     ASSERT(window->renderer != NULL, "Failed to create renderer! SDL error: %s", SDL_GetError());
 
+    window->isOpen = true;
+
     NumWindows++;
 
     return window;
@@ -47,4 +52,30 @@ void freeWindow(T_Window* window)
     SDL_DestroyRenderer(window->renderer);
     SDL_DestroyWindow(window->window);
     free(window);
+}
+
+void updateWindow(T_Window* window)
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_QUIT)
+            window->isOpen = false;
+    }
+}
+
+void clearWindow(T_Window* window, unsigned char r, unsigned char g, unsigned char b)
+{
+    SDL_SetRenderDrawColor(window->renderer, r, g, b, 255);
+    SDL_RenderClear(window->renderer);
+}
+
+void presentWindow(T_Window* window)
+{
+    SDL_RenderPresent(window->renderer);
+}
+
+bool isWindowOpen(T_Window* window)
+{
+    return window->isOpen;
 }

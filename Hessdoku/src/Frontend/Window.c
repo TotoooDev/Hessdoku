@@ -20,7 +20,7 @@ void initSDL()
 
 void quitSDL()
 {
-    SDl_Quit();
+    SDL_Quit();
 }
 
 T_Window* createWindow(const char* title, int width, int height)

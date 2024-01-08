@@ -1,6 +1,8 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <stdbool.h>
+
 typedef struct T_Window T_Window;
 
 T_Window* createWindow(const char* title, int width, int height);

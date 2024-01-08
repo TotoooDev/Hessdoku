@@ -1,9 +1,9 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-typedef struct Window Window;
+typedef struct T_Window T_Window;
 
-Window* createWindow(const char* title, int width, int height);
-void freeWindow(Window* window);
+T_Window* createWindow(const char* title, int width, int height);
+void freeWindow(T_Window* window);
 
 #endif

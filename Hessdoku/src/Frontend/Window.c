@@ -5,20 +5,20 @@
 
 static unsigned int NumWindows = 0;
 
-typedef struct Window
+typedef struct T_Window
 {
     SDL_Window* window;
     SDL_Renderer* renderer;
-} Window;
+} T_Window;
 
 void initSDL()
 {
     ASSERT(SDL_Init(SDL_INIT_EVERYTHING) > 0, "Failed to initialize SDL! SDL error: %s", SDL_GetError());
 }
 
-Window* createWindow(const char* title, int width, int height)
+T_Window* createWindow(const char* title, int width, int height)
 {
-    Window* window = (Window*)malloc(sizeof(Window));
+    T_Window* window = (T_Window*)malloc(sizeof(T_Window));
 
     window->window = SDL_CreateWindow(
         title,
@@ -42,7 +42,7 @@ Window* createWindow(const char* title, int width, int height)
     return window;
 }
 
-void freeWindow(Window* window)
+void freeWindow(T_Window* window)
 {
     SDL_DestroyRenderer(window->renderer);
     SDL_DestroyWindow(window->window);

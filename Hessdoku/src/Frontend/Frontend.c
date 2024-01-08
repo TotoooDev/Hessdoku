@@ -27,6 +27,13 @@ void runFrontend(T_Frontend* frontend)
     {
         updateWindow(frontend->window);
         clearWindow(frontend->window, 127, 127, 127);
+
+        setDrawColor(frontend->window, 255, 0, 255);
+        drawRect(frontend->window, 100, 100, 100, 100);
+
+        setDrawColor(frontend->window, 0, 255, 255);
+        drawLine(frontend->window, 125, 158, 541, 463);
+
         presentWindow(frontend->window);
     }
 }

@@ -21,6 +21,16 @@ T_Frontend* createFrontend(T_Game* game)
     return frontend;
 }
 
+void runFrontend(T_Frontend* frontend)
+{
+    while (isWindowOpen(frontend->window))
+    {
+        updateWindow(frontend->window);
+        clearWindow(frontend->window);
+        presentWindow(frontend->window);
+    }
+}
+
 void freeFrontend(T_Frontend* frontend)
 {
     freeWindow(frontend->window);

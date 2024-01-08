@@ -17,7 +17,7 @@
 	/**
 	 * Terminates the program if x is false, and prints msg.
 	 */
-	#define ASSERT(x, msg, ...) if (!x) { LOG(msg, ##__VA_ARGS__); exit(-1); }
+	#define ASSERT(x, msg, ...) if (!(x)) { LOG(msg, ##__VA_ARGS__); exit(-1); }
 
 #else
 

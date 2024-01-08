@@ -15,9 +15,9 @@ void setGridToDemoGrid(T_Grid grid)
         {3, 0, 9, 7, 6, 2, 1, 5, 0},
         {0, 2, 7, 0, 1, 5, 6, 8, 3} };
 
-    for (int x = 0; x < GRID_SIZE; x++)
+    for (int x = 0; x < getGridSize(grid); x++)
     {
-        for (int y = 0; y < GRID_SIZE; y++)
+        for (int y = 0; y < getGridSize(grid); y++)
         {
             if (testGrid[x][y] != 0)
             {
@@ -29,8 +29,9 @@ void setGridToDemoGrid(T_Grid grid)
 
 int main(int argc, char* argv[])
 {
-    T_Game* game = createGame(GRID_SIZE, GRID_SIZE);
-    setGridToDemoGrid(game->grid);
+    //T_Game* game = createGame(GRID_SIZE, GRID_SIZE);
+    T_Grid game = generateGrid(GRID_SIZE, SQRT_GRID_SIZE);
+    setGridToDemoGrid(game);
 
     /*
     setCell(game->grid, 0, 0, 3);
@@ -84,15 +85,15 @@ int main(int argc, char* argv[])
     //setCell(game->grid, 8, 4, 5); //NOPE
 
     printf("Grid before solving algorithm :\n");
-    displayGridToConsole(game->grid);
-    displayNotesToConsole(game->grid);
+    displayGridToConsole(game);
+    displayNotesToConsole(game);
 
     /* MOVE THIS PIECE OF CODE TO THE APPROPRIATE PLACE */
     bool hasChanged = true;
 
     while (hasChanged)
     {
-        hasChanged &= removeNotesInGridByZones(game->grid);
+        hasChanged &= removeNotesInGridByZones(game);
 
         if (!hasChanged)
         {
@@ -102,10 +103,10 @@ int main(int argc, char* argv[])
     /* END OF MOVE */
 
     printf("Grid after solving algorithm :\n");
-    displayGridToConsole(game->grid);
-    displayNotesToConsole(game->grid);
+    displayGridToConsole(game);
+    displayNotesToConsole(game);
 
-    const gridValidity = checkValidityOfGrid(game->grid);
+    const gridValidity = checkValidityOfGrid(game);
     if (gridValidity == true)
     {
         printf("The grid is valid.");

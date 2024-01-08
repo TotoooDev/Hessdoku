@@ -2,7 +2,6 @@
 #include <Log.h>
 #include <SDL2/SDL.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 static unsigned int NumWindows = 0;
 

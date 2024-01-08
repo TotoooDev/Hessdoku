@@ -90,3 +90,24 @@ bool isWindowOpen(T_Window* window)
 {
     return window->isOpen;
 }
+
+void setDrawColor(T_Window* window, unsigned char r, unsigned char g, unsigned char b)
+{
+    SDL_SetRenderDrawColor(window->renderer, r, g, b, 255);
+}
+
+void drawLine(T_Window* window, int startX, int startY, int endX, int endY)
+{
+    SDL_RenderDrawLine(window->renderer, startX, startY, endX, endY);
+}
+
+void drawRect(T_Window* window, int x, int y, int width, int height)
+{
+    SDL_Rect rect = { x, y, width, height };
+    SDL_RenderFillRect(window->renderer, &rect);
+}
+
+void drawGrid(T_Window* window, T_Grid grid)
+{
+    // this is left as an exercise for the curious reader
+}

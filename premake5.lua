@@ -43,15 +43,23 @@ project "Hessdoku"
 		staticruntime "off"
 		runtime "Release"
 		systemversion "latest"
-		libdirs ("libs/windows")
-		-- links ()
-		postbuildcommands ("xcopy ..\\libs\\windows\\dlls\\ ..\\bin\\" .. outputDir .. "\\%{prj.name}\\ /s /e /y /i")
+		libdirs ("libs")
+		links
+		{
+			"SDL2",
+			"SDL2main"
+		}
+		postbuildcommands ("xcopy ..\\libs\\dlls\\ ..\\bin\\" .. outputDir .. "\\%{prj.name}\\ /s /e /y /i")
 		postbuildcommands ("xcopy ..\\dev-assets\\ ..\\bin\\" .. outputDir .. "\\%{prj.name}\\ /s /e /y /i")
 
 	filter "system:linux"
 		staticruntime "off"
 		systemversion "latest"
-		libdirs ("libs/linux")
+		links
+		{
+			"SDL2",
+			"SDL2main"
+		}
 
 	filter "configurations:Debug"
 		defines

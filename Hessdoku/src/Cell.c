@@ -48,16 +48,14 @@ static unsigned char isPowerOfTwo(unsigned int n)
 
 unsigned int getValueOfCell(T_Cell* cell)
 {
-    if (!isPowerOfTwo(cell->notes)) return 0;           // A number's binary representation contains 
-                                                        //a single bit set when the number is a power of two
-    unsigned i = 1, pos = 1;
+    if (!isPowerOfTwo(cell->notes)) return 0;
 
-    while (!(i & cell->notes))                          // We shift through the bits and stop whenever we find a bit set
-    {                                                   // i & cell->notes will be non-zero when i and cell->notes have a set bit at the same position
+    unsigned i = 1, pos = 1;
+    while (!(i & cell->notes))               
+    {                                               
         i = i << 1;
-        ++pos;                                          // We increment the counter, to keep track of our position
+        ++pos;                    
     }
 
     return pos;
-
 }

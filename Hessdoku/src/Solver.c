@@ -14,7 +14,7 @@ bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, un
 	{
 		for (int j = minY; j < maxY; j++)
 		{
-			if (!checkValidityOfCell(baton, getValueOfCell(grid[i][j])))
+			if (!checkValidityOfCell(baton, getValue(grid, i, j)))
 			{
 				return false;
 			}
@@ -52,6 +52,7 @@ bool checkValidityOfLine(T_Grid grid)
 		}
 		createBaton(baton);
 	}
+	free(baton);
 	return true;
 }
 
@@ -67,6 +68,7 @@ bool checkValidityOfColumn(T_Grid grid)
 		}
 		createBaton(baton);
 	}
+	free(baton);
 	return true;
 }
 
@@ -94,6 +96,7 @@ bool checkValidityOfSquare(T_Grid grid)
 		}
 		createBaton(baton);
 	}
+	free(baton);
 	return true;
 }
 
@@ -109,7 +112,7 @@ bool removeNotesInGridByRows(T_Grid grid, T_Cell* currentCell, unsigned int curr
 
 	for (int k = 0; k < GRID_SIZE; k++)	// Checking for each line
 	{
-		tempCell = grid[x][k];
+		tempCell = getCell(grid, x, k);
 		if (tempCell == currentCell) continue;
 
 		// We check if the grid changed after this operation,
@@ -128,7 +131,7 @@ bool removeNotesInGridByColumns(T_Grid grid, T_Cell* currentCell, unsigned int c
 
 	for (int i = 0; i < GRID_SIZE; i++) // Checking for each column
 	{
-		tempCell = grid[i][y];
+		tempCell = getCell(grid, i, y);
 		if (tempCell == currentCell) continue;
 
 		// We check if the grid changed after this operation,
@@ -151,7 +154,7 @@ bool removeNotesInGridByBlocks(T_Grid grid, T_Cell* currentCell, unsigned int cu
 	{
 		for (int n = 0; n < SQRT_GRID_SIZE; n++)		// Checking for each cell of a m by n block
 		{
-			tempCell = grid[boxRow + m][boxCol + n];	// Represents the current cell
+			tempCell = getCell(grid, boxRow + m, boxCol + n);	// Represents the current cell
 			if (tempCell == currentCell) continue;		// We don't modify the current cell's notes
 
 			// We check if the grid changed after this operation,
@@ -172,7 +175,7 @@ bool removeNotesInGridByZones(T_Grid grid)
 	{
 		for (int y = 0; y < GRID_SIZE; y++) 
 		{
-			T_Cell* currentCell = grid[x][y];
+			T_Cell* currentCell = getCell(grid, x, y);
 			unsigned int currentValue = getValueOfCell(currentCell);
 			
 			if (currentValue == 0) continue;
@@ -189,4 +192,14 @@ bool removeNotesInGridByZones(T_Grid grid)
 		}
 	}
 	return hasChanged;
+}
+
+bool kUpletsSolve(T_Grid grid, const int k) {
+	int* variable = malloc(sizeof(int) * k);
+
+	//int possibility =
+
+
+	//free(variable);
+	return false;
 }

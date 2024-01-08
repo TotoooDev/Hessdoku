@@ -5,31 +5,56 @@
 #include <Macros.h>
 
 /**
- * A matrix (double table) of pointers to cells.
+ * A struct that contains a matrix (double table) of pointers to cells and its size.
  */
-typedef T_Cell* ** T_Grid;
+typedef struct T_GridStruct {
+	T_Cell*** grid;
+	unsigned int size;
+	unsigned int sqrtSize;
+} T_Grid;
 
 /**
  * Allocates a grid and fills it by default cells (value : 0 : empty)
  *
- * @param sizeX The size of the columns of the grid
- * @param sizeY The size of the lines of the grid
+ * @param size The size of the grid (size x size)
  *
  * @author Phileas
  */
-T_Grid generateGrid(int sizeX, int sizeY);
+T_Grid generateGrid(int size);
 
+/**
+ * Returns the size of the grid
+ *
+ * @param grid The grid
+ */
+unsigned int getGridSize(T_Grid grid);
+
+/**
+ * Returns the sqrt size of the grid
+ *
+ * @param grid The grid
+ */
+unsigned int getGridSqrtSize(T_Grid grid);
 
 /**
  * Frees the grid
  *
  * @param grid The grid to be fred
- * @param sizeX The size of the columns of the grid
- * @param sizeY The size of the lines of the grid
  *
  * @author Phileas
  */
-void freeGrid(T_Grid grid, int sizeX, int sizeY);
+void freeGrid(T_Grid grid);
+
+/**
+ * Returns the value of a cell.
+ *
+ * @param grid A Sudoku grid
+ * @param x The x position of the cell
+ * @param y The y position of the cell
+ *
+ * @author Baptiste
+ */
+unsigned int getValue(T_Grid grid, int x, int y);
 
 /**
  * Change the value of a cell. If the new value is 0, the cell is treatde as empty.
@@ -71,6 +96,17 @@ void displayGridToConsole(T_Grid grid);
  * @author Baptiste
  */
 void displayNotesToConsole(T_Grid grid);
+
+/**
+ * Returns the cell.
+ *
+ * @param grid A Sudoku grid
+ * @param i The x position of the cell
+ * @param j The y position of the cell
+ *
+ * @author Marie
+ */
+T_Cell* getCell(T_Grid grid, int i, int j);
 
 
 #endif

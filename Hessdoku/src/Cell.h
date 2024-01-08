@@ -27,7 +27,7 @@ T_Cell *createCell();
 /**
  * Frees the cell in parameter.
  *
- * @param cell a pointer to the cell that must be fred
+ * @param cell a pointer to the cell that must be freed
  *
  * @author Phileas
  */

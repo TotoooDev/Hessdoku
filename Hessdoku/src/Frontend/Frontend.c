@@ -26,7 +26,7 @@ void runFrontend(T_Frontend* frontend)
     while (isWindowOpen(frontend->window))
     {
         updateWindow(frontend->window);
-        clearWindow(frontend->window);
+        clearWindow(frontend->window, 127, 127, 127);
         presentWindow(frontend->window);
     }
 }

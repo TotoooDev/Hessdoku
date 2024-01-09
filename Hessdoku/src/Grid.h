@@ -20,7 +20,7 @@ typedef struct T_GridStruct {
  *
  * @author Phileas
  */
-T_Grid generateGrid(int size);
+T_Grid generateGrid(int size, int sqrtSize);
 
 /**
  * Returns the size of the grid

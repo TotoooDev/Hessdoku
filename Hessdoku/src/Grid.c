@@ -37,9 +37,9 @@ void freeGrid(T_Grid grid)
 {
     unsigned int size = getGridSize(grid);
 
-    for (int x = 0; x < size; x++)
+    for (unsigned int x = 0; x < size; x++)
     {
-        for (int y = 0; y < size; y++)
+        for (unsigned int y = 0; y < size; y++)
         {
             freeCell(getCell(grid, x, y));
         }
@@ -77,16 +77,16 @@ void displayGridToConsole(T_Grid grid)
 {
     unsigned int size = getGridSize(grid);
 
-    for(int i = 0; i < size; i++)
+    for(unsigned int i = 0; i < size; i++)
     {
         if(i % getGridSqrtSize(grid) == 0)
         {
-            for(int k = 0; k < size; k++) printf("####");
+            for(unsigned int k = 0; k < size; k++) printf("####");
             printf("#\n");
         }
 
-        for(int k = 0; k < size; k++) {
-            printf(k % (grid)- == 0 ? "#" : "|");
+        for(unsigned int k = 0; k < size; k++) {
+            printf(k % getGridSqrtSize(grid) == 0 ? "#" : "|");
 
             if(getValue(grid, i, k) == 0) 
             {
@@ -100,7 +100,7 @@ void displayGridToConsole(T_Grid grid)
         }
         printf("#\n");
 
-        for (int k = 0; k < size && i % getGridSqrtSize(grid) != (getGridSqrtSize(grid) - 1); k++)
+        for (unsigned int k = 0; k < size && i % getGridSqrtSize(grid) != (getGridSqrtSize(grid) - 1); k++)
         {
             printf(k % getGridSqrtSize(grid) == 0 ? "#" : "+");
             printf("---");
@@ -110,7 +110,7 @@ void displayGridToConsole(T_Grid grid)
     }
 
     // Ending line
-    for(int k = 0; k < size; k++)
+    for(unsigned int k = 0; k < size; k++)
     {
         printf("####");
     }
@@ -122,9 +122,9 @@ void displayNotesToConsole(T_Grid grid)
 {
     unsigned int size = getGridSize(grid);
 
-    for (int x = 0; x < size; x++)
+    for (unsigned int x = 0; x < size; x++)
     {
-        for (int y = 0; y < size; y++)
+        for (unsigned int y = 0; y < size; y++)
         {
             for (unsigned int i = 1; i <= 9; ++i) {
                 if ((getCell(grid, x, y)->notes & (1 << (i - 1))) != 0) {

@@ -97,7 +97,8 @@ int main(int argc, char* argv[])
 
         if (!hasChanged)
         {
-            // Next algorithm step
+            hasChanged &= kUpletsSolve(grid, 3);
+
         }
     }
     /* END OF MOVE */

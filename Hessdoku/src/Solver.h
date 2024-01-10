@@ -108,4 +108,10 @@ bool checkValidityOfGrid(T_Grid grid);
  */
 bool removeNotesInGridByZones(T_Grid grid);
 
+
+/**
+ * 
+ */
+bool kUpletsSolve(T_Grid grid, const int k);
+
 #endif

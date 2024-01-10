@@ -195,11 +195,18 @@ bool removeNotesInGridByZones(T_Grid grid)
 }
 
 bool kUpletsSolve(T_Grid grid, const int k) {
+	bool hasChanged = false;
 	int* variable = malloc(sizeof(int) * k);
 
 	//int possibility =
 
+	// Pour les 27 zones
+		// Pour les k nombres compris entre 1 et 9 (k nombres distincts)
+			// Tableau de booléens t de taille 9 tous à faux
+			// Pour les k nombres 
+				// Pour les 9 cases d'une zone, si la case contient k[i], t[case] = vrai
+			// Si exactement 3 cases de t sont à true, alors on a un triplet
 
-	//free(variable);
-	return false;
+	free(variable);
+	return hasChanged;
 }

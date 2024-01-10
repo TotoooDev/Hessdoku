@@ -8,11 +8,12 @@
 /**
  * Reset/set a table to 0
  *
+ * @param grid : the grid (for the size)
  * @param b : a table of 9 unsigned char
  *
  * @author Marie
  */
-void createBaton(unsigned char* b);
+void createBaton(T_Grid grid, unsigned char* b);
 
 
 /**

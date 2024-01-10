@@ -1,8 +1,8 @@
 #include <Solver.h>
 
-void createBaton(unsigned char* b)
+void createBaton(T_Grid grid, unsigned char* b)
 {
-	for (int i = 0; i < GRID_SIZE; i++)
+	for (int i = 0; i < getGridSize(grid); i++)
 	{
 		b[i] = 0;
 	}
@@ -42,15 +42,15 @@ bool checkValidityOfCell(unsigned char * baton, int val)
 
 bool checkValidityOfLine(T_Grid grid)
 {
-	unsigned char* baton = malloc(GRID_SIZE * sizeof(unsigned char));
-	createBaton(baton);
-	for (int i = 0; i < GRID_SIZE; i++)
+	unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
+	createBaton(grid, baton);
+	for (int i = 0; i < getGridSize(grid); i++)
 	{
-		if (!checkValidityOfRect(grid, i, i+1, 0, GRID_SIZE, baton))
+		if (!checkValidityOfRect(grid, i, i+1, 0, getGridSize(grid), baton))
 		{
 			return false;
 		}
-		createBaton(baton);
+		createBaton(grid, baton);
 	}
 	free(baton);
 	return true;
@@ -58,15 +58,15 @@ bool checkValidityOfLine(T_Grid grid)
 
 bool checkValidityOfColumn(T_Grid grid)
 {
-	unsigned char* baton = malloc(GRID_SIZE * sizeof(unsigned char));
-	createBaton(baton);
-	for (int i = 0; i < GRID_SIZE; i++)
+	unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
+	createBaton(grid, baton);
+	for (int i = 0; i < getGridSize(grid); i++)
 	{
-		if (!checkValidityOfRect(grid, 0, GRID_SIZE, i, i+1, baton))
+		if (!checkValidityOfRect(grid, 0, getGridSize(grid), i, i+1, baton))
 		{
 			return false;
 		}
-		createBaton(baton);
+		createBaton(grid, baton);
 	}
 	free(baton);
 	return true;
@@ -74,27 +74,27 @@ bool checkValidityOfColumn(T_Grid grid)
 
 bool checkValidityOfSquare(T_Grid grid)
 {
-	unsigned char* baton = malloc(GRID_SIZE * sizeof(unsigned char));
-	createBaton(baton);
+	unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
+	createBaton(grid, baton);
 	int X = 0;
 	int Y = 0;
-	for (int k = 0; k < GRID_SIZE; k++)
+	for (int k = 0; k < getGridSize(grid); k++)
 	{
 		if (!checkValidityOfRect(grid, X, X + SQRT_GRID_SIZE, Y, Y + SQRT_GRID_SIZE, baton))
 		{
 			return false;
 		}
 		Y += SQRT_GRID_SIZE;
-		if (Y == GRID_SIZE)
+		if (Y == getGridSize(grid))
 		{
 			Y = 0;
 			X += SQRT_GRID_SIZE;
 		}
-		if (X == GRID_SIZE)
+		if (X == getGridSize(grid))
 		{
 			X = 0;
 		}
-		createBaton(baton);
+		createBaton(grid, baton);
 	}
 	free(baton);
 	return true;
@@ -110,7 +110,7 @@ bool removeNotesInGridByRows(T_Grid grid, T_Cell* currentCell, unsigned int curr
 	bool hasChanged = false;
 	T_Cell* tempCell;
 
-	for (int k = 0; k < GRID_SIZE; k++)	// Checking for each line
+	for (int k = 0; k < getGridSize(grid); k++)	// Checking for each line
 	{
 		tempCell = getCell(grid, x, k);
 		if (tempCell == currentCell) continue;
@@ -129,7 +129,7 @@ bool removeNotesInGridByColumns(T_Grid grid, T_Cell* currentCell, unsigned int c
 	bool hasChanged = false;
 	T_Cell* tempCell;
 
-	for (int i = 0; i < GRID_SIZE; i++) // Checking for each column
+	for (int i = 0; i < getGridSize(grid); i++) // Checking for each column
 	{
 		tempCell = getCell(grid, i, y);
 		if (tempCell == currentCell) continue;
@@ -171,9 +171,9 @@ bool removeNotesInGridByZones(T_Grid grid)
 {
 	bool hasChanged = false;
 
-	for (int x = 0; x < GRID_SIZE; x++)
+	for (int x = 0; x < getGridSize(grid); x++)
 	{
-		for (int y = 0; y < GRID_SIZE; y++) 
+		for (int y = 0; y < getGridSize(grid); y++)
 		{
 			T_Cell* currentCell = getCell(grid, x, y);
 			unsigned int currentValue = getValueOfCell(currentCell);
@@ -195,18 +195,87 @@ bool removeNotesInGridByZones(T_Grid grid)
 }
 
 bool kUpletsSolve(T_Grid grid, const int k) {
+
+	//TODO
+	//	- faire des sous fonctions
+	//  - optimisation
+	//  - finir les TODO 
+
 	bool hasChanged = false;
 	int* variable = malloc(sizeof(int) * k);
 
-	//int possibility =
+	int howManyTrue = 0;
 
-	// Pour les 27 zones
-		// Pour les k nombres compris entre 1 et 9 (k nombres distincts)
-			// Tableau de booléens t de taille 9 tous à faux
-			// Pour les k nombres 
-				// Pour les 9 cases d'une zone, si la case contient k[i], t[case] = vrai
+	unsigned char* batonL = malloc(getGridSize(grid) * sizeof(unsigned char));
+	unsigned char* batonC = malloc(getGridSize(grid) * sizeof(unsigned char));
+	int possibility = 0; //TODO calcul
+	int stop = 0;
+
+	while(stop != possibility || hasChanged == false)
+	{
+		//TODO possibility, faire varibale
+
+		// Pour les 27 zones
+		// Ligne + colonne
+		for (int i = 0; i < getGridSize(grid); i++)
+		{
+			// Pour les k nombres compris entre 1 et 9 (k nombres distincts)
+					// Tableau de booléens t de taille 9 tous à faux
+			createBaton(grid, batonL);
+			createBaton(grid, batonC);
+			for (int j = 0; j < getGridSize(grid); j++)
+			{
+				// Pour les k nombres 
+				for (int m = 0; m < k; m++)
+				{
+					// Pour les 9 cases d'une zone, si la case contient k[i], t[case] = vrai
+					if (getValue(grid, i, j) == variable[m])
+					{
+						batonL[variable[m]] = true;
+					}
+					if (getValue(grid, j, i) == variable[m])
+					{
+						batonC[variable[m]] = true;
+					}
+				}
+			}
 			// Si exactement 3 cases de t sont à true, alors on a un triplet
+			for (int r = 0; r < getGridSize(grid); r++)
+			{
+				if (batonL[r] == true)
+				{
+					howManyTrue += 1;
+				}
+			}
+			if (howManyTrue == 3)
+			{
+				//TODO enlever les notes inutiles
+				howManyTrue = 0;
+				hasChanged = true;
+			}
+			else
+			{
+				howManyTrue = 0;
+				for (int r = 0; r < getGridSize(grid); r++)
+				{
+					if (batonC[r] == true)
+					{
+						howManyTrue += 1;
+					}
+				}
+				if (howManyTrue == 3)
+				{
+					//TODO enlever les notes inutiles
+					howManyTrue = 0;
+					hasChanged = true;
+				}
+			}
+		}
+		//TODO square
+		}
 
 	free(variable);
+	free(batonL);
+	free(batonC);
 	return hasChanged;
 }

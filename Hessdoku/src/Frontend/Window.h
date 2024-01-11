@@ -2,6 +2,8 @@
 #define WINDOW_H
 
 #include <Grid.h>
+#include <Frontend/Color.h>
+#include <Frontend/Font.h>
 #include <stdbool.h>
 
 /**
@@ -80,6 +82,18 @@ void drawLine(T_Window* window, int startX, int startY, int endX, int endY);
  * @param height The height of the shape.
 */
 void drawRect(T_Window* window, int x, int y, int width, int height);
+
+/**
+ * Draws some text.
+ * @param window The window to draw to.
+ * @param font The font to use.
+ * @param color The color to use.
+ * @param text The text to draw.
+ * @param x The x position of the text.
+ * @param y The y position of the text.
+ * @param sizeRatio A multiplicator for the size of the text.
+*/
+void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, int x, int y, float sizeRatio);
 
 /**
  * Draws a whole grid.

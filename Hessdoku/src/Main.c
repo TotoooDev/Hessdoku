@@ -1,15 +1,15 @@
-#include <Game.h>
+#include <Grid.h>
 #include <Frontend/Frontend.h>
 
 int main(int argc, char* argv[])
 {
-    T_Game* game = createGame(GRID_SIZE, GRID_SIZE);
-    T_Frontend* frontend = createFrontend(game);
+    T_Grid grid = generateGrid(81, 9);
+    T_Frontend* frontend = createFrontend(grid);
 
     runFrontend(frontend);
 
     freeFrontend(frontend);
-    destroyGame(game);
+    freeGrid(grid);
 
     return 0;
 }

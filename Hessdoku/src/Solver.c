@@ -252,17 +252,23 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 
 	unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
 	int possibility = coeffBinomial(k, size);
-	int stop = 0;
+	int stop = 0;	
 
 	while (stop != possibility || hasChanged == false)
 	{
-		//TODO possibility, faire varibale
+		int xSquare = 0;
+		int ySquare = 0;
+		int sqrtS = getGridSqrtSize(grid);
+
+		//TODO possibility, faire variable
 
 
 		// Pour les 27 zones
-		// Ligne
+		
 		for (unsigned int i = 0; i < size; i++)
 		{
+			// LIGNE
+			
 			// Pour les k nombres compris entre 1 et 9 (k nombres distincts)
 					// Tableau de booléens t de taille 9 tous à faux
 			createBaton(grid, baton);
@@ -280,14 +286,12 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 				howManyT = 0;
 				hasChanged = true;
 			}
-		}
 
-		// Colonne
-		for (unsigned int j = 0; j < size; j++)
-		{
+			//COLONNE
+
 			createBaton(grid, baton);
 
-			checkRectKUpletSolve(grid, baton, 0, size, j, j, k, variable);
+			checkRectKUpletSolve(grid, baton, 0, size, i, i, k, variable);
 
 			howManyT = howManyTrue(grid, baton);
 
@@ -297,17 +301,11 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 				howManyT = 0;
 				hasChanged = true;
 			}
-		}
 
-		//TODO square
-		int xSquare = 0;
-		int ySquare = 0;
-		int sqrtS = getGridSqrtSize(grid);
-		
-		for (int u = 0; u < size; u++)
-		{
+			//SQUARE
+
 			createBaton(grid, baton);
-			
+
 			checkRectKUpletSolve(grid, baton, xSquare, xSquare + sqrtS, ySquare, ySquare + sqrtS, k, variable);
 
 			howManyT = howManyTrue(grid, baton);
@@ -329,6 +327,7 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 			{
 				xSquare = 0;
 			}
+
 		}
 
 		stop += 1;

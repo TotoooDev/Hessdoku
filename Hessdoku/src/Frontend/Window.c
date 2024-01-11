@@ -107,7 +107,21 @@ void drawRect(T_Window* window, int x, int y, int width, int height)
     SDL_RenderFillRect(window->renderer, &rect);
 }
 
-void drawGrid(T_Window* window, T_Grid grid)
+void drawGrid(T_Window* window, T_Grid grid, int xOffset, int yOffset, int rectSize)
 {
-    // this is left as an exercise for the curious reader
+    for (unsigned int i = 0; i < getGridSqrtSize(grid); i++)
+    {
+        for (unsigned int ii = 0; ii < getGridSqrtSize(grid); ii++)
+        {
+            setDrawColor(window, 255, 255, 255);
+            drawRect(window, ii * rectSize + xOffset, i * rectSize + yOffset, rectSize, rectSize);
+        }
+    }
+
+    setDrawColor(window, 0, 0, 0);
+    for (unsigned int i = 0; i < getGridSqrtSize(grid) + 1; i++)
+    {
+        drawLine(window, i * rectSize + xOffset, yOffset, i * rectSize + xOffset, rectSize * getGridSqrtSize(grid) + yOffset);
+        drawLine(window,  xOffset, i * rectSize + yOffset, rectSize * getGridSqrtSize(grid) + xOffset, i * rectSize + yOffset);
+    }
 }

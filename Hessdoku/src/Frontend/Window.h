@@ -85,7 +85,10 @@ void drawRect(T_Window* window, int x, int y, int width, int height);
  * Draws a whole grid.
  * @param window The window to draw the line to.
  * @param grid The grid to draw.
+ * @param xOffset The x offset to apply when drawing the grid.
+ * @param xOffset The y offset to apply when drawing the grid.
+ * @param rectSize The size of a grid square.
 */
-void drawGrid(T_Window* window, T_Grid grid);
+void drawGrid(T_Window* window, T_Grid grid, int xOffset, int yOffset, int rectSize);
 
 #endif

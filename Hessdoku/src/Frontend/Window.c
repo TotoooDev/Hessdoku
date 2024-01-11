@@ -1,6 +1,7 @@
 #include <Frontend/Window.h>
 #include <Log.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdlib.h>
 
 static unsigned int NumWindows = 0;
@@ -16,6 +17,7 @@ typedef struct T_Window
 void initSDL()
 {
     ASSERT(SDL_Init(SDL_INIT_EVERYTHING) == 0, "Failed to initialize SDL! SDL error: %s", SDL_GetError());
+    ASSERT(TTF_Init() == 0, "Failed to initialize SDL_ttf! TTF error: %s", TTF_GetError());
 }
 
 void quitSDL()

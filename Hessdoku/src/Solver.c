@@ -280,7 +280,7 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 			// Si exactement 3 cases de t sont à true, alors on a un triplet
 			howManyT = howManyTrue(grid, baton);
 			
-			if (howManyT == 3)
+			if (howManyT == k)
 			{
 				//TODO enlever les notes inutiles
 				howManyT = 0;
@@ -295,7 +295,7 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 
 			howManyT = howManyTrue(grid, baton);
 
-			if (howManyT == 3)
+			if (howManyT == k)
 			{
 				//TODO enlever les notes inutiles
 				howManyT = 0;
@@ -310,7 +310,7 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 
 			howManyT = howManyTrue(grid, baton);
 
-			if (howManyT == 3)
+			if (howManyT == k)
 			{
 				//TODO enlever les notes inutiles
 				howManyT = 0;

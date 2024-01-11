@@ -2,7 +2,7 @@
 
 void createBaton(T_Grid grid, unsigned char* b)
 {
-	for (int i = 0; i < getGridSize(grid); i++)
+	for (unsigned int i = 0; i < getGridSize(grid); i++)
 	{
 		b[i] = 0;
 	}
@@ -240,7 +240,7 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 				}
 			}
 			// Si exactement 3 cases de t sont à true, alors on a un triplet
-			for (int r = 0; r < getGridSize(grid); r++)
+			for (unsigned int r = 0; r < getGridSize(grid); r++)
 			{
 				if (batonL[r] == true)
 				{

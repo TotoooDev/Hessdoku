@@ -194,88 +194,147 @@ bool removeNotesInGridByZones(T_Grid grid)
 	return hasChanged;
 }
 
-bool kUpletsSolve(T_Grid grid, const int k) {
+int howManyTrue(T_Grid grid, unsigned char* baton)
+{
+	int howMany = 0;
+	for (unsigned int r = 0; r < getGridSize(grid); r++)
+	{
+		if (baton[r] == true)
+		{
+			howMany += 1;
+		}
+	}
+	return howMany;
+}
 
-	//TODO
-	//	- faire des sous fonctions
-	//  - optimisation
-	//  - finir les TODO 
+int coeffBinomial(int k, int n)
+{
+	int num = 1;
+	int deno = 1;
+
+	for (int i = 0; i < k; i++)
+	{
+		num = num * (n - i);
+		deno = deno * (k - i);
+	}
+
+	return num / deno;
+}
+
+void checkRectKUpletSolve(T_Grid grid, unsigned char* b, int minX, int maxX, int minY, int maxY, int k, unsigned char * variable)
+{
+	int whichCell = 0;
+	for (int i = minX; i < maxX; i++)
+	{
+		for (int j = minY; j < maxY; j++)
+		{
+			for (int m = 0; m < k; m++)
+			{
+				if (getValue(grid, i, j) == variable[m])
+				{
+					b[whichCell] = true;
+				}
+			}
+			whichCell += 1;
+		}
+		whichCell += 1;
+	}
+}
+
+bool kUpletsSolve(T_Grid grid, const int k) {
 
 	bool hasChanged = false;
 	int* variable = malloc(sizeof(int) * k);
 
-	int howManyTrue = 0;
+	int size = getGridSize(grid);
 
-	unsigned char* batonL = malloc(getGridSize(grid) * sizeof(unsigned char));
-	unsigned char* batonC = malloc(getGridSize(grid) * sizeof(unsigned char));
-	int possibility = 0; //TODO calcul
+	int howManyT = 0;
+
+	unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
+	int possibility = coeffBinomial(k, size);
 	int stop = 0;
 
-	while(stop != possibility || hasChanged == false)
+	while (stop != possibility || hasChanged == false)
 	{
 		//TODO possibility, faire varibale
 
+
 		// Pour les 27 zones
-		// Ligne + colonne
-		for (unsigned int i = 0; i < getGridSize(grid); i++)
+		// Ligne
+		for (unsigned int i = 0; i < size; i++)
 		{
 			// Pour les k nombres compris entre 1 et 9 (k nombres distincts)
 					// Tableau de booléens t de taille 9 tous à faux
-			createBaton(grid, batonL);
-			createBaton(grid, batonC);
-			for (unsigned int j = 0; j < getGridSize(grid); j++)
-			{
-				// Pour les k nombres 
-				for (int m = 0; m < k; m++)
-				{
+			createBaton(grid, baton);
+
+			// Pour les k nombres 
 					// Pour les 9 cases d'une zone, si la case contient k[i], t[case] = vrai
-					if (getValue(grid, i, j) == variable[m])
-					{
-						batonL[variable[m]] = true;
-					}
-					if (getValue(grid, j, i) == variable[m])
-					{
-						batonC[variable[m]] = true;
-					}
-				}
-			}
+			checkRectKUpletSolve(grid, baton, i, i, 0, size, k, variable);
+
 			// Si exactement 3 cases de t sont à true, alors on a un triplet
-			for (unsigned int r = 0; r < getGridSize(grid); r++)
-			{
-				if (batonL[r] == true)
-				{
-					howManyTrue += 1;
-				}
-			}
-			if (howManyTrue == 3)
+			howManyT = howManyTrue(grid, baton);
+			
+			if (howManyT == 3)
 			{
 				//TODO enlever les notes inutiles
-				howManyTrue = 0;
+				howManyT = 0;
 				hasChanged = true;
 			}
-			else
-			{
-				howManyTrue = 0;
-				for (unsigned int r = 0; r < getGridSize(grid); r++)
-				{
-					if (batonC[r] == true)
-					{
-						howManyTrue += 1;
-					}
-				}
-				if (howManyTrue == 3)
-				{
-					//TODO enlever les notes inutiles
-					howManyTrue = 0;
-					hasChanged = true;
-				}
-			}
-		}
-		//TODO square
 		}
 
+		// Colonne
+		for (unsigned int j = 0; j < size; j++)
+		{
+			createBaton(grid, baton);
+
+			checkRectKUpletSolve(grid, baton, 0, size, j, j, k, variable);
+
+			howManyT = howManyTrue(grid, baton);
+
+			if (howManyT == 3)
+			{
+				//TODO enlever les notes inutiles
+				howManyT = 0;
+				hasChanged = true;
+			}
+		}
+
+		//TODO square
+		int xSquare = 0;
+		int ySquare = 0;
+		int sqrtS = getGridSqrtSize(grid);
+		
+		for (int u = 0; u < size; u++)
+		{
+			createBaton(grid, baton);
+			
+			checkRectKUpletSolve(grid, baton, xSquare, xSquare + sqrtS, ySquare, ySquare + sqrtS, k, variable);
+
+			howManyT = howManyTrue(grid, baton);
+
+			if (howManyT == 3)
+			{
+				//TODO enlever les notes inutiles
+				howManyT = 0;
+				hasChanged = true;
+			}
+
+			ySquare += getGridSqrtSize(grid);
+			if (ySquare == getGridSize(grid))
+			{
+				ySquare = 0;
+				xSquare += getGridSqrtSize(grid);
+			}
+			if (xSquare == getGridSize(grid))
+			{
+				xSquare = 0;
+			}
+		}
+
+		stop += 1;
+	}
+
 	free(variable);
-	free(batonL);
-	free(batonC);
+	free(baton);
 	return hasChanged;
 }

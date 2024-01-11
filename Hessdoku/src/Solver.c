@@ -44,7 +44,7 @@ bool checkValidityOfLine(T_Grid grid)
 {
 	unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
 	createBaton(grid, baton);
-	for (int i = 0; i < getGridSize(grid); i++)
+	for (unsigned int i = 0; i < getGridSize(grid); i++)
 	{
 		if (!checkValidityOfRect(grid, i, i+1, 0, getGridSize(grid), baton))
 		{
@@ -60,7 +60,7 @@ bool checkValidityOfColumn(T_Grid grid)
 {
 	unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
 	createBaton(grid, baton);
-	for (int i = 0; i < getGridSize(grid); i++)
+	for (unsigned int i = 0; i < getGridSize(grid); i++)
 	{
 		if (!checkValidityOfRect(grid, 0, getGridSize(grid), i, i+1, baton))
 		{
@@ -78,17 +78,17 @@ bool checkValidityOfSquare(T_Grid grid)
 	createBaton(grid, baton);
 	int X = 0;
 	int Y = 0;
-	for (int k = 0; k < getGridSize(grid); k++)
+	for (unsigned int k = 0; k < getGridSize(grid); k++)
 	{
-		if (!checkValidityOfRect(grid, X, X + SQRT_GRID_SIZE, Y, Y + SQRT_GRID_SIZE, baton))
+		if (!checkValidityOfRect(grid, X, X + getGridSqrtSize(grid), Y, Y + getGridSqrtSize(grid), baton))
 		{
 			return false;
 		}
-		Y += SQRT_GRID_SIZE;
+		Y += getGridSqrtSize(grid);
 		if (Y == getGridSize(grid))
 		{
 			Y = 0;
-			X += SQRT_GRID_SIZE;
+			X += getGridSqrtSize(grid);
 		}
 		if (X == getGridSize(grid))
 		{
@@ -110,7 +110,7 @@ bool removeNotesInGridByRows(T_Grid grid, T_Cell* currentCell, unsigned int curr
 	bool hasChanged = false;
 	T_Cell* tempCell;
 
-	for (int k = 0; k < getGridSize(grid); k++)	// Checking for each line
+	for (unsigned int k = 0; k < getGridSize(grid); k++)	// Checking for each line
 	{
 		tempCell = getCell(grid, x, k);
 		if (tempCell == currentCell) continue;
@@ -129,7 +129,7 @@ bool removeNotesInGridByColumns(T_Grid grid, T_Cell* currentCell, unsigned int c
 	bool hasChanged = false;
 	T_Cell* tempCell;
 
-	for (int i = 0; i < getGridSize(grid); i++) // Checking for each column
+	for (unsigned int i = 0; i < getGridSize(grid); i++) // Checking for each column
 	{
 		tempCell = getCell(grid, i, y);
 		if (tempCell == currentCell) continue;
@@ -148,14 +148,14 @@ bool removeNotesInGridByBlocks(T_Grid grid, T_Cell* currentCell, unsigned int cu
 	bool hasChanged = false;
 	T_Cell* tempCell;
 
-	int boxRow = x / SQRT_GRID_SIZE * SQRT_GRID_SIZE;
-	int boxCol = y / SQRT_GRID_SIZE * SQRT_GRID_SIZE;
-	for (int m = 0; m < SQRT_GRID_SIZE; m++)
+	int boxRow = x / getGridSqrtSize(grid) * getGridSqrtSize(grid);
+	int boxCol = y / getGridSqrtSize(grid) * getGridSqrtSize(grid);
+	for (unsigned int m = 0; m < getGridSqrtSize(grid); m++)
 	{
-		for (int n = 0; n < SQRT_GRID_SIZE; n++)		// Checking for each cell of a m by n block
+		for (unsigned int n = 0; n < getGridSqrtSize(grid); n++)	// Checking for each cell of a m by n block
 		{
-			tempCell = getCell(grid, boxRow + m, boxCol + n);	// Represents the current cell
-			if (tempCell == currentCell) continue;		// We don't modify the current cell's notes
+			tempCell = getCell(grid, boxRow + m, boxCol + n);		// Represents the current cell
+			if (tempCell == currentCell) continue;					// We don't modify the current cell's notes
 
 			// We check if the grid changed after this operation,
 			// Using OR operator with the hasChanged value
@@ -171,9 +171,9 @@ bool removeNotesInGridByZones(T_Grid grid)
 {
 	bool hasChanged = false;
 
-	for (int x = 0; x < getGridSize(grid); x++)
+	for (unsigned int x = 0; x < getGridSize(grid); x++)
 	{
-		for (int y = 0; y < getGridSize(grid); y++)
+		for (unsigned int y = 0; y < getGridSize(grid); y++)
 		{
 			T_Cell* currentCell = getCell(grid, x, y);
 			unsigned int currentValue = getValueOfCell(currentCell);
@@ -217,13 +217,13 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 
 		// Pour les 27 zones
 		// Ligne + colonne
-		for (int i = 0; i < getGridSize(grid); i++)
+		for (unsigned int i = 0; i < getGridSize(grid); i++)
 		{
 			// Pour les k nombres compris entre 1 et 9 (k nombres distincts)
 					// Tableau de booléens t de taille 9 tous à faux
 			createBaton(grid, batonL);
 			createBaton(grid, batonC);
-			for (int j = 0; j < getGridSize(grid); j++)
+			for (unsigned int j = 0; j < getGridSize(grid); j++)
 			{
 				// Pour les k nombres 
 				for (int m = 0; m < k; m++)
@@ -256,7 +256,7 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 			else
 			{
 				howManyTrue = 0;
-				for (int r = 0; r < getGridSize(grid); r++)
+				for (unsigned int r = 0; r < getGridSize(grid); r++)
 				{
 					if (batonC[r] == true)
 					{

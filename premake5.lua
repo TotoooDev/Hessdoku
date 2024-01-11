@@ -47,7 +47,8 @@ project "Hessdoku"
 		links
 		{
 			"SDL2",
-			"SDL2main"
+			"SDL2main",
+			"SDL2_ttf"
 		}
 		postbuildcommands ("xcopy ..\\libs\\dlls\\ ..\\bin\\" .. outputDir .. "\\%{prj.name}\\ /s /e /y /i")
 		postbuildcommands ("xcopy ..\\dev-assets\\ ..\\bin\\" .. outputDir .. "\\%{prj.name}\\ /s /e /y /i")
@@ -58,7 +59,8 @@ project "Hessdoku"
 		links
 		{
 			"SDL2",
-			"SDL2main"
+			"SDL2main",
+			"SDL2_ttf"
 		}
 
 	filter "configurations:Debug"

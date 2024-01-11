@@ -109,6 +109,26 @@ void drawRect(T_Window* window, int x, int y, int width, int height)
     SDL_RenderFillRect(window->renderer, &rect);
 }
 
+void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, int x, int y, float sizeRatio)
+{
+    SDL_Surface* surface = TTF_RenderText_Solid(getTTF(font), text, (SDL_Color){ color.r, color.g, color.b, 255 });
+	ASSERT(surface != NULL, "Failed to create surface! TTF error: %s\n", TTF_GetError());
+
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(window->renderer, surface);
+	
+    SDL_Rect rect = { 
+        x,
+        y,
+        (int)((float)surface->w * sizeRatio),
+        (int)((float)surface->h * sizeRatio)
+    };
+    
+    SDL_RenderCopy(window->renderer, texture, NULL, &rect);
+	
+	SDL_FreeSurface(surface);
+	SDL_DestroyTexture(texture);
+}
+
 void drawGrid(T_Window* window, T_Grid grid, int xOffset, int yOffset, int rectSize)
 {
     for (unsigned int i = 0; i < getGridSqrtSize(grid); i++)

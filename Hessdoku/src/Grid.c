@@ -86,7 +86,7 @@ void displayGridToConsole(T_Grid grid)
         }
 
         for(int k = 0; k < size; k++) {
-            printf(k % (grid)- == 0 ? "#" : "|");
+            // printf(k % (grid) == 0 ? "#" : "|");
 
             if(getValue(grid, i, k) == 0) 
             {

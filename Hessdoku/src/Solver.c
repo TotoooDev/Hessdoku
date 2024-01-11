@@ -345,11 +345,14 @@ bool removeNotesKUpletSquare(T_Grid grid, T_Cell** var, int* variable, int k, in
 	return hasChanged;
 }
 
+//bool removeNoteOnCell (T_Grid grid, T_Cell** var, int* variable, int k)
+
 bool kUpletsSolve (T_Grid grid, const int k) {
 
 	//TODO
 	// - si square est line ou colonne
 	// - enlever note sur k_uplet
+	// - stopper quand trouver un k_uplet
 
 
 	bool hasChanged = false;

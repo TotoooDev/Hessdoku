@@ -241,7 +241,7 @@ void checkRectKUpletSolve(T_Grid grid, unsigned char* b, int minX, int maxX, int
 	}
 }
 
-void nextSquare(int step, int* xSquare, int* ySquare)
+void nextSquare (int step, int* xSquare, int* ySquare)
 {
 	ySquare += step;
 	if (ySquare == step)
@@ -255,10 +255,106 @@ void nextSquare(int step, int* xSquare, int* ySquare)
 	}
 }
 
-bool kUpletsSolve(T_Grid grid, const int k) {
+bool removeNotesKUpletRows(T_Grid grid,T_Cell ** var, int * variable, int k, int x)
+{
+	bool hasChanged = false;
+	T_Cell* tempCell;
+	bool notTheSame = true;
+
+	for (int i = 0; i < getGridSize(grid); i++)
+	{
+		for (int m = 0; m < k; m++)
+		{
+			tempCell = getCell(grid, x, i);
+			if (tempCell == var[m])
+			{
+				notTheSame = false;
+			}
+		}
+		if (notTheSame)
+		{
+			for (int j = 0; j < k; j++) {
+				hasChanged |= unsetNoteCell(tempCell, variable[j]);
+			}
+		}
+		notTheSame = false;
+	}
+
+	return hasChanged;
+}
+
+bool removeNotesKUpletColumns(T_Grid grid, T_Cell** var, int* variable, int k, int y)
+{
+	bool hasChanged = false;
+	T_Cell* tempCell;
+	bool notTheSame = true;
+
+	for (int i = 0; i < getGridSize(grid); i++)
+	{
+		for (int m = 0; m < k; m++)
+		{
+			tempCell = getCell(grid, i, y);
+			if (tempCell == var[m])
+			{
+				notTheSame = false;
+			}
+		}
+		if (notTheSame)
+		{
+			for (int j = 0; j < k; j++) {
+				hasChanged |= unsetNoteCell(tempCell, variable[j]);
+			}
+		}
+		notTheSame = false;
+	}
+
+	return hasChanged;
+}
+
+bool removeNotesKUpletSquare(T_Grid grid, T_Cell** var, int* variable, int k, int x, int y)
+{
+	bool hasChanged = false;
+	T_Cell* tempCell;
+	bool notTheSame = true;
+	int sqrtSize = getGridSqrtSize(grid);
+
+	int boxRow = x / sqrtSize * sqrtSize;
+	int boxCol = y / sqrtSize * sqrtSize;
+	for (unsigned int m = 0; m < sqrtSize; m++)
+	{
+		for (unsigned int n = 0; n < sqrtSize; n++)
+		{	
+			for (int m = 0; m < k; m++)
+			{
+				tempCell = getCell(grid, boxRow + m, boxCol + n);
+				if (tempCell == var[m])
+				{
+					notTheSame = false;
+				}
+			}
+			if (notTheSame)
+			{
+				for (int j = 0; j < k; j++) {
+					hasChanged |= unsetNoteCell(tempCell, variable[j]);
+				}
+			}
+			notTheSame = false;
+		}
+	}
+
+	return hasChanged;
+}
+
+bool kUpletsSolve (T_Grid grid, const int k) {
+
+	//TODO
+	// - si square est line ou colonne
+	// - enlever note sur k_uplet
+
 
 	bool hasChanged = false;
 	int* variable = malloc(sizeof(int) * k);
+	T_Cell** cooVariable = malloc(sizeof(T_Cell) * k);
 
 	int size = getGridSize(grid);
 
@@ -284,6 +380,25 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 		
 		for (unsigned int i = 0; i < size; i++)
 		{
+
+			//SQUARE
+
+			createBaton(grid, baton);
+
+			checkRectKUpletSolve(grid, baton, xSquare, xSquare + sqrtS, ySquare, ySquare + sqrtS, k, variable);
+
+			howManyT = howManyTrue(grid, baton);
+
+			if (howManyT == k)
+			{
+				//TODO enlever les notes inutiles
+				howManyT = 0;
+				hasChanged = removeNotesKUpletSquare(grid, cooVariable, variable, k, xSquare, ySquare);
+			}
+
+			nextSquare(getGridSqrtSize(grid), &xSquare, &ySquare);
+
+
 			// LIGNE
 			
 			// Pour les k nombres compris entre 1 et 9 (k nombres distincts)
@@ -299,10 +414,10 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 			
 			if (howManyT == k)
 			{
-				//TODO enlever les notes inutiles
 				howManyT = 0;
-				hasChanged = true;
+				hasChanged = removeNotesKUpletRows(grid, cooVariable, variable, k, i);
 			}
+
 
 			//COLONNE
 
@@ -316,25 +431,10 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 			{
 				//TODO enlever les notes inutiles
 				howManyT = 0;
-				hasChanged = true;
+				hasChanged = removeNotesKUpletColumns(grid, cooVariable, variable, k, i);
 			}
 
-			//SQUARE
-
-			createBaton(grid, baton);
-
-			checkRectKUpletSolve(grid, baton, xSquare, xSquare + sqrtS, ySquare, ySquare + sqrtS, k, variable);
-
-			howManyT = howManyTrue(grid, baton);
-
-			if (howManyT == k)
-			{
-				//TODO enlever les notes inutiles
-				howManyT = 0;
-				hasChanged = true;
-			}
-
-			nextSquare(getGridSqrtSize(grid), &xSquare, &ySquare);
+			
 
 		}
 
@@ -344,6 +444,7 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 	}
 
 	free(variable);
+	free(cooVariable);
 	free(baton);
 	return hasChanged;
 }

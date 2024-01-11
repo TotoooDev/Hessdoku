@@ -241,6 +241,20 @@ void checkRectKUpletSolve(T_Grid grid, unsigned char* b, int minX, int maxX, int
 	}
 }
 
+void nextSquare(int step, int* xSquare, int* ySquare)
+{
+	ySquare += step;
+	if (ySquare == step)
+	{
+		ySquare = 0;
+		xSquare += step;
+	}
+	if (xSquare == step)
+	{
+		xSquare = 0;
+	}
+}
+
 bool kUpletsSolve(T_Grid grid, const int k) {
 
 	bool hasChanged = false;
@@ -252,9 +266,12 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 
 	unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
 	int possibility = coeffBinomial(k, size);
+
+	printf("%d", possibility);
+
 	int stop = 0;	
 
-	while (stop != possibility || hasChanged == false)
+	while (stop < possibility && hasChanged == false)
 	{
 		int xSquare = 0;
 		int ySquare = 0;
@@ -317,18 +334,11 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 				hasChanged = true;
 			}
 
-			ySquare += getGridSqrtSize(grid);
-			if (ySquare == getGridSize(grid))
-			{
-				ySquare = 0;
-				xSquare += getGridSqrtSize(grid);
-			}
-			if (xSquare == getGridSize(grid))
-			{
-				xSquare = 0;
-			}
+			nextSquare(getGridSqrtSize(grid), &xSquare, &ySquare);
 
 		}
+
+		printf("%d\n", stop);
 
 		stop += 1;
 	}

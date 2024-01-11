@@ -345,13 +345,52 @@ bool removeNotesKUpletSquare(T_Grid grid, T_Cell** var, int* variable, int k, in
 	return hasChanged;
 }
 
-//bool removeNoteOnCell (T_Grid grid, T_Cell** var, int* variable, int k)
+bool removeNoteOnCell(T_Grid grid, T_Cell** var, int* variable, int k)
+{
+	int size = getGridSize(grid);
+	T_Cell* tempCell;
+	bool theSame = false;
+	bool notTheSame = true;
+	bool hasChanged = false;
+
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			tempCell = getCell(grid, i, j);
+			for (int m = 0; m < k; m++)
+			{
+				if (tempCell == var[m])
+				{
+					theSame = true;
+				}
+			}
+			if (theSame) {
+				for (int t = 1; t < 10; t++)
+				{
+					for (int n = 0; n < k; n++)
+					{
+						if (t == variable[n])
+						{
+							notTheSame = false;
+						}
+					}
+					if (notTheSame)
+					{
+						hasChanged |= unsetNoteCell(tempCell, t);
+					}
+				}
+				theSame = false;
+			}
+		}
+	}
+	return hasChanged;
+}
 
 bool kUpletsSolve (T_Grid grid, const int k) {
 
 	//TODO
 	// - si square est line ou colonne
-	// - enlever note sur k_uplet
 	// - stopper quand trouver un k_uplet
 
 
@@ -396,7 +435,9 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 			{
 				//TODO enlever les notes inutiles
 				howManyT = 0;
-				hasChanged = removeNotesKUpletSquare(grid, cooVariable, variable, k, xSquare, ySquare);
+				hasChanged |= removeNotesKUpletSquare(grid, cooVariable, variable, k, xSquare, ySquare);
+				hasChanged |= removeNoteOnCell(grid, cooVariable, variable, k);
+
 			}
 
 			nextSquare(getGridSqrtSize(grid), &xSquare, &ySquare);
@@ -418,7 +459,8 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 			if (howManyT == k)
 			{
 				howManyT = 0;
-				hasChanged = removeNotesKUpletRows(grid, cooVariable, variable, k, i);
+				hasChanged |= removeNotesKUpletRows(grid, cooVariable, variable, k, i);
+				hasChanged |= removeNoteOnCell(grid, cooVariable, variable, k);
 			}
 
 
@@ -434,7 +476,8 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 			{
 				//TODO enlever les notes inutiles
 				howManyT = 0;
-				hasChanged = removeNotesKUpletColumns(grid, cooVariable, variable, k, i);
+				hasChanged |= removeNotesKUpletColumns(grid, cooVariable, variable, k, i);
+				hasChanged |= removeNoteOnCell(grid, cooVariable, variable, k);
 			}
 
 			

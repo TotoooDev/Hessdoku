@@ -78,4 +78,11 @@ unsigned int getValueOfCell(T_Cell* cell);
  */
 void setValueOfCell(T_Cell* cell, unsigned int value);
 
+/**
+ * @param cell The cell to check the note on.
+ * @param value The value of the note to check.
+ * @returns `true` if the cell has a note set for `value`, `false` otherwise.
+*/
+bool hasNote(T_Cell* cell, unsigned int value);
+
 #endif

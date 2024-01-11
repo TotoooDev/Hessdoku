@@ -59,3 +59,8 @@ unsigned int getValueOfCell(T_Cell* cell)
 
     return pos;
 }
+
+bool hasNote(T_Cell* cell, unsigned int value)
+{
+    return (cell->notes & 1 << value) != 0;
+}

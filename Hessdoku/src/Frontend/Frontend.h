@@ -27,4 +27,14 @@ void runFrontend(T_Frontend* frontend);
  */
 void freeFrontend(T_Frontend* frontend);
 
+/**
+ * Draws a whole grid.
+ * @param window The window to draw the line to.
+ * @param grid The grid to draw.
+ * @param xOffset The x offset to apply when drawing the grid.
+ * @param xOffset The y offset to apply when drawing the grid.
+ * @param rectSize The size of a grid square.
+*/
+void drawGrid(T_Frontend* frontend, int xOffset, int yOffset, int rectSize);
+
 #endif

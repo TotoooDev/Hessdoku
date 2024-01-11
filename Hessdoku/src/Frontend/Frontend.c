@@ -8,15 +8,15 @@
 
 typedef struct T_Frontend {
     T_Window* window;
-    T_Game* game;
+    T_Grid grid;
 } T_Frontend;
 
-T_Frontend* createFrontend(T_Game* game)
+T_Frontend* createFrontend(T_Grid grid)
 {
     T_Frontend* frontend = (T_Frontend*)malloc(sizeof(T_Frontend));
 
     frontend->window = createWindow(FRONTEND_WINDOW_TITLE, FRONTEND_WINDOW_WIDTH, FRONTEND_WINDOW_HEIGHT);
-    frontend->game = game;
+    frontend->grid = grid;
 
     return frontend;
 }
@@ -28,11 +28,7 @@ void runFrontend(T_Frontend* frontend)
         updateWindow(frontend->window);
         clearWindow(frontend->window, 127, 127, 127);
 
-        setDrawColor(frontend->window, 255, 0, 255);
-        drawRect(frontend->window, 100, 100, 100, 100);
-
-        setDrawColor(frontend->window, 0, 255, 255);
-        drawLine(frontend->window, 125, 158, 541, 463);
+        drawGrid(frontend->window, frontend->grid, 40, 10, 64);
 
         presentWindow(frontend->window);
     }

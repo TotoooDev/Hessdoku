@@ -1,7 +1,7 @@
 #ifndef FRONTEND_H
 #define FRONTEND_H
 
-#include <Game.h>
+#include <Grid.h>
 
 /**
  * A frontend structure that holds everything related to the graphical interface.
@@ -13,7 +13,7 @@ typedef struct T_Frontend T_Frontend;
  * @param game The game to display to the frontend.
  * @return The new frontend.
 */
-T_Frontend* createFrontend(T_Game* game);
+T_Frontend* createFrontend(T_Grid grid);
 
 /**
  * Run the frontend. This executes the main loop of the frontend.

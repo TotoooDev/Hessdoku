@@ -103,6 +103,6 @@ void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, i
  * @param xOffset The y offset to apply when drawing the grid.
  * @param rectSize The size of a grid square.
 */
-void drawGrid(T_Window* window, T_Grid grid, int xOffset, int yOffset, int rectSize);
+void drawGrid(T_Window* window, T_Font* font, T_Grid grid, int xOffset, int yOffset, int rectSize);
 
 #endif

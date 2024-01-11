@@ -129,7 +129,7 @@ void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, i
 	SDL_DestroyTexture(texture);
 }
 
-void drawGrid(T_Window* window, T_Grid grid, int xOffset, int yOffset, int rectSize)
+void drawGrid(T_Window* window, T_Font* font, T_Grid grid, int xOffset, int yOffset, int rectSize)
 {
     for (unsigned int i = 0; i < getGridSqrtSize(grid); i++)
     {
@@ -137,6 +137,15 @@ void drawGrid(T_Window* window, T_Grid grid, int xOffset, int yOffset, int rectS
         {
             setDrawColor(window, 255, 255, 255);
             drawRect(window, ii * rectSize + xOffset, i * rectSize + yOffset, rectSize, rectSize);
+            
+            unsigned int value = getValue(grid, ii, i);
+            if (value == 0)
+                continue;
+            
+            char text[2];
+            sprintf(text, "%d", value);
+            setDrawColor(window, 0, 0, 0);
+            drawText(window, font, (T_Color){ 0, 0, 0 }, text, ii * rectSize + xOffset, i * rectSize + yOffset, 1.0f);
         }
     }
 

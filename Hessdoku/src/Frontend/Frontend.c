@@ -23,12 +23,13 @@ T_Frontend* createFrontend(T_Grid grid)
 
 void runFrontend(T_Frontend* frontend)
 {
+    T_Font* font = loadFont("OpenSans-Regular.ttf", 16);
     while (isWindowOpen(frontend->window))
     {
         updateWindow(frontend->window);
         clearWindow(frontend->window, 127, 127, 127);
 
-        drawGrid(frontend->window, frontend->grid, 40, 10, 64);
+        drawGrid(frontend->window, font, frontend->grid, 40, 10, 64);
 
         presentWindow(frontend->window);
     }

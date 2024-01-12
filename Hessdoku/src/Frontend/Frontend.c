@@ -42,23 +42,52 @@ void freeFrontend(T_Frontend* frontend)
     free(frontend);
 }
 
+void drawNotes(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, unsigned int cellX, unsigned int cellY)
+{
+    int y = cellY * rectSize + yOffset;
+    for (unsigned int i = 0; i < getGridSqrtSize(frontend->grid); i++)
+    {
+        if (!hasNote(getCell(frontend->grid, cellX, cellY), i))
+            continue;
+        
+        int x = cellX * rectSize + xOffset + (i % 3) * 16;
+        if (i % 3 == 0 && i != 0)
+            y += 16;
+
+        char text[2];
+        sprintf(text, "%d", i + 1);
+        setDrawColor(frontend->window, 0, 0, 0);
+        drawText(frontend->window, frontend->font, (T_Color){ 0, 0, 0 }, text, x, y, 1.0f);
+    }
+}
+
+void drawValue(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, int value, unsigned int cellX, unsigned int cellY)
+{
+    int x = cellX * rectSize + xOffset;
+    int y = cellY * rectSize + yOffset;
+    char text[2];
+    sprintf(text, "%d", value);
+    setDrawColor(frontend->window, 0, 0, 0);
+    drawText(frontend->window, frontend->font, (T_Color){ 0, 0, 0 }, text, x, y, 2.0f);
+}
+
 void drawGrid(T_Frontend* frontend, int xOffset, int yOffset, int rectSize)
 {
     for (unsigned int i = 0; i < getGridSqrtSize(frontend->grid); i++)
     {
         for (unsigned int ii = 0; ii < getGridSqrtSize(frontend->grid); ii++)
         {
+            int x = ii * rectSize + xOffset;
+            int y = i * rectSize + yOffset;
             setDrawColor(frontend->window, 255, 255, 255);
-            drawRect(frontend->window, ii * rectSize + xOffset, i * rectSize + yOffset, rectSize, rectSize);
+            drawRect(frontend->window, x, y, rectSize, rectSize);
             
             unsigned int value = getValue(frontend->grid, ii, i);
             if (value == 0)
-                continue;
+                drawNotes(frontend, xOffset, yOffset, rectSize, ii, i);
+            else
+                drawValue(frontend, xOffset, yOffset, rectSize, value, ii, i);
             
-            char text[2];
-            sprintf(text, "%d", value);
-            setDrawColor(frontend->window, 0, 0, 0);
-            drawText(frontend->window, frontend->font, (T_Color){ 0, 0, 0 }, text, ii * rectSize + xOffset, i * rectSize + yOffset, 1.0f);
         }
     }
 

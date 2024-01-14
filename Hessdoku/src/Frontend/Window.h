@@ -4,6 +4,7 @@
 #include <Grid.h>
 #include <Frontend/Color.h>
 #include <Frontend/Font.h>
+#include <Frontend/Button.h>
 #include <stdbool.h>
 
 /**
@@ -48,11 +49,32 @@ void clearWindow(T_Window* window, unsigned char r, unsigned char g, unsigned ch
 void presentWindow(T_Window* window);
 
 /**
+ * Draws all the widgets (buttons, ...) of the window.
+ * @param window The window to draw the widgets of.
+ */
+void drawWidgets(T_Window* window);
+
+/**
  * Returns whether the window is open or not. What can close a window include inputs like clicking the x button, ressing Alt-F4, and probably other things.
  * @param window The window to check for.
  * @return `true` if the window is open, `false` otherwise.
 */
 bool isWindowOpen(T_Window* window);
+
+/**
+ * Adds a button to the window.
+ * @param window The window to add the button to.
+ * @param button The button to add to the window.
+*/
+void addButton(T_Window* window, T_Button* button);
+
+/**
+ * Removes a button from the window.
+ * @param window The window to remove the button from.
+ * @param button The button to remove.
+ * @note This function also calls `freeButton`, which destroys the button. This function is also called in `freeWindow` for every button in the window.
+*/
+void removeButton(T_Window* window, T_Button* button);
 
 /**
  * Sets the draw color for the next draw calls.

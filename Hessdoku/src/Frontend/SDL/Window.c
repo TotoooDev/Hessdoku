@@ -9,6 +9,9 @@
 #include <SDL2/SDL_ttf.h>
 #include <stdlib.h>
 
+// arbitrary number lol
+#define WINDOW_MAX_BUTTONS 128
+
 static unsigned int NumWindows = 0;
 
 typedef struct T_Window
@@ -17,7 +20,12 @@ typedef struct T_Window
     SDL_Renderer* renderer;
 
     bool isOpen;
+
+    T_Button* buttons[WINDOW_MAX_BUTTONS];
+    unsigned int numButtons;
 } T_Window;
+
+bool isCursorInButton(int mouseX, int mouseY, T_Button* button);
 
 void initSDL()
 {
@@ -56,6 +64,10 @@ T_Window* createWindow(const char* title, int width, int height)
 
     window->isOpen = true;
 
+    for (unsigned int i = 0; i < WINDOW_MAX_BUTTONS; i++)
+        window->buttons[i] = NULL;
+    window->numButtons = 0;
+
     NumWindows++;
 
     return window;
@@ -63,6 +75,9 @@ T_Window* createWindow(const char* title, int width, int height)
 
 void freeWindow(T_Window* window)
 {
+    for (unsigned int i = 0; i < window->numButtons; i++)
+        freeButton(window->buttons[i]);
+
     SDL_DestroyRenderer(window->renderer);
     SDL_DestroyWindow(window->window);
     free(window);
@@ -77,8 +92,27 @@ void updateWindow(T_Window* window)
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
-        if (event.type == SDL_QUIT)
+        switch (event.type)
+        {
+        case SDL_QUIT:
             window->isOpen = false;
+            break;
+
+        case SDL_MOUSEBUTTONDOWN:
+            for (unsigned int i = 0; i < window->numButtons; i++)
+            {
+                if (!isCursorInButton(event.button.x, event.button.y, window->buttons[i]))
+                    continue;
+                // functional programming hell
+                T_ButtonFunction function = getButtonFunction(window->buttons[i]);
+                if (function != NULL)
+                    function(event.button.button, event.button.clicks);
+            }
+            break;
+
+        default:
+            break;
+        }
     }
 }
 
@@ -93,9 +127,50 @@ void presentWindow(T_Window* window)
     SDL_RenderPresent(window->renderer);
 }
 
+void drawWidgets(T_Window* window)
+{
+    for (unsigned int i = 0; i < window->numButtons; i++) {
+        int x, y, width, height;
+        getButtonCoordinates(window->buttons[i], &x, &y);
+        getButtonSize(window->buttons[i], &width, &height);
+        setDrawColor(window, 0, 0, 0);
+        drawRect(window, x, y, width, height);
+    }
+}
+
 bool isWindowOpen(T_Window* window)
 {
     return window->isOpen;
+}
+
+void addButton(T_Window* window, T_Button* button)
+{
+    ASSERT(window->numButtons < WINDOW_MAX_BUTTONS, "Failed to add button! The button array is full.");
+    window->buttons[window->numButtons] = button;
+    window->numButtons++;
+}
+
+void removeButton(T_Window* window, T_Button* button)
+{
+    int index = -1;
+    for (unsigned int i = 0; i < window->numButtons; i++) {
+        if (window->buttons[i] == button) {
+            index = i;
+            break;
+        }
+    }
+
+    ASSERT(index != -1, "Failed to find button %p in array! It's not in the array.\n", button);
+    ASSERT(index < window->numButtons, "Failed to remove button %p! The index was unused.\n", button);
+
+    freeButton(window->buttons[index]);
+    
+    for (unsigned int i = index; i < window->numButtons; i++) {
+        window->buttons[i] = window->buttons[i + 1];
+    }
+    window->buttons[window->numButtons] = NULL;
+
+    window->numButtons--;
 }
 
 void setDrawColor(T_Window* window, unsigned char r, unsigned char g, unsigned char b)
@@ -132,6 +207,15 @@ void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, i
 	
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(texture);
+}
+
+bool isCursorInButton(int mouseX, int mouseY, T_Button* button)
+{
+    int buttonX, buttonY, buttonWidth, buttonHeight;
+    getButtonCoordinates(button, &buttonX, &buttonY);
+    getButtonSize(button, &buttonWidth, &buttonHeight);
+
+    return (mouseX > buttonX && mouseX < buttonX + buttonWidth) && (mouseY > buttonY && mouseY < buttonY + buttonHeight);
 }
 
 #endif

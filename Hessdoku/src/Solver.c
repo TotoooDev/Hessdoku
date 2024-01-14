@@ -347,6 +347,45 @@ bool removeNotesKUpletSquare(T_Grid grid, T_Cell** var, int* variable, int k, in
 
 //bool removeNoteOnCell (T_Grid grid, T_Cell** var, int* variable, int k)
 
+void generateKtuples(int tupleSize, int nbCombinations)
+{
+
+	if (tupleSize < 0)
+	{
+		fprintf(stderr, "Invalid tuple size given (%d)\n", tupleSize);
+		return;
+	}
+
+	for (int i = 1; i <= 9; i++)
+	{
+		if (tupleSize < 2)
+		{
+			printf("%d\n", i);
+			continue;
+		}
+		for (int j = 2; (j <= 9) && (j != i); j++)
+		{
+			if (tupleSize < 3)
+			{
+				printf("%d %d\n", i, j);
+				continue;
+			}
+			for (int k = 3; (k <= 9) && (k != j) && (k != i); k++)
+			{
+				if (tupleSize < 4)
+				{
+					printf("%d %d %d\n", i, j, k);
+					continue;
+				}
+				for (int l = 4; (l <= 9) && (l != i) && (l != j) && (l != k); l++)
+				{
+					printf("%d %d %d %d\n", i, j, k, l);
+				}
+			}
+		}
+	}
+}
+
 bool kUpletsSolve (T_Grid grid, const int k) {
 
 	//TODO

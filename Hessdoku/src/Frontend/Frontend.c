@@ -7,6 +7,8 @@ typedef struct T_Frontend {
     T_Window* window;
     T_Font* font;
     T_Grid grid;
+
+    bool isRunning;
 } T_Frontend;
 
 T_Frontend* createFrontend(T_Grid grid)
@@ -16,19 +18,21 @@ T_Frontend* createFrontend(T_Grid grid)
     frontend->window = createWindow(FRONTEND_WINDOW_TITLE, FRONTEND_WINDOW_WIDTH, FRONTEND_WINDOW_HEIGHT);
     frontend->font = loadFont("OpenSans-Regular.ttf", 32);
     frontend->grid = grid;
+    frontend->isRunning = true;
 
     return frontend;
 }
 
 void runFrontend(T_Frontend* frontend)
 {
-    while (isWindowOpen(frontend->window))
+    while (frontend->isRunning && isWindowOpen(frontend->window))
     {
         updateWindow(frontend->window);
         clearWindow(frontend->window, 127, 127, 127);
 
         drawGrid(frontend, 10, 10, 64);
 
+        drawWidgets(frontend->window, frontend->font);
         presentWindow(frontend->window);
     }
 }

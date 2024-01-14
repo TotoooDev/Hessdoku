@@ -23,8 +23,13 @@ T_Frontend* createFrontend(T_Grid grid)
     return frontend;
 }
 
+void quit(int, int, void* userData) { ((T_Frontend*)userData)->isRunning = false; } // cool oneliner
+
 void runFrontend(T_Frontend* frontend)
 {
+    // small button example
+    addButton(frontend->window, createButton(600, 50, 50, 30, "Quit", quit, frontend));
+    
     while (frontend->isRunning && isWindowOpen(frontend->window))
     {
         updateWindow(frontend->window);

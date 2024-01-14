@@ -52,7 +52,7 @@ void presentWindow(T_Window* window);
  * Draws all the widgets (buttons, ...) of the window.
  * @param window The window to draw the widgets of.
  */
-void drawWidgets(T_Window* window);
+void drawWidgets(T_Window* window, T_Font* font);
 
 /**
  * Returns whether the window is open or not. What can close a window include inputs like clicking the x button, ressing Alt-F4, and probably other things.

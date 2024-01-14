@@ -127,7 +127,7 @@ void presentWindow(T_Window* window)
     SDL_RenderPresent(window->renderer);
 }
 
-void drawWidgets(T_Window* window)
+void drawWidgets(T_Window* window, T_Font* font)
 {
     for (unsigned int i = 0; i < window->numButtons; i++) {
         int x, y, width, height;
@@ -135,6 +135,7 @@ void drawWidgets(T_Window* window)
         getButtonSize(window->buttons[i], &width, &height);
         setDrawColor(window, 0, 0, 0);
         drawRect(window, x, y, width, height);
+        drawText(window, font, (T_Color){ 255, 255, 255 }, getButtonText(window->buttons[i]), x, y, 0.5f);
     }
 }
 

@@ -1,3 +1,7 @@
+#include <Frontend/Config.h>
+
+#ifdef FRONTEND_SDL
+
 #include <Frontend/Font.h>
 #include <Log.h>
 
@@ -27,3 +31,5 @@ TTF_Font* getTTF(T_Font* font)
 {
     return font->font;
 }
+
+#endif

@@ -1,4 +1,9 @@
+#include <Frontend/Config.h>
+
+#ifdef FRONTEND_SDL
+
 #include <Frontend/Window.h>
+#include <Frontend/SDL/Font.h>
 #include <Log.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -111,7 +116,7 @@ void drawRect(T_Window* window, int x, int y, int width, int height)
 
 void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, int x, int y, float sizeRatio)
 {
-    SDL_Surface* surface = TTF_RenderText_Solid(getTTF(font), text, (SDL_Color){ color.r, color.g, color.b, 255 });
+    SDL_Surface* surface = TTF_RenderText_Blended(getTTF(font), text, (SDL_Color){ color.r, color.g, color.b, 255 });
 	ASSERT(surface != NULL, "Failed to create surface! TTF error: %s\n", TTF_GetError());
 
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(window->renderer, surface);
@@ -128,3 +133,5 @@ void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, i
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(texture);
 }
+
+#endif

@@ -1,14 +1,16 @@
 #include <Frontend/Button.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct T_Button
 {
     int x, y; /** The coordiantes of the button */
     int width, height; /** The size of the button */
+    char* text;
     T_ButtonFunction function; /** The function pointer that executes the code when the button is pressed */
 } T_Button;
 
-T_Button* createButton(int x, int y, int width, int height, T_ButtonFunction function)
+T_Button* createButton(int x, int y, int width, int height, const char* text, T_ButtonFunction function)
 {
     T_Button* button = (T_Button*)malloc(sizeof(T_Button));
 
@@ -18,11 +20,15 @@ T_Button* createButton(int x, int y, int width, int height, T_ButtonFunction fun
     button->height = height;
     button->function = function;
 
+    button->text = malloc(sizeof(char) * strlen(text));
+    strcpy(button->text, text);
+
     return button;
 }
 
 void freeButton(T_Button* button)
 {
+    free(button->text);
     free(button);
 }
 
@@ -57,6 +63,11 @@ void getButtonSize(T_Button* button, int* width, int* height)
         *width = button->width;
     if (height != NULL)
         *height = button->height;
+}
+
+char* getButtonText(T_Button* button)
+{
+    return button->text;
 }
 
 T_ButtonFunction getButtonFunction(T_Button* button)

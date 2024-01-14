@@ -19,10 +19,11 @@ typedef struct T_Button T_Button;
  * @param y The y coordinate of the new button.
  * @param width The width of the new button.
  * @param height The height of the new button.
+ * @param text The text displayed in the button.
  * @param function The function to call when the button is pressed.
  * @note If `function` is NULL, then clicking the button won't do anything.
  */
-T_Button* createButton(int x, int y, int width, int height, T_ButtonFunction function);
+T_Button* createButton(int x, int y, int width, int height, const char* text, T_ButtonFunction function);
 
 /**
  * Destroys a button.
@@ -72,6 +73,8 @@ void getButtonCoordinates(T_Button* button, int* x, int* y);
  * @note `width` and `height` can be NULL.
  */
 void getButtonSize(T_Button* button, int* width, int* height);
+
+char* getButtonText(T_Button* button);
 
 /**
  * Returns a button's function.

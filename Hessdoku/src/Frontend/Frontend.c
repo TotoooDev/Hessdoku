@@ -1,10 +1,7 @@
 #include <Frontend/Frontend.h>
 #include <Frontend/Window.h>
+#include <Frontend/Config.h>
 #include <stdlib.h>
-
-#define FRONTEND_WINDOW_TITLE "Hessdoku"
-#define FRONTEND_WINDOW_WIDTH 800
-#define FRONTEND_WINDOW_HEIGHT 600
 
 typedef struct T_Frontend {
     T_Window* window;
@@ -17,7 +14,7 @@ T_Frontend* createFrontend(T_Grid grid)
     T_Frontend* frontend = (T_Frontend*)malloc(sizeof(T_Frontend));
 
     frontend->window = createWindow(FRONTEND_WINDOW_TITLE, FRONTEND_WINDOW_WIDTH, FRONTEND_WINDOW_HEIGHT);
-    frontend->font = loadFont("OpenSans-Regular.ttf", 16);
+    frontend->font = loadFont("OpenSans-Regular.ttf", 32);
     frontend->grid = grid;
 
     return frontend;
@@ -57,7 +54,7 @@ void drawNotes(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, uns
         char text[2];
         sprintf(text, "%d", i + 1);
         setDrawColor(frontend->window, 0, 0, 0);
-        drawText(frontend->window, frontend->font, (T_Color){ 0, 0, 0 }, text, x, y, 1.0f);
+        drawText(frontend->window, frontend->font, (T_Color){ 0, 0, 0 }, text, x, y, 0.5f);
     }
 }
 
@@ -68,7 +65,7 @@ void drawValue(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, int
     char text[2];
     sprintf(text, "%d", value);
     setDrawColor(frontend->window, 0, 0, 0);
-    drawText(frontend->window, frontend->font, (T_Color){ 0, 0, 0 }, text, x, y, 2.0f);
+    drawText(frontend->window, frontend->font, (T_Color){ 0, 0, 0 }, text, x, y, 1.0f);
 }
 
 void drawGrid(T_Frontend* frontend, int xOffset, int yOffset, int rectSize)

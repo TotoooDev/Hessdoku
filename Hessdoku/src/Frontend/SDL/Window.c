@@ -101,12 +101,13 @@ void updateWindow(T_Window* window)
         case SDL_MOUSEBUTTONDOWN:
             for (unsigned int i = 0; i < window->numButtons; i++)
             {
-                if (!isCursorInButton(event.button.x, event.button.y, window->buttons[i]))
+                T_Button* button = window->buttons[i];
+                if (!isCursorInButton(event.button.x, event.button.y, button))
                     continue;
                 // functional programming hell
-                T_ButtonFunction function = getButtonFunction(window->buttons[i]);
+                T_ButtonFunction function = getButtonFunction(button);
                 if (function != NULL)
-                    function(event.button.button, event.button.clicks);
+                    function(event.button.button, event.button.clicks, getButtonUserData(button));
             }
             break;
 

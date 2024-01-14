@@ -5,8 +5,9 @@
  * A function pointer type for the function called when a button is pressed.
  * @param button The button that is pressed
  * @param clicks 1 for single click, 2 for double click, ...
+ * @param userData A pointer to the button's user data. It is used to pass any arbitrary data to the function.
  */
-typedef void(*T_ButtonFunction)(int button, int clicks);
+typedef void(*T_ButtonFunction)(int button, int clicks, void* userData);
 
 /**
  * A structure that represents a button.
@@ -21,9 +22,10 @@ typedef struct T_Button T_Button;
  * @param height The height of the new button.
  * @param text The text displayed in the button.
  * @param function The function to call when the button is pressed.
- * @note If `function` is NULL, then clicking the button won't do anything.
+ * @param userData A pointer to any data structure that is passed in the button's function. You can use it to pass any data in `function`.
+ * @note If `function` is NULL, then clicking the button won't do anything. `userData` can be NULL.
  */
-T_Button* createButton(int x, int y, int width, int height, const char* text, T_ButtonFunction function);
+T_Button* createButton(int x, int y, int width, int height, const char* text, T_ButtonFunction function, void* userData);
 
 /**
  * Destroys a button.
@@ -74,6 +76,11 @@ void getButtonCoordinates(T_Button* button, int* x, int* y);
  */
 void getButtonSize(T_Button* button, int* width, int* height);
 
+/**
+ * Returns the text contained inside a button.
+ * @param button The button to get the text of.
+ * @returns The text of the button.
+ */
 char* getButtonText(T_Button* button);
 
 /**
@@ -82,5 +89,12 @@ char* getButtonText(T_Button* button);
  * @return A function pointer to the function called when the button is pressed.
  */
 T_ButtonFunction getButtonFunction(T_Button* button);
+
+/**
+ * Returns the user data of the button.
+ * @param button The button to get the user data of.
+ * @return The user data of the button.
+ */
+void* getButtonUserData(T_Button* button);
 
 #endif

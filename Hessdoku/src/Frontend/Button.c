@@ -6,11 +6,12 @@ typedef struct T_Button
 {
     int x, y; /** The coordiantes of the button */
     int width, height; /** The size of the button */
-    char* text;
+    char* text; /** The text inside the button */
     T_ButtonFunction function; /** The function pointer that executes the code when the button is pressed */
+    void* userData; /** The user data of the button passed in the function. */
 } T_Button;
 
-T_Button* createButton(int x, int y, int width, int height, const char* text, T_ButtonFunction function)
+T_Button* createButton(int x, int y, int width, int height, const char* text, T_ButtonFunction function, void* userData)
 {
     T_Button* button = (T_Button*)malloc(sizeof(T_Button));
 
@@ -19,6 +20,7 @@ T_Button* createButton(int x, int y, int width, int height, const char* text, T_
     button->width = width;
     button->height = height;
     button->function = function;
+    button->userData = userData;
 
     button->text = malloc(sizeof(char) * strlen(text));
     strcpy(button->text, text);
@@ -73,4 +75,9 @@ char* getButtonText(T_Button* button)
 T_ButtonFunction getButtonFunction(T_Button* button)
 {
     return button->function;
+}
+
+void* getButtonUserData(T_Button* button)
+{
+    return button->userData;
 }

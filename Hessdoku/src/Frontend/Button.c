@@ -7,6 +7,8 @@ typedef struct T_Button
     int x, y; /** The coordiantes of the button */
     int width, height; /** The size of the button */
     char* text; /** The text inside the button */
+    bool isClicked;
+
     T_ButtonFunction function; /** The function pointer that executes the code when the button is pressed */
     void* userData; /** The user data of the button passed in the function. */
 } T_Button;
@@ -19,6 +21,7 @@ T_Button* createButton(int x, int y, int width, int height, const char* text, T_
     button->y = y;
     button->width = width;
     button->height = height;
+    button->isClicked = false;
     button->function = function;
     button->userData = userData;
 
@@ -46,6 +49,11 @@ void setButtonSize(T_Button* button, int width, int height)
     button->height = height;
 }
 
+void setButtonClicked(T_Button* button, bool toggle)
+{
+    button->isClicked = toggle;
+}
+
 void setButtonFunction(T_Button* button, T_ButtonFunction function)
 {
     button->function = function;
@@ -70,6 +78,11 @@ void getButtonSize(T_Button* button, int* width, int* height)
 char* getButtonText(T_Button* button)
 {
     return button->text;
+}
+
+bool isButtonClicked(T_Button* button)
+{
+    return button->isClicked;
 }
 
 T_ButtonFunction getButtonFunction(T_Button* button)

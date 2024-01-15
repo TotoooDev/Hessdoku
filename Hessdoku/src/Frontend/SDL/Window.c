@@ -87,6 +87,33 @@ void freeWindow(T_Window* window)
         quitSDL();
 }
 
+void buttonDown(T_Window* window, SDL_Event event)
+{
+    for (unsigned int i = 0; i < window->numButtons; i++)
+    {
+        T_Button* button = window->buttons[i];
+        if (!isCursorInButton(event.button.x, event.button.y, button))
+            continue;
+        setButtonClicked(button, true);
+    }
+}
+
+void buttonUp(T_Window* window, SDL_Event event)
+{
+    for (unsigned int i = 0; i < window->numButtons; i++)
+    {
+        T_Button* button = window->buttons[i];
+        if (isButtonClicked(button) && isCursorInButton(event.button.x, event.button.y, button))
+        {
+            // functional programming hell
+            T_ButtonFunction function = getButtonFunction(button);
+            if (function != NULL)
+                function(event.button.button, event.button.clicks, getButtonUserData(button));
+        }
+        setButtonClicked(button, false);
+    }
+}
+
 void updateWindow(T_Window* window)
 {
     SDL_Event event;
@@ -99,16 +126,11 @@ void updateWindow(T_Window* window)
             break;
 
         case SDL_MOUSEBUTTONDOWN:
-            for (unsigned int i = 0; i < window->numButtons; i++)
-            {
-                T_Button* button = window->buttons[i];
-                if (!isCursorInButton(event.button.x, event.button.y, button))
-                    continue;
-                // functional programming hell
-                T_ButtonFunction function = getButtonFunction(button);
-                if (function != NULL)
-                    function(event.button.button, event.button.clicks, getButtonUserData(button));
-            }
+            buttonDown(window, event);
+            break;
+
+        case SDL_MOUSEBUTTONUP:
+            buttonUp(window, event);
             break;
 
         default:
@@ -128,16 +150,32 @@ void presentWindow(T_Window* window)
     SDL_RenderPresent(window->renderer);
 }
 
-void drawWidgets(T_Window* window, T_Font* font)
+void drawButtons(T_Window* window, T_Font* font)
 {
     for (unsigned int i = 0; i < window->numButtons; i++) {
+        T_Button* button = window->buttons[i];
+
+        int borderWidth = 3;
         int x, y, width, height;
-        getButtonCoordinates(window->buttons[i], &x, &y);
-        getButtonSize(window->buttons[i], &width, &height);
-        setDrawColor(window, 0, 0, 0);
+        getButtonCoordinates(button, &x, &y);
+        getButtonSize(button, &width, &height);
+
+        setDrawColor(window, 60, 60, 60);
+        drawRect(window, x - borderWidth, y - borderWidth, width + borderWidth * 2, height + borderWidth * 2);
+
+        if (isButtonClicked(button))
+            setDrawColor(window, 200, 200, 200);
+        else
+            setDrawColor(window, 220, 220, 220);
+
         drawRect(window, x, y, width, height);
-        drawText(window, font, (T_Color){ 255, 255, 255 }, getButtonText(window->buttons[i]), x, y, 0.5f);
+        drawText(window, font, (T_Color){ 10, 10, 10 }, getButtonText(window->buttons[i]), x, y, 0.5f);
     }
+}
+
+void drawWidgets(T_Window* window, T_Font* font)
+{
+    drawButtons(window, font);
 }
 
 bool isWindowOpen(T_Window* window)

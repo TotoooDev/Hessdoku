@@ -1,6 +1,8 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include <stdbool.h>
+
 /**
  * A function pointer type for the function called when a button is pressed.
  * @param button The button that is pressed
@@ -50,6 +52,8 @@ void setButtonCoordinates(T_Button* button, int x, int y);
  */
 void setButtonSize(T_Button* button, int width, int height);
 
+void setButtonClicked(T_Button* button, bool toggle);
+
 /**
  * Sets the function to call when the button is pressed.
  * @param button The button to move.
@@ -82,6 +86,8 @@ void getButtonSize(T_Button* button, int* width, int* height);
  * @returns The text of the button.
  */
 char* getButtonText(T_Button* button);
+
+bool isButtonClicked(T_Button* button);
 
 /**
  * Returns a button's function.

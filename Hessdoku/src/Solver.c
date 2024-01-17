@@ -387,43 +387,94 @@ bool removeNoteOnCell(T_Grid grid, T_Cell** var, int* variable, int k)
 	return hasChanged;
 }
 
-void generateKtuples(int tupleSize, int nbCombinations)
+int** generateKtuples(int tupleSize, int nbCombinations)
 {
-
 	if (tupleSize < 0)
 	{
 		fprintf(stderr, "Invalid tuple size given (%d)\n", tupleSize);
-		return;
+		return NULL;
 	}
 
-	for (int i = 1; i <= 9; i++)
+	// Calcul du nombre total de combinaisons
+	int totalCombinations = 1;
+	for (int i = 0; i < tupleSize; i++)
 	{
-		if (tupleSize < 2)
+		totalCombinations *= 9 - i;
+	}
+
+	// Vérification de la taille demandée par rapport au nombre total de combinaisons possibles
+	if (nbCombinations > totalCombinations)
+	{
+		fprintf(stderr, "Invalid number of combinations requested (%d)\n", nbCombinations);
+		return NULL;
+	}
+
+	// Allocation du tableau de résultats
+	int** tuples = (int**)malloc(nbCombinations * sizeof(int*));
+	for (int i = 0; i < nbCombinations; i++)
+	{
+		tuples[i] = (int*)malloc(nbCombinations * sizeof(int));
+	}
+
+	int tupleIndex = 0;
+
+	// Boucle pour générer les combinaisons
+	for (int i = 1; i <= 9 && tupleIndex < nbCombinations; i++)
+	{
+		if (tupleSize == 1)
 		{
-			printf("%d\n", i);
+			tuples[tupleIndex][0] = i;
+			tupleIndex++;
 			continue;
 		}
-		for (int j = 2; (j <= 9) && (j != i); j++)
+
+		for (int j = 2; j <= 9 && tupleIndex < nbCombinations; j++)
 		{
-			if (tupleSize < 3)
+			if (tupleSize == 2)
 			{
-				printf("%d %d\n", i, j);
+				tuples[tupleIndex][0] = i;
+				tuples[tupleIndex][1] = j;
+				tupleIndex++;
 				continue;
 			}
-			for (int k = 3; (k <= 9) && (k != j) && (k != i); k++)
+
+			for (int k = 3; k <= 9 && tupleIndex < nbCombinations; k++)
 			{
-				if (tupleSize < 4)
+				if (tupleSize == 3)
 				{
-					printf("%d %d %d\n", i, j, k);
+					tuples[tupleIndex][0] = i;
+					tuples[tupleIndex][1] = j;
+					tuples[tupleIndex][2] = k;
+					tupleIndex++;
 					continue;
 				}
-				for (int l = 4; (l <= 9) && (l != i) && (l != j) && (l != k); l++)
+
+				for (int l = 4; l <= 9 && tupleIndex < nbCombinations; l++)
 				{
-					printf("%d %d %d %d\n", i, j, k, l);
+					if (tupleSize == 4)
+					{
+						tuples[tupleIndex][0] = i;
+						tuples[tupleIndex][1] = j;
+						tuples[tupleIndex][2] = k;
+						tuples[tupleIndex][3] = l;
+						tupleIndex++;
+					}
 				}
 			}
 		}
 	}
+
+	return tuples;
+}
+
+// Fonction pour libérer la mémoire allouée au tableau de tuples
+void freeTuples(int** tuples, int numTuples)
+{
+	for (int i = 0; i < numTuples; i++)
+	{
+		free(tuples[i]);
+	}
+	free(tuples);
 }
 
 bool kUpletsSolve (T_Grid grid, const int k) {
@@ -431,6 +482,7 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 	//TODO
 	// - si square est line ou colonne
 	// - stopper quand trouver un k_uplet
+
 
 
 	bool hasChanged = false;
@@ -443,6 +495,26 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 
 	unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
 	int possibility = coeffBinomial(k, size);
+
+	// CODE POUR MONTRER QUE ÇA MARCHE
+	int** tuples = generateKtuples(k, possibility);
+
+	if (tuples != NULL)
+	{
+		printf("Liste de kuplets générés :\n");
+		for (int i = 0; i < possibility; i++)
+		{
+			for (int j = 0; j < k; j++)
+			{
+				printf("%d ", tuples[i][j]);
+			}
+			printf("\n");
+		}
+
+		// Libérer la mémoire allouée
+		freeTuples(tuples, possibility);
+	}
+	// CODE POUR MONTRER QUE ÇA MARCHE
 
 	printf("%d", possibility);
 

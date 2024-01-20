@@ -22,6 +22,6 @@ T_Font* loadFont(const char* filename, int size);
  */
 void freeFont(T_Font* font);
 
-void getTextDimensions(T_Font* font, const char* text, int* width, int* height);
+void getTextDimensions(T_Font* font, const char* text, int* width, int* height, float sizeRatio);
 
 #endif

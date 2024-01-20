@@ -33,22 +33,13 @@ TTF_Font* getTTF(T_Font* font)
     return font->font;
 }
 
-void getTextDimensions(T_Font* font, const char* text, int* width, int* height)
+void getTextDimensions(T_Font* font, const char* text, int* width, int* height, float sizeRatio)
 {
     int textWidth = 0;
     int textHeight = 0;
-    for (unsigned int i = 0; i < strlen(text); i++)
-    {
-        int minY, maxY, advance;
-        TTF_GlyphMetrics32(font->font, text[i], NULL, NULL, &minY, &maxY, &advance);
-        int charHeight = maxY - minY;
-
-        textWidth += advance;
-        textHeight = charHeight > textHeight ? charHeight : textHeight;
-    }
-
-    *width = textWidth;
-    *height = textHeight;
+    TTF_SizeUTF8(font->font, text, &textWidth, &textHeight);
+    *width = textWidth * sizeRatio;
+    *height = textHeight * sizeRatio;
 }
 
 #endif

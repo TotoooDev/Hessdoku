@@ -480,8 +480,6 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 				hasChanged |= removeNoteOnCell(grid, cooVariable, variable, k);
 			}
 
-			
-
 		}
 
 		printf("%d\n", stop);

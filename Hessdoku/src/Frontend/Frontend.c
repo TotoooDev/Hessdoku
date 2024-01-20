@@ -28,11 +28,12 @@ void quit(int, int, void* userData) { ((T_Frontend*)userData)->isRunning = false
 void runFrontend(T_Frontend* frontend)
 {
     // small button example
-    addButton(frontend->window, createButton(600, 50, 50, 30, "Quit", quit, frontend));
+    addButton(frontend->window, createButton(600, 50, "Quit", quit, frontend));
+    addButton(frontend->window, createButton(600, 100, "useless", NULL, NULL));
     
     while (frontend->isRunning && isWindowOpen(frontend->window))
     {
-        updateWindow(frontend->window);
+        updateWindow(frontend->window, frontend->font);
         clearWindow(frontend->window, 127, 127, 127);
 
         drawGrid(frontend, 10, 10, 64);

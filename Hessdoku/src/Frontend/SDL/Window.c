@@ -25,7 +25,7 @@ typedef struct T_Window
     unsigned int numButtons;
 } T_Window;
 
-bool isCursorInButton(int mouseX, int mouseY, T_Button* button);
+bool isCursorInButton(int mouseX, int mouseY, T_Button* button, T_Font* font);
 
 void initSDL()
 {
@@ -87,23 +87,23 @@ void freeWindow(T_Window* window)
         quitSDL();
 }
 
-void buttonDown(T_Window* window, SDL_Event event)
+void buttonDown(T_Window* window, T_Font* font, SDL_Event event)
 {
     for (unsigned int i = 0; i < window->numButtons; i++)
     {
         T_Button* button = window->buttons[i];
-        if (!isCursorInButton(event.button.x, event.button.y, button))
+        if (!isCursorInButton(event.button.x, event.button.y, button, font))
             continue;
         setButtonClicked(button, true);
     }
 }
 
-void buttonUp(T_Window* window, SDL_Event event)
+void buttonUp(T_Window* window, T_Font* font, SDL_Event event)
 {
     for (unsigned int i = 0; i < window->numButtons; i++)
     {
         T_Button* button = window->buttons[i];
-        if (isButtonClicked(button) && isCursorInButton(event.button.x, event.button.y, button))
+        if (isButtonClicked(button) && isCursorInButton(event.button.x, event.button.y, button, font))
         {
             // functional programming hell
             T_ButtonFunction function = getButtonFunction(button);
@@ -114,7 +114,7 @@ void buttonUp(T_Window* window, SDL_Event event)
     }
 }
 
-void updateWindow(T_Window* window)
+void updateWindow(T_Window* window, T_Font* font)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -126,11 +126,11 @@ void updateWindow(T_Window* window)
             break;
 
         case SDL_MOUSEBUTTONDOWN:
-            buttonDown(window, event);
+            buttonDown(window, font, event);
             break;
 
         case SDL_MOUSEBUTTONUP:
-            buttonUp(window, event);
+            buttonUp(window, font, event);
             break;
 
         default:
@@ -155,20 +155,21 @@ void drawButtons(T_Window* window, T_Font* font)
     for (unsigned int i = 0; i < window->numButtons; i++) {
         T_Button* button = window->buttons[i];
 
-        int borderWidth = 3;
+        int border = 6;
+        int padding = 3;
         int x, y, width, height;
         getButtonCoordinates(button, &x, &y);
-        getButtonSize(button, &width, &height);
+        getTextDimensions(font, getButtonText(button), &width, &height, 0.5f);
 
         setDrawColor(window, 60, 60, 60);
-        drawRect(window, x - borderWidth, y - borderWidth, width + borderWidth * 2, height + borderWidth * 2);
+        drawRect(window, x - border, y - border, width + border * 2, height + border * 2);
 
         if (isButtonClicked(button))
             setDrawColor(window, 200, 200, 200);
         else
             setDrawColor(window, 220, 220, 220);
 
-        drawRect(window, x, y, width, height);
+        drawRect(window, x - padding, y - padding, width + padding * 2, height + padding * 2);
         drawText(window, font, (T_Color){ 10, 10, 10 }, getButtonText(window->buttons[i]), x, y, 0.5f);
     }
 }
@@ -249,11 +250,11 @@ void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, i
 	SDL_DestroyTexture(texture);
 }
 
-bool isCursorInButton(int mouseX, int mouseY, T_Button* button)
+bool isCursorInButton(int mouseX, int mouseY, T_Button* button, T_Font* font)
 {
     int buttonX, buttonY, buttonWidth, buttonHeight;
     getButtonCoordinates(button, &buttonX, &buttonY);
-    getButtonSize(button, &buttonWidth, &buttonHeight);
+    getTextDimensions(font, getButtonText(button), &buttonWidth, &buttonHeight, 0.5f);
 
     return (mouseX > buttonX && mouseX < buttonX + buttonWidth) && (mouseY > buttonY && mouseY < buttonY + buttonHeight);
 }

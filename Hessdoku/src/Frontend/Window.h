@@ -31,7 +31,7 @@ void freeWindow(T_Window* window);
  * Polls the window events and update the window.
  * @param window The window to update
  */
-void updateWindow(T_Window* window);
+void updateWindow(T_Window* window, T_Font* font);
 
 /**
  * Clears the window with a given color.

@@ -43,17 +43,37 @@ void freeButton(T_Button* button);
  */
 void setButtonCoordinates(T_Button* button, int x, int y);
 
+/**
+ * Sets the size of the outer border of the button.
+ * @param button The button to modify.
+ * @param border The new border.
+*/
 void setButtonBorder(T_Button* button, int border);
 
+/**
+ * Sets the size of the inner padding of the button.
+ * @param button The button to modify.
+ * @param padding The new padding.
+*/
 void setButtonPadding(T_Button* button, int padding);
 
+/**
+ * Sets whether the button is being clicked or not.
+ * @param button The button to modify.
+ * @param toggle `true` if the button is currently clicked, `false` otherwise.
+*/
 void setButtonClicked(T_Button* button, bool toggle);
 
+/**
+ * Sets whether the button is being hobered by the mouse or not.
+ * @param button The button to modify.
+ * @param toggle `true` if the button is currently hovered, `false` otherwise.
+*/
 void setButtonHovered(T_Button* button, bool toggle);
 
 /**
  * Sets the function to call when the button is pressed.
- * @param button The button to move.
+ * @param button The button to modify.
  * @param function The new function.
  * @note If `function` is NULL, then clicking the button won't do anything.
  */
@@ -68,10 +88,29 @@ void setButtonFunction(T_Button* button, T_ButtonFunction function);
  */
 void getButtonCoordinates(T_Button* button, int* x, int* y);
 
+/**
+ * Returns the button's inner padding.
+ * @param button The button in question.
+ * @returns The inner padding in question.
+*/
 int getButtonBorder(T_Button* button);
 
+/**
+ * Returns the button's outer border.
+ * @param button The button in question.
+ * @returns The outer border in question.
+*/
 int getButtonPadding(T_Button* button);
 
+/**
+ * Calculates the total size of the button, including padding and border.
+ * @param button The button to get the size of.
+ * @param font The font that is used when calculating the size of the button.
+ * @param sizeRatio The size ratio of the font.
+ * @param width A pointer to the emplacement of the width.
+ * @param height A pointer to the emplacement of the height.
+ * @note `width` and `height` can be NULL.
+*/
 void getButtonDimensions(T_Button* button, T_Font* font, float sizeRatio, int* width, int* height);
 
 /**
@@ -81,8 +120,18 @@ void getButtonDimensions(T_Button* button, T_Font* font, float sizeRatio, int* w
  */
 char* getButtonText(T_Button* button);
 
+/**
+ * Returns whether or not the button is currently clicked.
+ * @param button The button in question.
+ * @returns `true` if the button is currently clicked, `false` otherwise.
+*/
 bool isButtonClicked(T_Button* button);
 
+/**
+ * Returns whether or not the button is currently hovered by the mouse.
+ * @param button The button in question.
+ * @returns `true` if the button is currently hovered, `false` otherwise.
+*/
 bool isButtonHovered(T_Button* button);
 
 /**

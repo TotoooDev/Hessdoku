@@ -1,6 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include <Frontend/Font.h>
 #include <stdbool.h>
 
 /**
@@ -20,14 +21,12 @@ typedef struct T_Button T_Button;
  * Creates a new button.
  * @param x The x coordinate of the new button.
  * @param y The y coordinate of the new button.
- * @param width The width of the new button.
- * @param height The height of the new button.
  * @param text The text displayed in the button.
  * @param function The function to call when the button is pressed.
  * @param userData A pointer to any data structure that is passed in the button's function. You can use it to pass any data in `function`.
  * @note If `function` is NULL, then clicking the button won't do anything. `userData` can be NULL.
  */
-T_Button* createButton(int x, int y, int width, int height, const char* text, T_ButtonFunction function, void* userData);
+T_Button* createButton(int x, int y, const char* text, T_ButtonFunction function, void* userData);
 
 /**
  * Destroys a button.
@@ -44,13 +43,9 @@ void freeButton(T_Button* button);
  */
 void setButtonCoordinates(T_Button* button, int x, int y);
 
-/**
- * Changes the size of a button.
- * @param button The button to resize.
- * @param width The new width.
- * @param height The new height.
- */
-void setButtonSize(T_Button* button, int width, int height);
+void setButtonBorder(T_Button* button, int border);
+
+void setButtonPadding(T_Button* button, int padding);
 
 void setButtonClicked(T_Button* button, bool toggle);
 
@@ -71,14 +66,11 @@ void setButtonFunction(T_Button* button, T_ButtonFunction function);
  */
 void getButtonCoordinates(T_Button* button, int* x, int* y);
 
-/**
- * Puts a button's size into `width` and `height`.
- * @param button The button to get the size from.
- * @param width A pointer to a variable that will contain the width.
- * @param height A pointer to a variable that will contain the height.
- * @note `width` and `height` can be NULL.
- */
-void getButtonSize(T_Button* button, int* width, int* height);
+int getButtonBorder(T_Button* button);
+
+int getButtonPadding(T_Button* button);
+
+void getButtonDimensions(T_Button* button, T_Font* font, float sizeRatio, int* width, int* height);
 
 /**
  * Returns the text contained inside a button.

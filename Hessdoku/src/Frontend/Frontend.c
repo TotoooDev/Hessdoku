@@ -93,10 +93,14 @@ void drawNotes(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, uns
 
 void drawValue(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, int value, unsigned int cellX, unsigned int cellY)
 {
-    int x = cellX * rectSize + xOffset + rectSize / 4;
-    int y = cellY * rectSize + yOffset + rectSize / 4;
     char text[2];
     sprintf(text, "%d", value);
+
+    int width, height;
+    getTextDimensions(frontend->font, text, &width, &height, 1.0f);
+
+    int x = cellX * rectSize + xOffset - width / 2 + rectSize / 2;
+    int y = cellY * rectSize + yOffset - height / 2 + rectSize / 2;
     setDrawColor(frontend->window, 0, 0, 0);
     drawText(frontend->window, frontend->font, (T_Color){ 0, 0, 0 }, text, x, y, 1.0f);
 }

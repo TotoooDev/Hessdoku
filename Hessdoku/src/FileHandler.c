@@ -22,6 +22,7 @@ void closeFile(FILE* file)
 void skipUntil(FILE* fd, char c, int occurences)
 {
 	char characterRead = ' '; 
+	char repetitions = 0;
 	while (occurences != 0)
 	{
 		fread(&characterRead, sizeof(char), 1, fd);
@@ -34,6 +35,13 @@ void skipUntil(FILE* fd, char c, int occurences)
 		{
 			occurences = 0;
 		}
+
+		repetitions++;
+		if (repetitions == 1000)
+		{
+			printf("Attention, le formatage du fichier est mauvais !  (attente)");
+			exit(EXIT_FAILURE);
+		}
 	}
 }
 
@@ -42,6 +50,8 @@ unsigned int readNumbersUntil(FILE* fd, char c)
 {
 	char characterRead = ' ';
 	int nb = 0;
+	int repetitions = 0;
+
 	while (characterRead != c)
 	{
 		unsigned int size = fread(&characterRead, sizeof(char), 1, fd);
@@ -50,6 +60,13 @@ unsigned int readNumbersUntil(FILE* fd, char c)
 		if (characterRead >= '1' && characterRead <= '9')
 		{
 			nb = nb * 10 + (unsigned int)atoi(&characterRead);
+		}
+
+		repetitions++;
+		if (repetitions == 10000)
+		{
+			printf("Attention, le formatage du fichier est mauvais ! (lecture d'un nombre)");
+			exit(EXIT_FAILURE);
 		}
 	}
 

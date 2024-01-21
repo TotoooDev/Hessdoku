@@ -4,8 +4,8 @@
 
 typedef struct T_Button
 {
-    int x, y; /** The coordiantes of the button */
-    char* text; /** The text inside the button */
+    int x, y;
+    char* text;
 
     bool isClicked;
     bool isHovered;
@@ -13,8 +13,8 @@ typedef struct T_Button
     int border;
     int padding;
 
-    T_ButtonFunction function; /** The function pointer that executes the code when the button is pressed */
-    void* userData; /** The user data of the button passed in the function. */
+    T_ButtonFunction function;
+    void* userData;
 } T_Button;
 
 T_Button* createButton(int x, int y, const char* text, T_ButtonFunction function, void* userData)

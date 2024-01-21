@@ -38,8 +38,10 @@ void getTextDimensions(T_Font* font, const char* text, int* width, int* height, 
     int textWidth = 0;
     int textHeight = 0;
     TTF_SizeUTF8(font->font, text, &textWidth, &textHeight);
-    *width = textWidth * sizeRatio;
-    *height = textHeight * sizeRatio;
+    if (width != NULL)
+        *width = textWidth * sizeRatio;
+    if (height != NULL)
+        *height = textHeight * sizeRatio;
 }
 
 #endif

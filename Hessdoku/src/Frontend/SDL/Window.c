@@ -171,9 +171,10 @@ void drawButtons(T_Window* window, T_Font* font)
     for (unsigned int i = 0; i < window->numButtons; i++) {
         T_Button* button = window->buttons[i];
 
-        int border = 3;
-        int padding = 3;
+        int border, padding;
         int x, y, width, height;
+        getButtonBorder(button, &border);
+        getButtonPadding(button, &padding);
         getButtonCoordinates(button, &x, &y);
         getTextDimensions(font, getButtonText(button), &width, &height, 0.5f);
 

@@ -1,5 +1,6 @@
 #include <Grid.h>
 #include <Log.h>
+#include "FileHandler.h"
 
 T_Grid generateGrid(int size, int sqrtSize)
 {
@@ -22,9 +23,36 @@ T_Grid generateGrid(int size, int sqrtSize)
     return game;
 }
 
+// TODO: docs in .h
+T_Grid generateGridFromFile(const char* path)
+{
+    FILE* fd = openFile(path);
+
+    int sizeX = readNumbersUntil(fd, ',');
+    int sizeY = readNumbersUntil(fd, '\n');
+
+    T_Grid grid = generateGrid(sizeX * sizeX, sizeX);
+
+    skipUntil(fd, '|', 1);
+    for (int x = 0; x < sizeX * sizeX; x++)
+    {
+        for (int y = 0; y < sizeY * sizeY; y++)
+        {
+            int nb = readNumbersUntil(fd, '|'); 
+
+            setCell(grid, x, y, nb);
+        }
+        skipUntil(fd, '|', sizeX + 2);                  // TODO: Peut être détecter les fins avec \n
+    }
+
+    closeFile(fd);
+
+    return grid;
+}
+
 unsigned int getGridSize(T_Grid grid)
 {
-    return grid.size;
+    return grid.size;   
 }
 
 unsigned int getGridSqrtSize(T_Grid grid)

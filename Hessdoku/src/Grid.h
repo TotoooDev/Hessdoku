@@ -22,6 +22,8 @@ typedef struct T_GridStruct {
  */
 T_Grid generateGrid(int size, int sqrtSize);
 
+T_Grid generateGridFromFile(const char* path);
+
 /**
  * Returns the size of the grid
  *

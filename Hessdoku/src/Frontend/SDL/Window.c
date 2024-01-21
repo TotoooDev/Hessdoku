@@ -155,22 +155,22 @@ void drawButtons(T_Window* window, T_Font* font)
     for (unsigned int i = 0; i < window->numButtons; i++) {
         T_Button* button = window->buttons[i];
 
-        int border = 6;
+        int border = 3;
         int padding = 3;
         int x, y, width, height;
         getButtonCoordinates(button, &x, &y);
         getTextDimensions(font, getButtonText(button), &width, &height, 0.5f);
 
         setDrawColor(window, 60, 60, 60);
-        drawRect(window, x - border, y - border, width + border * 2, height + border * 2);
+        drawRect(window, x, y, width + border * 2 + padding * 2, height + border * 2 + padding * 2);
 
         if (isButtonClicked(button))
             setDrawColor(window, 200, 200, 200);
         else
             setDrawColor(window, 220, 220, 220);
 
-        drawRect(window, x - padding, y - padding, width + padding * 2, height + padding * 2);
-        drawText(window, font, (T_Color){ 10, 10, 10 }, getButtonText(window->buttons[i]), x, y, 0.5f);
+        drawRect(window, x + border, y + border, width + padding * 2, height + padding * 2);
+        drawText(window, font, (T_Color){ 10, 10, 10 }, getButtonText(window->buttons[i]), x + padding + border, y + padding + border, 0.5f);
     }
 }
 
@@ -254,7 +254,7 @@ bool isCursorInButton(int mouseX, int mouseY, T_Button* button, T_Font* font)
 {
     int buttonX, buttonY, buttonWidth, buttonHeight;
     getButtonCoordinates(button, &buttonX, &buttonY);
-    getTextDimensions(font, getButtonText(button), &buttonWidth, &buttonHeight, 0.5f);
+    getButtonDimensions(button, font, 0.5f, &buttonWidth, &buttonHeight);
 
     return (mouseX > buttonX && mouseX < buttonX + buttonWidth) && (mouseY > buttonY && mouseY < buttonY + buttonHeight);
 }

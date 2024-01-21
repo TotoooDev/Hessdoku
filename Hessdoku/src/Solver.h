@@ -115,4 +115,8 @@ bool removeNotesInGridByZones(T_Grid grid);
  */
 bool kUpletsSolve(T_Grid grid, const int k);
 
+void testBouh(T_Grid grid);
+
+void testMwah(T_Grid grid);
+
 #endif

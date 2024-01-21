@@ -199,7 +199,7 @@ int howManyTrue(T_Grid grid, unsigned char* baton)
 	int howMany = 0;
 	for (unsigned int r = 0; r < getGridSize(grid); r++)
 	{
-		if (baton[r] == true)
+		if (baton[r] == 1)
 		{
 			howMany += 1;
 		}
@@ -221,169 +221,202 @@ int coeffBinomial(int k, int n)
 	return num / deno;
 }
 
-void checkRectKUpletSolve(T_Grid grid, unsigned char* b, int minX, int maxX, int minY, int maxY, int k, unsigned char * variable)
+void checkRectKUpletSolve(T_Grid grid, unsigned char* bH, int*bN, int minX, int maxX, int minY, int maxY, int k, int * variable)
 {
 	int whichCell = 0;
+	printf("\ncheck\n");
+	printf("minX : %d\n", minX);
+	printf("maxX : %d\n", maxX);
+	printf("minY : %d\n", minY);
+	printf("maxY : %d\n", maxY);
 	for (int i = minX; i < maxX; i++)
 	{
+		printf("enter x\n");
 		for (int j = minY; j < maxY; j++)
 		{
+			printf("enter y\n");
 			for (int m = 0; m < k; m++)
 			{
-				if (getValue(grid, i, j) == variable[m])
+				if (isNoteInCell(getCell(grid, i, j), variable[m]))
 				{
-					b[whichCell] = true;
+					bH[whichCell] = 1;
+					bN[whichCell] -= 1;
 				}
 			}
 			whichCell += 1;
 		}
-		whichCell += 1;
 	}
 }
 
 void nextSquare (int step, int* xSquare, int* ySquare)
 {
-	ySquare += step;
-	if (ySquare == step)
+	*(ySquare) += step;
+	if (*(ySquare) == (step*step))
 	{
-		ySquare = 0;
-		xSquare += step;
+		*(ySquare) = 0;
+		*(xSquare) += step;
 	}
-	if (xSquare == step)
+	if (*(xSquare) == (step*step))
 	{
-		xSquare = 0;
+		*(xSquare) = 0;
 	}
 }
 
-bool removeNotesKUpletRows(T_Grid grid,T_Cell ** var, int * variable, int k, int x)
+bool removeNotesKUpletRows(T_Grid grid,int ** cooTuple, int * variable, int k, int x)
 {
+
 	bool hasChanged = false;
-	T_Cell* tempCell;
-	bool notTheSame = true;
-
-	for (int i = 0; i < getGridSize(grid); i++)
-	{
-		for (int m = 0; m < k; m++)
-		{
-			tempCell = getCell(grid, x, i);
-			if (tempCell == var[m])
-			{
-				notTheSame = false;
-			}
-		}
-		if (notTheSame)
-		{
-			for (int j = 0; j < k; j++) {
-				hasChanged |= unsetNoteCell(tempCell, variable[j]);
-			}
-		}
-		notTheSame = false;
-	}
-
-	return hasChanged;
-}
-
-bool removeNotesKUpletColumns(T_Grid grid, T_Cell** var, int* variable, int k, int y)
-{
-	bool hasChanged = false;
-	T_Cell* tempCell;
-	bool notTheSame = true;
-
-	for (int i = 0; i < getGridSize(grid); i++)
-	{
-		for (int m = 0; m < k; m++)
-		{
-			tempCell = getCell(grid, i, y);
-			if (tempCell == var[m])
-			{
-				notTheSame = false;
-			}
-		}
-		if (notTheSame)
-		{
-			for (int j = 0; j < k; j++) {
-				hasChanged |= unsetNoteCell(tempCell, variable[j]);
-			}
-		}
-		notTheSame = false;
-	}
-
-	return hasChanged;
-}
-
-bool removeNotesKUpletSquare(T_Grid grid, T_Cell** var, int* variable, int k, int x, int y)
-{
-	bool hasChanged = false;
-	T_Cell* tempCell;
-	bool notTheSame = true;
-	int sqrtSize = getGridSqrtSize(grid);
-
-	int boxRow = x / sqrtSize * sqrtSize;
-	int boxCol = y / sqrtSize * sqrtSize;
-	for (unsigned int m = 0; m < sqrtSize; m++)
-	{
-		for (unsigned int n = 0; n < sqrtSize; n++)
-		{	
-			for (int m = 0; m < k; m++)
-			{
-				tempCell = getCell(grid, boxRow + m, boxCol + n);
-				if (tempCell == var[m])
-				{
-					notTheSame = false;
-				}
-			}
-			if (notTheSame)
-			{
-				for (int j = 0; j < k; j++) {
-					hasChanged |= unsetNoteCell(tempCell, variable[j]);
-				}
-			}
-			notTheSame = false;
-		}
-	}
-
-	return hasChanged;
-}
-
-bool removeNoteOnCell(T_Grid grid, T_Cell** var, int* variable, int k)
-{
-	int size = getGridSize(grid);
-	T_Cell* tempCell;
 	bool theSame = false;
-	bool notTheSame = true;
-	bool hasChanged = false;
-
-	for (int i = 0; i < size; i++)
+	
+	for (int i = 0; i < 9; i++)
 	{
-		for (int j = 0; j < size; j++)
+		for (int j = 0; j < k; j++)
 		{
-			tempCell = getCell(grid, i, j);
+			if (cooTuple[j][1] == i)
+			{
+				theSame = true;
+			}
+		}
+		if (!theSame)
+		{
 			for (int m = 0; m < k; m++)
 			{
-				if (tempCell == var[m])
+				hasChanged |= unsetNoteCell(getCell(grid, cooTuple[0][0], i), variable[m]);
+			}
+		}
+		theSame = false;
+	}
+
+	return hasChanged;
+}
+
+bool removeNotesKUpletColumns(T_Grid grid, int** cooTuple, int* variable, int k, int y)
+{
+	bool hasChanged = false;
+	bool theSame = false;
+
+	printf("\nDEBUF\n");
+	printf("k : %d\n", k);
+	printf("x,y : %d,%d\n", cooTuple[0][0], y);
+	printf("variable : %d\n", variable[0]);
+	printf("cooTuple : (%d,%d)\n\n", cooTuple[0][0], cooTuple[0][1]);
+
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < k; j++)
+		{
+			if (cooTuple[j][0] == i)
+			{
+				theSame = true;
+			}
+		}
+		if (!theSame)
+		{
+			for (int m = 0; m < k; m++)
+			{
+				hasChanged |= unsetNoteCell(getCell(grid, i, cooTuple[0][1]), variable[m]);
+			}
+		}
+		theSame = false;
+	}
+
+	return hasChanged;
+}
+
+bool removeNotesKUpletSquare(T_Grid grid, int** cooTuple, int* variable, int k, int x, int y)
+{
+	bool hasChanged = false;
+	bool theSame = false;
+
+	/*printf("\nDEBUF\n");
+	printf("k : %d\n",k);
+	printf("x,y : %d,%d\n", x, y);
+	printf("variable : %d\n", variable[0]);
+	printf("cooTuple : (%d,%d)\n\n", cooTuple[0][0], cooTuple[0][1]);*/
+
+	int sqrtSize = getGridSqrtSize(grid);
+	
+	for (int i = x; i < x+sqrtSize; i++)
+	{
+		for (int j = y; j < y+sqrtSize; j++)
+		{
+			for (int it_k = 0; it_k < k; it_k++)
+			{
+				if (cooTuple[it_k][0] == i && cooTuple[it_k][1] == j)
 				{
 					theSame = true;
 				}
 			}
-			if (theSame) {
-				for (int t = 1; t < 10; t++)
+			printf("theSame coo (%d,%d) : %d\n", i, y, theSame);
+			if (!theSame)
+			{
+				for (int m = 0; m < k; m++)
 				{
-					for (int n = 0; n < k; n++)
-					{
-						if (t == variable[n])
-						{
-							notTheSame = false;
-						}
-					}
-					if (notTheSame)
-					{
-						hasChanged |= unsetNoteCell(tempCell, t);
-					}
+					hasChanged |= unsetNoteCell(getCell(grid, i, j), variable[m]);
 				}
-				theSame = false;
 			}
+			theSame = false;
 		}
 	}
+
+	printf("\n\n");
+
+	return hasChanged;
+}
+
+bool removeNoteOnCell(T_Grid grid, int** cooTuple, int* tuple, int k)
+{
+	int size = getGridSize(grid);
+
+	bool theSame = false;
+
+	printf("\n\n\nDEBUG :\n\n");
+	printf("k : %d\nsize : %d\n\n", k,size);
+
+	if (k == 1)
+	{
+		printf("coo : (%d,", cooTuple[0][0]);
+		printf("%d)\n", cooTuple[0][1]);
+	}
+	if (k == 2)
+	{
+		printf("coo : (%d,", cooTuple[0][0]);
+		printf("%d) ; (", cooTuple[0][1]);
+		printf("%d,", cooTuple[1][0]);
+		printf("%d)\n\n", cooTuple[1][1]);
+
+		printf("var %d %d\n", tuple[0], tuple[1]);
+	}
+	
+	bool hasChanged = false;
+
+	for (int w = 0; w < k; w++)
+	{
+		//printf("boucle w : %d\n", w);
+		for (int t = 1; t < size+1; t++)
+		{
+			//printf("boucle t : %d\n", t);
+			for (int r = 0; r < k; r++)
+			{
+				//printf("boucle r : %d\n", r);
+				if (tuple[r] == t)
+				{
+					//printf("Avant\n");
+					printf("tuple : %d | t : %d\n", tuple[r], t);
+					theSame = true;
+					
+					//printf("Apres\n");
+				}
+			}
+			if (!theSame)
+			{
+				printf("rmv : %d\n",t);
+				hasChanged |= unsetNoteCell(getCell(grid, cooTuple[w][0], cooTuple[w][1]), t);
+			}
+			theSame = false;
+		}
+	}
+	
 	return hasChanged;
 }
 
@@ -430,7 +463,7 @@ int** generateKtuples(int tupleSize, int nbCombinations)
 
 		for (int j = 2; j <= 9 && tupleIndex < nbCombinations; j++)
 		{
-			if (tupleSize == 2)
+			if (tupleSize == 2 && i != j)
 			{
 				tuples[tupleIndex][0] = i;
 				tuples[tupleIndex][1] = j;
@@ -440,7 +473,7 @@ int** generateKtuples(int tupleSize, int nbCombinations)
 
 			for (int k = 3; k <= 9 && tupleIndex < nbCombinations; k++)
 			{
-				if (tupleSize == 3)
+				if (tupleSize == 3 && i != j && j != k)
 				{
 					tuples[tupleIndex][0] = i;
 					tuples[tupleIndex][1] = j;
@@ -451,7 +484,7 @@ int** generateKtuples(int tupleSize, int nbCombinations)
 
 				for (int l = 4; l <= 9 && tupleIndex < nbCombinations; l++)
 				{
-					if (tupleSize == 4)
+					if (tupleSize == 4 && i != j && j != k && k != l)
 					{
 						tuples[tupleIndex][0] = i;
 						tuples[tupleIndex][1] = j;
@@ -467,6 +500,16 @@ int** generateKtuples(int tupleSize, int nbCombinations)
 	return tuples;
 }
 
+void afficheBaton(unsigned char * baton)
+{
+	printf("Baton : ");
+	for (int i = 0; i < 9; i++)
+	{
+		printf("%d ", baton[i]);
+	}
+	printf("\n");
+}
+
 // Fonction pour libérer la mémoire allouée au tableau de tuples
 void freeTuples(int** tuples, int numTuples)
 {
@@ -475,6 +518,68 @@ void freeTuples(int** tuples, int numTuples)
 		free(tuples[i]);
 	}
 	free(tuples);
+}
+
+void afficheBatonBis(int* b)
+{
+	printf("Baton : ");
+	for (int i = 0; i < 9; i++)
+	{
+		printf("%d ", b[i]);
+	}
+	printf(" \n");
+}
+
+void initBaton(T_Grid grid, int* b, int xMin, int xMax, int yMin, int yMax)
+{
+	int size = getGridSize(grid);
+
+	printf("test\n");
+
+	for (int z = 0; z < size; z++)
+	{
+		//printf("test2 %d\n",z);
+
+		b[z] = 0;
+	}
+
+	afficheBatonBis(b);
+
+	int k = 0;
+
+	for (int x = xMin; x < xMax + 1; x++)
+	{
+		for (int y = yMin; y < yMax + 1; y++)
+		{
+			for (int i = 1; i < size+1; i++)
+			{
+				if (isNoteInCell(getCell(grid, x, y), i))
+				{
+					//printf("cell (%d,%d) : ", x, y);
+					//printf("%d \n", i);
+					b[k] += 1;
+				}
+			}
+			k++;
+		}
+	}
+
+	afficheBatonBis(b);
+}
+
+
+
+int howManyZero(T_Grid grid, int* b)
+{
+	int res = 0;
+	for (int i = 0; i < getGridSize(grid); i++)
+	{
+		if (b[i] == 0)
+		{
+			res++;
+		}
+	}
+	return res;
 }
 
 bool kUpletsSolve (T_Grid grid, const int k) {
@@ -487,14 +592,23 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 
 	bool hasChanged = false;
 	int* variable = malloc(sizeof(int) * k);
-	T_Cell** cooVariable = malloc(sizeof(T_Cell) * k);
+	int** cooTuple = malloc(sizeof(int*) * k);
+	for (int pop = 0; pop < k; pop++)
+	{
+		cooTuple[pop] = malloc(sizeof(int) * 2);
+	}
+	
 
 	int size = getGridSize(grid);
 
 	int howManyT = 0;
+	int howManyZ = 0;
 
-	unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
+	unsigned char* batonHidden = malloc(size * sizeof(unsigned char));
+	int* batonNaked = malloc(size * sizeof(int));
 	int possibility = coeffBinomial(k, size);
+	//int possibility = 1;
+
 
 	// CODE POUR MONTRER QUE ÇA MARCHE
 	int** tuples = generateKtuples(k, possibility);
@@ -512,94 +626,310 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 		}
 
 		// Libérer la mémoire allouée
-		freeTuples(tuples, possibility);
+		//freeTuples(tuples, possibility);
 	}
 	// CODE POUR MONTRER QUE ÇA MARCHE
 
-	printf("%d", possibility);
 
-	int stop = 0;	
+	int stop = 0;
+	int stopbis = 0;
 
-	while (stop < possibility && hasChanged == false)
+	while (stop < possibility && !hasChanged)
 	{
 		int xSquare = 0;
 		int ySquare = 0;
 		int sqrtS = getGridSqrtSize(grid);
 
-		//TODO possibility, faire variable
+		//variable
+		for (int o = 0; o < k; o++) {
+			variable[o] = tuples[stop][o];
+		}
+		//variable[0] = 9;
+
+		if (k == 1)
+		{
+			printf("\n\nTesting %d...\n",variable[0]);
+		}
+		if (k == 2)
+		{
+			printf("\n\nTesting %d %d...\n", variable[0], variable[1]);
+		}
 
 
 		// Pour les 27 zones
 		
-		for (unsigned int i = 0; i < size; i++)
+		while (stopbis < size && hasChanged == false)
 		{
 
 			//SQUARE
 
-			createBaton(grid, baton);
+			printf("Square %d %d\n", xSquare, ySquare);
 
-			checkRectKUpletSolve(grid, baton, xSquare, xSquare + sqrtS, ySquare, ySquare + sqrtS, k, variable);
+			createBaton(grid, batonHidden);
+			initBaton(grid, batonNaked, xSquare, xSquare + sqrtS - 1, ySquare, ySquare + sqrtS - 1);
 
-			howManyT = howManyTrue(grid, baton);
+			//printf("reboot baton : ");
+			//afficheBaton(baton);
+
+			checkRectKUpletSolve(grid, batonHidden, batonNaked, xSquare, xSquare + sqrtS, ySquare, ySquare + sqrtS, k, variable);
+
+			howManyT = howManyTrue(grid, batonHidden);
+			printf("befor howmany\n");
+			howManyZ = howManyZero(grid, batonNaked);
+			printf("afetr howmany\n");
+
+			printf("howmany : %d\n", howManyZ);
+
+			//afficheBaton(baton);
 
 			if (howManyT == k)
 			{
 				//TODO enlever les notes inutiles
-				howManyT = 0;
-				hasChanged |= removeNotesKUpletSquare(grid, cooVariable, variable, k, xSquare, ySquare);
-				hasChanged |= removeNoteOnCell(grid, cooVariable, variable, k);
+				printf("\nHERE !\n");
 
+				afficheBaton(batonHidden);
+
+				int bwa = 0;
+				printf("howMany : %d\n", howManyT);
+
+				int beh = 0;
+				for (int i = 0; i < sqrtS; i++)
+				{
+					for (int j = 0; j < sqrtS; j++)
+					{
+						//printf("baton[%d] = %d\n", bwa, baton[bwa]);
+						if (batonHidden[bwa] == 1)
+						{
+							//printf("beh : %d\n", beh);
+							cooTuple[beh][0] = xSquare + i;
+							//printf("bouh\n");
+							cooTuple[beh][1] = ySquare + j;
+							//printf("braouh\n");
+							
+							beh++;
+						}
+						bwa++;
+					}
+				}
+				
+				howManyT = 0;
+				
+				hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
+				printf("on cell : ");
+				if (hasChanged) {
+					printf("Change occur !\n");
+				}
+				else {
+					printf("No change !\n");
+				}
+
+			}
+			if (howManyZ == k && !hasChanged)
+			{
+				printf("bouh\n");
+				howManyZ = 0;
+
+				int bwa = 0;
+				int beh = 0;
+				for (int i = 0; i < sqrtS; i++)
+				{
+
+					for (int j = 0; j < sqrtS; j++)
+					{
+						if (batonNaked[bwa] == 0)
+						{
+							cooTuple[beh][0] = xSquare + i;
+							cooTuple[beh][1] = ySquare + j;
+							beh++;
+						}
+						bwa++;
+					}
+				}
+
+				printf("\nk : %d\n", k);
+
+				hasChanged |= removeNotesKUpletSquare(grid, cooTuple, variable, k, xSquare, ySquare);
+				printf("everywher : ");
+				if (hasChanged) {
+					printf("Change occur !\n");
+				}
+				else {
+					printf("No change !\n");
+				}
 			}
 
 			nextSquare(getGridSqrtSize(grid), &xSquare, &ySquare);
 
+			printf("\nfin square hasChanged : %d\n", hasChanged);
 
 			// LIGNE
-			
-			// Pour les k nombres compris entre 1 et 9 (k nombres distincts)
-					// Tableau de booléens t de taille 9 tous à faux
-			createBaton(grid, baton);
 
-			// Pour les k nombres 
-					// Pour les 9 cases d'une zone, si la case contient k[i], t[case] = vrai
-			checkRectKUpletSolve(grid, baton, i, i, 0, size, k, variable);
-
-			// Si exactement 3 cases de t sont à true, alors on a un triplet
-			howManyT = howManyTrue(grid, baton);
+			printf("Line %d\n", stopbis);
 			
-			if (howManyT == k)
+			if (!hasChanged)
 			{
+				printf("testLine\n");
+				// Pour les k nombres compris entre 1 et 9 (k nombres distincts)
+						// Tableau de booléens t de taille 9 tous à faux
+				createBaton(grid, batonHidden);
+				printf("avant\n");
+				initBaton(grid, batonNaked, stopbis, stopbis, 0, size-1);
+				printf("après\n");
+
+				// Pour les k nombres 
+						// Pour les 9 cases d'une zone, si la case contient k[i], t[case] = vrai
+				checkRectKUpletSolve(grid, batonHidden, batonNaked, stopbis, stopbis+1, 0, size, k, variable);
+
+				// Si exactement 3 cases de t sont à true, alors on a un triplet
+				howManyT = howManyTrue(grid, batonHidden);
+				howManyZ = howManyZero(grid, batonNaked);
+
+				if (howManyT == k)
+				{
+					printf("HERE !\n");
+
+					int grr = 0;
+					for (int i = 0; i < size; i++)
+					{
+						if (batonHidden[i] == 1)
+						{
+							cooTuple[grr][0] = stopbis;
+							cooTuple[grr][1] = i;
+							grr++;
+						}
+					}
+
+					
+					hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
+				}
+				if (howManyZ == k && !hasChanged)
+				{
+					int grr = 0;
+					for (int i = 0; i < size; i++)
+					{
+						if (batonNaked[i] == 0)
+						{
+							cooTuple[grr][0] = stopbis;
+							cooTuple[grr][1] = i;
+							grr++;
+						}
+
+					}
+					
+					hasChanged |= removeNotesKUpletRows(grid, cooTuple, variable, k, stopbis);
+				}
 				howManyT = 0;
-				hasChanged |= removeNotesKUpletRows(grid, cooVariable, variable, k, i);
-				hasChanged |= removeNoteOnCell(grid, cooVariable, variable, k);
 			}
 
-
+			printf("\nfin line hasChanged : %d\n", hasChanged);
 			//COLONNE
 
-			createBaton(grid, baton);
 
-			checkRectKUpletSolve(grid, baton, 0, size, i, i, k, variable);
+			printf("Colonne %d\n", stopbis);
 
-			howManyT = howManyTrue(grid, baton);
-
-			if (howManyT == k)
+			if (!hasChanged)
 			{
-				//TODO enlever les notes inutiles
-				howManyT = 0;
-				hasChanged |= removeNotesKUpletColumns(grid, cooVariable, variable, k, i);
-				hasChanged |= removeNoteOnCell(grid, cooVariable, variable, k);
+				printf("testColonne\n");
+				createBaton(grid, batonHidden);
+				initBaton(grid, batonNaked, 0, size-1, stopbis, stopbis);
+
+				checkRectKUpletSolve(grid, batonHidden, batonNaked, 0, size, stopbis, stopbis+1, k, variable);
+
+				howManyT = howManyTrue(grid, batonHidden);
+				howManyZ = howManyZero(grid, batonNaked);
+
+				afficheBatonBis(batonNaked);
+
+				if (howManyT == k)
+				{
+					//TODO enlever les notes inutiles
+
+					int graou = 0;
+					for (int i = 0; i < size; i++)
+					{
+						if (batonHidden[i] == 1)
+						{
+							cooTuple[graou][1] = stopbis;
+							cooTuple[graou][0] = i;
+							graou++;
+						}
+					}
+					graou = 0;
+
+					howManyT = 0;
+					
+					hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
+				}
+				if (howManyZ == k && !hasChanged)
+				{
+					int graou = 0;
+					for (int i = 0; i < size; i++)
+					{
+						if (batonNaked[i] == 0)
+						{
+							cooTuple[graou][1] = stopbis;
+							cooTuple[graou][0] = i;
+							graou++;
+						}
+					}
+					graou = 0;
+					howManyT = 0;
+					hasChanged |= removeNotesKUpletColumns(grid, cooTuple, variable, k, stopbis);
+				}
 			}
+
+			stopbis++;
 
 		}
 
-		printf("%d\n", stop);
+		stopbis = 0;
 
 		stop += 1;
 	}
 
 	free(variable);
-	free(cooVariable);
-	free(baton);
+	free(cooTuple);
+	free(batonHidden);
+	free(batonNaked);
+	freeTuples(tuples, possibility);
+
 	return hasChanged;
+}
+
+
+
+
+void testBouh(T_Grid grid) {
+	for (int j = 0; j < 9; j++) {
+		printf("\nTest %d : ", j);
+		for (int i = 0; i < 9; i++) {
+			if (isNoteInCell(getCell(grid, j, i), 1)) {
+				printf("o ");
+			}
+			else {
+				printf("x ");
+			}
+		}
+		printf("\n");
+	}
+}
+
+void testMwah(T_Grid grid) {
+	int xSquare = 0;
+	int ySquare = 0;
+	for (int k = 0; k < 9; k++) {
+		printf("\nTest square (%d,%d) : ", xSquare, ySquare);
+		for (int i = xSquare; i < xSquare + 3; i++) {
+			for (int j = ySquare; j < ySquare + 3; j++) {
+				//printf("(%d,%d) ", i, j);
+				if (isNoteInCell(getCell(grid, i, j), 1)) {
+					printf("o ; ");
+				}
+				else {
+					printf("x ; ");
+				}
+			}
+		}
+		nextSquare(3, &xSquare, &ySquare);
+	}
 }

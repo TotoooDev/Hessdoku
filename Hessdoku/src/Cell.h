@@ -67,7 +67,6 @@ bool unsetNoteCell(T_Cell* cell, unsigned int noteValue);
  */
 unsigned int getValueOfCell(T_Cell* cell);
 
-
 /**
  * Sets the value of a cell to a specific value.
  * 
@@ -77,5 +76,15 @@ unsigned int getValueOfCell(T_Cell* cell);
  * @author Baptiste
  */
 void setValueOfCell(T_Cell* cell, unsigned int value);
+
+/**
+ * Return if a value is a note of the cell.
+ *
+ * @param cell The cell where we search
+ * @param x The value we search
+ *
+ * @author Marie
+ */
+bool isNoteInCell(T_Cell* cell, unsigned int x);
 
 #endif

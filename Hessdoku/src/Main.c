@@ -17,7 +17,7 @@ void setGridToDemoGrid(T_Grid grid)
         {0, 2, 7, 0, 1, 5, 6, 8, 3} };*/
 
     // medium testGrid
-    int testGrid[9][9] = {
+    /*int testGrid[9][9] = {
         {0, 0, 5, 0, 7, 8, 0, 0, 0},
         {0, 7, 0, 4, 0, 0, 0, 0, 0},
         {2, 0, 0, 5, 6, 1, 3, 7, 4},
@@ -26,19 +26,19 @@ void setGridToDemoGrid(T_Grid grid)
         {0, 0, 0, 0, 3, 2, 4, 9, 0},
         {0, 0, 0, 9, 0, 0, 0, 0, 1},
         {3, 0, 1, 0, 0, 7, 6, 0, 0},
-        {4, 0, 9, 0, 0, 0, 8, 0, 0} };
+        {4, 0, 9, 0, 0, 0, 8, 0, 0} };*/
 
     // Hard testGrid
-    /*int testGrid[9][9] = {
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0} };*/
+    int testGrid[9][9] = {
+        {8, 0, 0, 0, 0, 0, 0, 0, 0},
+        {6, 0, 0, 0, 0, 0, 1, 0, 8},
+        {2, 5, 4, 6, 8, 1, 0, 0, 0},
+        {0, 0, 0, 0, 7, 0, 0, 8, 0},
+        {0, 0, 8, 0, 2, 4, 0, 0, 6},
+        {3, 2, 0, 9, 0, 8, 0, 1, 0},
+        {5, 0, 2, 0, 3, 7, 0, 0, 0},
+        {0, 3, 6, 0, 0, 0, 0, 2, 0},
+        {0, 0, 0, 2, 5, 0, 0, 3, 4} };
 
     for (int x = 0; x < getGridSize(grid); x++)
     {
@@ -116,16 +116,55 @@ int main(int argc, char* argv[])
     /* MOVE THIS PIECE OF CODE TO THE APPROPRIATE PLACE */
     bool hasChanged = true;
 
+    /*
     while (hasChanged)
     {
         hasChanged &= removeNotesInGridByZones(grid);
 
         if (!hasChanged)
         {
-            hasChanged &= kUpletsSolve(grid, 3);
-
+            //hasChanged &= kUpletsSolve(grid, 1);
+            printf("\nasjip\n");
         }
+    }*/
+    while (hasChanged)
+    {
+        //hasChanged &= removeNotesInGridByZones(grid);
+        hasChanged &= kUpletsSolve(grid, 1);
+        /*if (!hasChanged)
+        {
+            printf("\nSolving 1-uplet...\n");
+            hasChanged |= kUpletsSolve(grid, 1);
+        }*/
+        /*if (!hasChanged)
+        {
+            printf("\nSolving 2-uplet...\n");
+            hasChanged |= kUpletsSolve(grid, 2);
+            hasChanged = false;
+        }
+        if (!hasChanged)
+        {
+            printf("\nSolving 3-uplet...\n");
+            //hasChanged |= kUpletsSolve(grid, 3);
+        }*/
     }
+    /*printf("Grid after singleton :\n");
+    displayGridToConsole(grid);
+    displayNotesToConsole(grid);
+
+    printf("\nSolving 1-uplet...\n");
+    hasChanged |= kUpletsSolve(grid, 1);
+
+    printf("Grid after 1-uplet :\n");
+    displayGridToConsole(grid);
+    displayNotesToConsole(grid);
+
+    printf("\nSolving 2-uplet...\n");*/
+    //hasChanged |= kUpletsSolve(grid, 2);
+
+    //testBouh(grid);
+    //testMwah(grid);
+
     /* END OF MOVE */
 
     printf("Grid after solving algorithm :\n");

@@ -38,9 +38,12 @@ T_Grid generateGridFromFile(const char* path)
     {
         for (int y = 0; y < sizeY * sizeY; y++)
         {
-            int nb = readNumbersUntil(fd, '|'); 
+            int nb = readNumbersUntil(fd, '|');
 
-            setCell(grid, x, y, nb);
+            if (nb != 0)
+            {
+                setCell(grid, x, y, nb);
+            }
         }
         skipUntil(fd, '|', sizeX + 2);                  // TODO: Peut être détecter les fins avec \n
     }

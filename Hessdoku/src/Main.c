@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Grid.h"
+#include "Solver.h"
 
 void setGridToDemoGrid(T_Grid grid)
 {
@@ -55,8 +56,13 @@ void setGridToDemoGrid(T_Grid grid)
 int main(int argc, char* argv[])
 {
     //T_Game* game = createGame(GRID_SIZE, GRID_SIZE);
-    T_Grid grid = generateGrid(GRID_SIZE, SQRT_GRID_SIZE);
-    setGridToDemoGrid(grid);
+    //T_Grid grid = generateGrid(GRID_SIZE, SQRT_GRID_SIZE);
+   // setGridToDemoGrid(grid);
+   // displayGridToConsole(grid);
+
+    //freeGrid(grid);
+
+    T_Grid grid = generateGridFromFile("easySolvableGrid");
 
     /*
     setCell(game->grid, 0, 0, 3);
@@ -122,7 +128,7 @@ int main(int argc, char* argv[])
 
         if (!hasChanged)
         {
-            hasChanged &= kUpletsSolve(grid, 3);
+            // hasChanged &= kUpletsSolve(grid, 3);
 
         }
     }
@@ -141,6 +147,8 @@ int main(int argc, char* argv[])
     {
         printf("Warning : The grid is invalid !");
     }
+
+    freeGrid(grid);
 
     return 0;
 }

@@ -28,7 +28,7 @@ T_Button* createButton(int x, int y, const char* text, T_ButtonFunction function
     button->isHovered = false;
 
     button->border = 3;
-    button->padding = 6;
+    button->padding = 3;
 
     button->function = function;
     button->userData = userData;

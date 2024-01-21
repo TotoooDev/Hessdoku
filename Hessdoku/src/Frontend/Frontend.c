@@ -1,6 +1,7 @@
 #include <Frontend/Frontend.h>
 #include <Frontend/Window.h>
 #include <Frontend/Config.h>
+#include <Log.h>
 #include <stdlib.h>
 
 typedef struct T_Frontend {
@@ -25,11 +26,21 @@ T_Frontend* createFrontend(T_Grid grid)
 
 void quit(int, int, void* userData) { ((T_Frontend*)userData)->isRunning = false; } // cool oneliner
 
+// Example for a button that does something
+void exampleButton(int button, int clicks, void* userData)
+{
+    LOG("Example button was clicked!");
+    LOG("button: %d, clicks: %d, userData: %p", button, clicks, userData);
+    
+    T_Frontend* frontend = (T_Frontend*)userData;
+    // do stuff...
+}
+
 void runFrontend(T_Frontend* frontend)
 {
     // small button example
     addButton(frontend->window, createButton(600, 50, "Quit", quit, frontend));
-    addButton(frontend->window, createButton(600, 100, "useless", NULL, NULL));
+    addButton(frontend->window, createButton(600, 100, "Example", exampleButton, frontend));
     
     while (frontend->isRunning && isWindowOpen(frontend->window))
     {

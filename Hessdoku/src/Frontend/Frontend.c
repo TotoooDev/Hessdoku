@@ -62,13 +62,13 @@ void freeFrontend(T_Frontend* frontend)
 
 void drawNotes(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, unsigned int cellX, unsigned int cellY)
 {
-    int y = cellY * rectSize + yOffset;
+    int y = cellY * rectSize + yOffset + rectSize / 9;
     for (unsigned int i = 0; i < getGridSqrtSize(frontend->grid); i++)
     {
         if (!hasNote(getCell(frontend->grid, cellX, cellY), i))
             continue;
         
-        int x = cellX * rectSize + xOffset + (i % 3) * 16;
+        int x = cellX * rectSize + xOffset + (i % 3) * 16 + rectSize / 9;
         if (i % 3 == 0 && i != 0)
             y += 16;
 
@@ -81,8 +81,8 @@ void drawNotes(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, uns
 
 void drawValue(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, int value, unsigned int cellX, unsigned int cellY)
 {
-    int x = cellX * rectSize + xOffset;
-    int y = cellY * rectSize + yOffset;
+    int x = cellX * rectSize + xOffset + rectSize / 4;
+    int y = cellY * rectSize + yOffset + rectSize / 4;
     char text[2];
     sprintf(text, "%d", value);
     setDrawColor(frontend->window, 0, 0, 0);
@@ -109,9 +109,13 @@ void drawGrid(T_Frontend* frontend, int xOffset, int yOffset, int rectSize)
         }
     }
 
-    setDrawColor(frontend->window, 0, 0, 0);
     for (unsigned int i = 0; i < getGridSqrtSize(frontend->grid) + 1; i++)
     {
+        if (i % 3 == 0)
+            setDrawColor(frontend->window, 0, 0, 0);
+        else
+            setDrawColor(frontend->window, 127, 127, 127);
+
         drawLine(frontend->window, i * rectSize + xOffset, yOffset, i * rectSize + xOffset, rectSize * getGridSqrtSize(frontend->grid) + yOffset);
         drawLine(frontend->window,  xOffset, i * rectSize + yOffset, rectSize * getGridSqrtSize(frontend->grid) + xOffset, i * rectSize + yOffset);
     }

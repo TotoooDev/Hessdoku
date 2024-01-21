@@ -86,8 +86,7 @@ void drawNotes(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, uns
 
         char text[2];
         sprintf(text, "%d", i + 1);
-        setDrawColor(frontend->window, 0, 0, 0);
-        drawText(frontend->window, frontend->font, (T_Color){ 0, 0, 0 }, text, x, y, 0.5f);
+        drawText(frontend->window, frontend->font, (T_Color){ 127, 127, 127 }, text, x, y, 0.5f);
     }
 }
 
@@ -101,7 +100,6 @@ void drawValue(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, int
 
     int x = cellX * rectSize + xOffset - width / 2 + rectSize / 2;
     int y = cellY * rectSize + yOffset - height / 2 + rectSize / 2;
-    setDrawColor(frontend->window, 0, 0, 0);
     drawText(frontend->window, frontend->font, (T_Color){ 0, 0, 0 }, text, x, y, 1.0f);
 }
 

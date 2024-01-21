@@ -10,6 +10,8 @@ typedef struct T_Frontend {
     T_Grid grid;
 
     bool isRunning;
+
+    bool drawNotes;
 } T_Frontend;
 
 T_Frontend* createFrontend(T_Grid grid)
@@ -20,11 +22,17 @@ T_Frontend* createFrontend(T_Grid grid)
     frontend->font = loadFont("OpenSans-Regular.ttf", 32);
     frontend->grid = grid;
     frontend->isRunning = true;
+    frontend->drawNotes = true;
 
     return frontend;
 }
 
 void quit(int, int, void* userData) { ((T_Frontend*)userData)->isRunning = false; } // cool oneliner
+
+void showHideNotes(int button, int clicks, void* userData)
+{
+    ((T_Frontend*)userData)->drawNotes ^= 1;
+}
 
 // Example for a button that does something
 void exampleButton(int button, int clicks, void* userData)
@@ -40,7 +48,8 @@ void runFrontend(T_Frontend* frontend)
 {
     // small button example
     addButton(frontend->window, createButton(600, 50, "Quit", quit, frontend));
-    addButton(frontend->window, createButton(600, 100, "Example", exampleButton, frontend));
+    addButton(frontend->window, createButton(600, 100, "Show/Hide notes", showHideNotes, frontend));
+    addButton(frontend->window, createButton(600, 150, "Example", exampleButton, frontend));
     
     while (frontend->isRunning && isWindowOpen(frontend->window))
     {
@@ -62,6 +71,9 @@ void freeFrontend(T_Frontend* frontend)
 
 void drawNotes(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, unsigned int cellX, unsigned int cellY)
 {
+    if (!frontend->drawNotes)
+        return;
+
     int y = cellY * rectSize + yOffset + rectSize / 9;
     for (unsigned int i = 0; i < getGridSqrtSize(frontend->grid); i++)
     {

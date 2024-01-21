@@ -6,7 +6,9 @@ typedef struct T_Button
 {
     int x, y; /** The coordiantes of the button */
     char* text; /** The text inside the button */
+
     bool isClicked;
+    bool isHovered;
 
     int border;
     int padding;
@@ -21,7 +23,9 @@ T_Button* createButton(int x, int y, const char* text, T_ButtonFunction function
 
     button->x = x;
     button->y = y;
+
     button->isClicked = false;
+    button->isHovered = false;
 
     button->border = 3;
     button->padding = 6;
@@ -60,6 +64,11 @@ void setButtonPadding(T_Button* button, int padding)
 void setButtonClicked(T_Button* button, bool toggle)
 {
     button->isClicked = toggle;
+}
+
+void setButtonHovered(T_Button* button, bool toggle)
+{
+    button->isHovered = toggle;
 }
 
 void setButtonFunction(T_Button* button, T_ButtonFunction function)
@@ -101,6 +110,11 @@ char* getButtonText(T_Button* button)
 bool isButtonClicked(T_Button* button)
 {
     return button->isClicked;
+}
+
+bool isButtonHovered(T_Button* button)
+{
+    return button->isHovered;
 }
 
 T_ButtonFunction getButtonFunction(T_Button* button)

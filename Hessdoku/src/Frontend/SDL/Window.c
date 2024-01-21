@@ -114,6 +114,18 @@ void buttonUp(T_Window* window, T_Font* font, SDL_Event event)
     }
 }
 
+void mouseMoved(T_Window* window, T_Font* font, SDL_Event event)
+{
+    for (unsigned int i = 0; i < window->numButtons; i++)
+    {
+        T_Button* button = window->buttons[i];
+        if (isCursorInButton(event.button.x, event.button.y, button, font))
+            setButtonHovered(button, true);
+        else
+            setButtonHovered(button, false);
+    }
+}
+
 void updateWindow(T_Window* window, T_Font* font)
 {
     SDL_Event event;
@@ -131,6 +143,10 @@ void updateWindow(T_Window* window, T_Font* font)
 
         case SDL_MOUSEBUTTONUP:
             buttonUp(window, font, event);
+            break;
+
+        case SDL_MOUSEMOTION:
+            mouseMoved(window, font, event);
             break;
 
         default:
@@ -166,6 +182,8 @@ void drawButtons(T_Window* window, T_Font* font)
 
         if (isButtonClicked(button))
             setDrawColor(window, 200, 200, 200);
+        else if (isButtonHovered(button))
+            setDrawColor(window, 240, 240, 240);
         else
             setDrawColor(window, 220, 220, 220);
 

@@ -49,6 +49,8 @@ void setButtonPadding(T_Button* button, int padding);
 
 void setButtonClicked(T_Button* button, bool toggle);
 
+void setButtonHovered(T_Button* button, bool toggle);
+
 /**
  * Sets the function to call when the button is pressed.
  * @param button The button to move.
@@ -80,6 +82,8 @@ void getButtonDimensions(T_Button* button, T_Font* font, float sizeRatio, int* w
 char* getButtonText(T_Button* button);
 
 bool isButtonClicked(T_Button* button);
+
+bool isButtonHovered(T_Button* button);
 
 /**
  * Returns a button's function.

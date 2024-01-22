@@ -150,7 +150,7 @@ void addButtons()
     addButton(FrontendInstance->window, createButton(600, 330, "Remove pairs until...", removeNotes2TupleUntilUnchanged, FrontendInstance));
     addButton(FrontendInstance->window, createButton(600, 370, "Remove triples until...", removeNotes3TupleUntilUnchanged, FrontendInstance));
     addButton(FrontendInstance->window, createButton(600, 410, "Solve", resolveSudokuGrid, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 450, "Quit", quit, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(750, 450, "Quit", quit, FrontendInstance));
 }
 
 void runFrontend()

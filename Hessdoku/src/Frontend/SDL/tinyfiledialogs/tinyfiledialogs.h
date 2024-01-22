@@ -62,6 +62,11 @@ misrepresented as being the original software.
 #ifndef TINYFILEDIALOGS_H
 #define TINYFILEDIALOGS_H
 
+// added by toto
+#ifdef _WIN32
+	#include <windows.h>
+#endif
+
 #ifdef	__cplusplus
 extern "C" {
 #endif

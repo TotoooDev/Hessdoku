@@ -1,7 +1,6 @@
 #ifndef FRONTEND_H
 #define FRONTEND_H
 
-#include <Grid.h>
 #include <Frontend/Window.h>
 
 /**
@@ -28,18 +27,7 @@ void runFrontend(T_Frontend* frontend);
  */
 void freeFrontend(T_Frontend* frontend);
 
-/**
- * Draws a whole grid.
- * @param frontend The frontend to draw to.
- * @param xOffset The x offset to apply when drawing the grid.
- * @param xOffset The y offset to apply when drawing the grid.
- * @param rectSize The size of a grid square.
-*/
-void drawGrid(T_Frontend* frontend, int xOffset, int yOffset, int rectSize);
-
 T_Window* getWindow(T_Frontend* frontend);
 T_Font* getFont(T_Frontend* frontend);
-T_Grid getGrid(T_Frontend* frontend);
-bool getDrawNotes(T_Frontend* frontend);
 
 #endif

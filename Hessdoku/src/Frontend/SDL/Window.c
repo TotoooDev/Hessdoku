@@ -42,8 +42,6 @@ typedef struct T_Window
     unsigned int numKeyDownFunctions;
 } T_Window;
 
-bool isCursorInButton(int mouseX, int mouseY, T_Button* button, T_Font* font);
-
 void initSDL()
 {
     ASSERT(SDL_Init(SDL_INIT_EVERYTHING) == 0, "Failed to initialize SDL! SDL error: %s", SDL_GetError());
@@ -109,45 +107,6 @@ void freeWindow(T_Window* window)
         quitSDL();
 }
 
-void buttonDown(T_Window* window, T_Font* font, SDL_Event event)
-{
-    for (unsigned int i = 0; i < window->numButtons; i++)
-    {
-        T_Button* button = window->buttons[i];
-        if (!isCursorInButton(event.button.x, event.button.y, button, font))
-            continue;
-        setButtonClicked(button, true);
-    }
-}
-
-void buttonUp(T_Window* window, T_Font* font, SDL_Event event)
-{
-    for (unsigned int i = 0; i < window->numButtons; i++)
-    {
-        T_Button* button = window->buttons[i];
-        if (isButtonClicked(button) && isCursorInButton(event.button.x, event.button.y, button, font))
-        {
-            // functional programming hell
-            T_ButtonFunction function = getButtonFunction(button);
-            if (function != NULL)
-                function(event.button.button, event.button.clicks, getButtonUserData(button));
-        }
-        setButtonClicked(button, false);
-    }
-}
-
-void mouseMoved(T_Window* window, T_Font* font, SDL_Event event)
-{
-    for (unsigned int i = 0; i < window->numButtons; i++)
-    {
-        T_Button* button = window->buttons[i];
-        if (isCursorInButton(event.button.x, event.button.y, button, font))
-            setButtonHovered(button, true);
-        else
-            setButtonHovered(button, false);
-    }
-}
-
 void updateWindow(T_Window* window, T_Font* font)
 {
     SDL_Event event;
@@ -171,7 +130,7 @@ void updateWindow(T_Window* window, T_Font* font)
 
         case SDL_MOUSEMOTION:
             for (unsigned int i = 0; i < window->numMouseMovedFunctions; i++)
-                window->mouseMovedFunctions[i](event.button.button, event.button.clicks, window->mouseMovedUserData[i]);
+                window->mouseMovedFunctions[i](event.motion.x, event.motion.y, window->mouseMovedUserData[i]);
             break;
 
         case SDL_KEYDOWN:
@@ -296,15 +255,6 @@ void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, i
 	
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(texture);
-}
-
-bool isCursorInButton(int mouseX, int mouseY, T_Button* button, T_Font* font)
-{
-    int buttonX, buttonY, buttonWidth, buttonHeight;
-    getButtonCoordinates(button, &buttonX, &buttonY);
-    getButtonDimensions(button, font, 0.5f, &buttonWidth, &buttonHeight);
-
-    return (mouseX > buttonX && mouseX < buttonX + buttonWidth) && (mouseY > buttonY && mouseY < buttonY + buttonHeight);
 }
 
 void addButtonDownFunction(T_Window* window, T_ButtonDownFunction func, void* userData)

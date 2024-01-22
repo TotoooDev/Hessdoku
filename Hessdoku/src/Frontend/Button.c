@@ -1,4 +1,5 @@
 #include <Frontend/Button.h>
+#include <Frontend/Frontend.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -16,6 +17,39 @@ typedef struct T_Button
     T_ButtonFunction function;
     void* userData;
 } T_Button;
+
+bool isCursorInButton(int mouseX, int mouseY, T_Button* button)
+{
+    int buttonX, buttonY, buttonWidth, buttonHeight;
+    getButtonCoordinates(button, &buttonX, &buttonY);
+    getButtonDimensions(button, getFont(), 0.5f, &buttonWidth, &buttonHeight);
+
+    return (mouseX > buttonX && mouseX < buttonX + buttonWidth) && (mouseY > buttonY && mouseY < buttonY + buttonHeight);
+}
+
+void buttonDownFunction(int button, int clicks, void* userData)
+{
+    T_Button* realButton = (T_Button*)userData;
+
+    if (realButton->isHovered && button == SDL_BUTTON_LEFT)
+    {
+        realButton->isClicked = true;
+        if (realButton->function != NULL)
+            realButton->function(button, clicks, realButton->userData);
+    }
+}
+
+void buttonUpFunction(int button, void* userData)
+{
+    T_Button* realButton = (T_Button*)userData;
+    realButton->isClicked = false;
+}
+
+void mouseMovedFunction(int x, int y, void* userData)
+{
+    T_Button* button = (T_Button*)userData;
+    button->isHovered = isCursorInButton(x, y, button);
+}
 
 T_Button* createButton(int x, int y, const char* text, T_ButtonFunction function, void* userData)
 {
@@ -35,6 +69,10 @@ T_Button* createButton(int x, int y, const char* text, T_ButtonFunction function
 
     button->text = malloc(sizeof(char) * strlen(text));
     strcpy(button->text, text);
+
+    addButtonDownFunction(getWindow(), buttonDownFunction, button);
+    addButtonUpFunction(getWindow(), buttonUpFunction, button);
+    addMouseMovedFunction(getWindow(), mouseMovedFunction, button);
 
     return button;
 }

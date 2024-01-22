@@ -73,22 +73,13 @@ void removeNotes3Tuple(int button, int clicks, void* userData) {
 
 void addButtons()
 {
-    LOG("Example button was clicked!");
-    LOG("button: %d, clicks: %d, userData: %p", button, clicks, userData);
-    
-    T_Frontend* frontend = (T_Frontend*)userData;
-    // do stuff...
-}
-
-void addButtons(T_Frontend* frontend)
-{
-    addButton(frontend->window, createButton(600, 50, "Open grid...", openGridFile, frontend));
-    addButton(frontend->window, createButton(600, 100, "Show/Hide notes", showHideNotes, frontend));
-    addButton(frontend->window, createButton(600, 150, "Remove some notes", removeSomeNotes, frontend));
-    addButton(frontend->window, createButton(600, 200, "Remove singletons", removeNotes1Tuple, frontend));
-    addButton(frontend->window, createButton(600, 250, "Remove pairs", removeNotes2Tuple, frontend));
-    addButton(frontend->window, createButton(600, 300, "Remove triples", removeNotes3Tuple, frontend));
-    addButton(frontend->window, createButton(600, 350, "Quit", quit, frontend));
+    addButton(FrontendInstance->window, createButton(600, 50, "Open grid...", openGridFile, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 100, "Show/Hide notes", showHideNotes, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 150, "Remove some notes", removeSomeNotes, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 200, "Remove singletons", removeNotes1Tuple, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 250, "Remove pairs", removeNotes2Tuple, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 300, "Remove triples", removeNotes3Tuple, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 350, "Quit", quit, FrontendInstance));
 }
 
 void runFrontend()

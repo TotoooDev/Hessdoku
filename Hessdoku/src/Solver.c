@@ -432,18 +432,18 @@ int tuplesSize4[][4] = { {1,2,3,4}, {1,2,3,5},{1,2,3,6},{1,2,3,7},{1,2,3,8},{1,2
 * @returns A pointer to the ktuples array. Returns NULL if the value is invalid (ie. not between 1 and 4)
 * @author Baptiste
 */
-int* generateKTuples(const int k) {
+int** generateKTuples(const int k) {
 	if (k == 1) {
-		return (int*)tuplesSize1;
+		return (int**)tuplesSize1;
 	}
 	else if (k == 2) {
-		return (int*)tuplesSize2;
+		return (int**)tuplesSize2;
 	}
 	else if (k == 3) {
-		return (int*)tuplesSize3;
+		return (int**)tuplesSize3;
 	}
 	else if (k == 4) {
-		return (int*)tuplesSize4;
+		return (int**)tuplesSize4;
 	}
 	else {
 		printf("Invalid value of k. Supported values are 1, 2, 3, or 4. Was given %d.\n", k);
@@ -523,58 +523,53 @@ int howManyZero(T_Grid grid, int* b)
 	return res;
 }
 
+void findCooTupleSquare(int sqrtS, unsigned char * b, int** coo, int addX, int addY)
+{
+	int count = 0;
+	int count2 = 0;
+	for (int i = 0; i < sqrtS; i++)
+	{
+		for (int j = 0; j < sqrtS; j++)
+		{
+			if (b[count] == 1)
+			{
+				coo[count2][0] = addX + i;
+				coo[count2][1] = addY + j;
+				count2++;
+			}
+			count++;
+		}
+	}
+}
+
 bool kUpletsSolve (T_Grid grid, const int k) {
 
-	//TODO
-	// - si square est line ou colonne
-	// - stopper quand trouver un k_uplet
-
-
-
 	bool hasChanged = false;
-	int* variable = malloc(sizeof(int) * k);
-	int** cooTuple = malloc(sizeof(int*) * k);
-	for (int pop = 0; pop < k; pop++)
-	{
-		cooTuple[pop] = malloc(sizeof(int) * 2);
-	}
-	
-
-	int size = getGridSize(grid);
 
 	int howManyT = 0;
 	int howManyZ = 0;
 
-	unsigned char* batonHidden = malloc(size * sizeof(unsigned char));
-	int* batonNaked = malloc(size * sizeof(int));
-	int possibility = coeffBinomial(k, size);
-	//int possibility = 1;
-
-
-	// CODE POUR MONTRER QUE �A MARCHE
-	// int** tuples = generateKTuples(k, possibility);
-	int** tuples = generateKTuples(k);
-
-	if (tuples != NULL)
-	{
-		printf("Liste de kuplets g�n�r�s :\n");
-		for (int i = 0; i < possibility; i++)
-		{
-			for (int j = 0; j < k; j++)
-			{
-				printf("%d ", tuples[i][j]);
-			}
-			printf("\n");
-		}
-
-		// Lib�rer la m�moire allou�e
-		//freeTuples(tuples, possibility);
-	}
-	// CODE POUR MONTRER QUE �A MARCHE
-
-
 	int stop = 0;
 	int stopbis = 0;
+
+	int size = getGridSize(grid);
+
+	int* variable = malloc(sizeof(int) * k);
+	int** cooTuple = malloc(sizeof(int*) * k);
+
+	for (int i = 0; i < k; i++)
+	{
+		cooTuple[i] = malloc(sizeof(int) * 2);
+	}
+
+	unsigned char* batonHidden = malloc(size * sizeof(unsigned char));
+	int* batonNaked = malloc(size * sizeof(int));
+
+	int possibility = coeffBinomial(k, size);
+	
+	printf("\nbefore\n");
+	int** tuples = generateKTuples(k);
+	printf("\nafter\n");
 
 	while (stop < possibility && !hasChanged)
 	{
@@ -582,11 +577,15 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 		int ySquare = 0;
 		int sqrtS = getGridSqrtSize(grid);
 
-		//variable
-		for (int o = 0; o < k; o++) {
-			variable[o] = tuples[stop][o];
+		printf("\ntest\n");
+		for (int i = 0; i < k; i++) {
+			printf("k : %d\n", k);
+			printf("i : %d\n", i);
+			printf("stop : %d\n", stop);
+			printf("tuples[stop][i] : %d\n", tuples[stop][i]);
+			variable[i] = tuples[stop][i];
 		}
-		//variable[0] = 9;
+		printf("\ntest1\n");
 
 		if (k == 1)
 		{
@@ -596,9 +595,6 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 		{
 			printf("\n\nTesting %d %d...\n", variable[0], variable[1]);
 		}
-
-
-		// Pour les 27 zones
 		
 		while (stopbis < size && hasChanged == false)
 		{
@@ -610,44 +606,29 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 			createBaton(grid, batonHidden);
 			initBaton(grid, batonNaked, xSquare, xSquare + sqrtS - 1, ySquare, ySquare + sqrtS - 1);
 
-			//printf("reboot baton : ");
-			//afficheBaton(baton);
-
 			checkRectKUpletSolve(grid, batonHidden, batonNaked, xSquare, xSquare + sqrtS, ySquare, ySquare + sqrtS, k, variable);
 
 			howManyT = howManyTrue(grid, batonHidden);
-			printf("befor howmany\n");
 			howManyZ = howManyZero(grid, batonNaked);
-			printf("afetr howmany\n");
-
-			printf("howmany : %d\n", howManyZ);
-
-			//afficheBaton(baton);
 
 			if (howManyT == k)
 			{
-				//TODO enlever les notes inutiles
 				printf("\nHERE !\n");
 
 				afficheBaton(batonHidden);
 
-				int bwa = 0;
-				printf("howMany : %d\n", howManyT);
+				//findCooTupleSquare(sqrtS, batonHidden, cooTuple, xSquare, ySquare);
 
+				int bwa = 0;
 				int beh = 0;
 				for (int i = 0; i < sqrtS; i++)
 				{
 					for (int j = 0; j < sqrtS; j++)
 					{
-						//printf("baton[%d] = %d\n", bwa, baton[bwa]);
 						if (batonHidden[bwa] == 1)
 						{
-							//printf("beh : %d\n", beh);
 							cooTuple[beh][0] = xSquare + i;
-							//printf("bouh\n");
 							cooTuple[beh][1] = ySquare + j;
-							//printf("braouh\n");
-							
 							beh++;
 						}
 						bwa++;

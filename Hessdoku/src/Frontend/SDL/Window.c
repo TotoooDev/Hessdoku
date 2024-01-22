@@ -3,6 +3,7 @@
 #ifdef FRONTEND_SDL
 
 #include <Frontend/Window.h>
+#include <Frontend/Button.h>
 #include <Frontend/SDL/Font.h>
 #include <Log.h>
 #include <SDL2/SDL.h>

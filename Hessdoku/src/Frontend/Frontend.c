@@ -20,7 +20,7 @@ T_Frontend* FrontendInstance = NULL;
 
 void createFrontend(T_Grid grid)
 {
-    ASSERT(FrontendInstance != NULL, "A frontend already exists!");
+    ASSERT(FrontendInstance == NULL, "A frontend already exists!");
 
     FrontendInstance = (T_Frontend*)malloc(sizeof(T_Frontend));
 

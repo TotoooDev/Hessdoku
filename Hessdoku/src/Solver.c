@@ -606,7 +606,7 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 	int possibility = coeffBinomial(k, size);
 	
 	printf("\nbefore\n");
-	int** tuples = generateKTuples(k, size);
+	int** tuples = generateKTuples(k, possibility);
 	printf("\nafter\n");
 
 	while (stop < possibility && !hasChanged)

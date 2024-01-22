@@ -209,7 +209,6 @@ int howManyTrue(T_Grid grid, unsigned char* baton)
 
 int coeffBinomial(int k, int n)
 {
-	printf("k : %d, n : %d\n", k, n);
 	int num = 1;
 	int deno = 1;
 
@@ -218,8 +217,6 @@ int coeffBinomial(int k, int n)
 		num = num * (n - i);
 		deno = deno * (k - i);
 	}
-
-	printf("res : %d\n", num / deno);
 
 	return num / deno;
 }
@@ -551,6 +548,62 @@ void findCooTupleSquareNaked(int sqrtS, int* b, int** coo, int addX, int addY)
 	}
 }
 
+void findCooTupleLineHidden(int size, unsigned char* b, int** coo, int addX)
+{
+	int count = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (b[i] == 1)
+		{
+			coo[count][0] = addX;
+			coo[count][1] = i;
+			count++;
+		}
+	}
+}
+
+void findCooTupleLineNaked(int size, int* b, int** coo, int addX)
+{
+	int count = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (b[i] == 0)
+		{
+			coo[count][0] = addX;
+			coo[count][1] = i;
+			count++;
+		}
+	}
+}
+
+void findCooTupleColumnHidden(int size, unsigned char* b, int** coo, int addY)
+{
+	int count = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (b[i] == 1)
+		{
+			coo[count][1] = addY;
+			coo[count][0] = i;
+			count++;
+		}
+	}
+}
+
+void findCooTupleColumnNaked(int size, int* b, int** coo, int addY)
+{
+	int count = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (b[i] == 0)
+		{
+			coo[count][1] = addY;
+			coo[count][0] = i;
+			count++;
+		}
+	}
+}
+
 bool kUpletsSolve (T_Grid grid, const int k) {
 
 	bool hasChanged = false;
@@ -562,7 +615,6 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 	int stopbis = 0;
 
 	int size = getGridSize(grid);
-	printf("size : %d\n", size);
 
 	int* variable = malloc(sizeof(int) * k);
 	int** cooTuple = malloc(sizeof(int*) * k);
@@ -576,8 +628,6 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 	int* batonNaked = malloc(size * sizeof(int));
 
 	int possibility = coeffBinomial(k, size);
-
-	printf("size : %d\n", possibility);
 	
 	int** tuples = generateKTuples(k, possibility);
 
@@ -593,7 +643,6 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 		
 		while (stopbis < size && hasChanged == false)
 		{
-
 			//SQUARE
 
 			createBaton(grid, batonHidden);
@@ -606,45 +655,13 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 
 			if (howManyT == k)
 			{
+				findCooTupleSquareHidden(sqrtS, batonHidden, cooTuple, xSquare, ySquare);
 
-				//findCooTupleSquare(sqrtS, batonHidden, cooTuple, xSquare, ySquare);
-
-				int bwa = 0;
-				int beh = 0;
-				for (int i = 0; i < sqrtS; i++)
-				{
-					for (int j = 0; j < sqrtS; j++)
-					{
-						if (batonHidden[bwa] == 1)
-						{
-							cooTuple[beh][0] = xSquare + i;
-							cooTuple[beh][1] = ySquare + j;
-							beh++;
-						}
-						bwa++;
-					}
-				}
-				
 				hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
 			}
 			if (howManyZ == k && !hasChanged)
 			{
-				int bwa = 0;
-				int beh = 0;
-				for (int i = 0; i < sqrtS; i++)
-				{
-
-					for (int j = 0; j < sqrtS; j++)
-					{
-						if (batonNaked[bwa] == 0)
-						{
-							cooTuple[beh][0] = xSquare + i;
-							cooTuple[beh][1] = ySquare + j;
-							beh++;
-						}
-						bwa++;
-					}
-				}
+				findCooTupleSquareNaked(sqrtS, batonNaked, cooTuple, xSquare, ySquare);
 
 				hasChanged |= removeNotesKUpletSquare(grid, cooTuple, variable, k, xSquare, ySquare);
 			}
@@ -665,34 +682,13 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 
 				if (howManyT == k)
 				{
-
-					int grr = 0;
-					for (int i = 0; i < size; i++)
-					{
-						if (batonHidden[i] == 1)
-						{
-							cooTuple[grr][0] = stopbis;
-							cooTuple[grr][1] = i;
-							grr++;
-						}
-					}
-
+					findCooTupleLineHidden(size, batonHidden, cooTuple, stopbis);
 					
 					hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
 				}
 				if (howManyZ == k && !hasChanged)
 				{
-					int grr = 0;
-					for (int i = 0; i < size; i++)
-					{
-						if (batonNaked[i] == 0)
-						{
-							cooTuple[grr][0] = stopbis;
-							cooTuple[grr][1] = i;
-							grr++;
-						}
-
-					}
+					findCooTupleLineNaked(size, batonNaked, cooTuple, stopbis);
 					
 					hasChanged |= removeNotesKUpletRows(grid, cooTuple, variable, k, stopbis);
 				}
@@ -711,22 +707,9 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 				howManyT = howManyTrue(grid, batonHidden);
 				howManyZ = howManyZero(grid, batonNaked);
 
-				//afficheBatonBis(batonNaked);
-
 				if (howManyT == k)
 				{
-
-					int graou = 0;
-					for (int i = 0; i < size; i++)
-					{
-						if (batonHidden[i] == 1)
-						{
-							cooTuple[graou][1] = stopbis;
-							cooTuple[graou][0] = i;
-							graou++;
-						}
-					}
-					graou = 0;
+					findCooTupleColumnHidden(size, batonHidden, cooTuple, stopbis);
 
 					howManyT = 0;
 					
@@ -734,17 +717,8 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 				}
 				if (howManyZ == k && !hasChanged)
 				{
-					int graou = 0;
-					for (int i = 0; i < size; i++)
-					{
-						if (batonNaked[i] == 0)
-						{
-							cooTuple[graou][1] = stopbis;
-							cooTuple[graou][0] = i;
-							graou++;
-						}
-					}
-					graou = 0;
+					findCooTupleColumnNaked(size, batonNaked, cooTuple, stopbis);
+					
 					howManyT = 0;
 					hasChanged |= removeNotesKUpletColumns(grid, cooTuple, variable, k, stopbis);
 				}

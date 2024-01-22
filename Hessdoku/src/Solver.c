@@ -224,17 +224,17 @@ int coeffBinomial(int k, int n)
 void checkRectKUpletSolve(T_Grid grid, unsigned char* bH, int*bN, int minX, int maxX, int minY, int maxY, int k, int * variable)
 {
 	int whichCell = 0;
-	printf("\ncheck\n");
+	/*printf("\ncheck\n");
 	printf("minX : %d\n", minX);
 	printf("maxX : %d\n", maxX);
 	printf("minY : %d\n", minY);
-	printf("maxY : %d\n", maxY);
+	printf("maxY : %d\n", maxY);*/
 	for (int i = minX; i < maxX; i++)
 	{
-		printf("enter x\n");
+		//printf("enter x\n");
 		for (int j = minY; j < maxY; j++)
 		{
-			printf("enter y\n");
+			//printf("enter y\n");
 			for (int m = 0; m < k; m++)
 			{
 				if (isNoteInCell(getCell(grid, i, j), variable[m]))
@@ -295,11 +295,11 @@ bool removeNotesKUpletColumns(T_Grid grid, int** cooTuple, int* variable, int k,
 	bool hasChanged = false;
 	bool theSame = false;
 
-	printf("\nDEBUF\n");
+	/*printf("\nDEBUF\n");
 	printf("k : %d\n", k);
 	printf("x,y : %d,%d\n", cooTuple[0][0], y);
 	printf("variable : %d\n", variable[0]);
-	printf("cooTuple : (%d,%d)\n\n", cooTuple[0][0], cooTuple[0][1]);
+	printf("cooTuple : (%d,%d)\n\n", cooTuple[0][0], cooTuple[0][1]);*/
 
 	for (int i = 0; i < 9; i++)
 	{
@@ -347,7 +347,7 @@ bool removeNotesKUpletSquare(T_Grid grid, int** cooTuple, int* variable, int k, 
 					theSame = true;
 				}
 			}
-			printf("theSame coo (%d,%d) : %d\n", i, y, theSame);
+			//printf("theSame coo (%d,%d) : %d\n", i, y, theSame);
 			if (!theSame)
 			{
 				for (int m = 0; m < k; m++)
@@ -370,22 +370,22 @@ bool removeNoteOnCell(T_Grid grid, int** cooTuple, int* tuple, int k)
 
 	bool theSame = false;
 
-	printf("\n\n\nDEBUG :\n\n");
-	printf("k : %d\nsize : %d\n\n", k,size);
+	/*printf("\n\n\nDEBUG :\n\n");
+	printf("k : %d\nsize : %d\n\n", k,size);*/
 
 	if (k == 1)
 	{
-		printf("coo : (%d,", cooTuple[0][0]);
-		printf("%d)\n", cooTuple[0][1]);
+		/*printf("coo : (%d,", cooTuple[0][0]);
+		printf("%d)\n", cooTuple[0][1]);*/
 	}
 	if (k == 2)
 	{
-		printf("coo : (%d,", cooTuple[0][0]);
+		/*printf("coo : (%d,", cooTuple[0][0]);
 		printf("%d) ; (", cooTuple[0][1]);
 		printf("%d,", cooTuple[1][0]);
 		printf("%d)\n\n", cooTuple[1][1]);
 
-		printf("var %d %d\n", tuple[0], tuple[1]);
+		printf("var %d %d\n", tuple[0], tuple[1]);*/
 	}
 	
 	bool hasChanged = false;
@@ -402,7 +402,7 @@ bool removeNoteOnCell(T_Grid grid, int** cooTuple, int* tuple, int k)
 				if (tuple[r] == t)
 				{
 					//printf("Avant\n");
-					printf("tuple : %d | t : %d\n", tuple[r], t);
+					//printf("tuple : %d | t : %d\n", tuple[r], t);
 					theSame = true;
 					
 					//printf("Apres\n");
@@ -410,7 +410,7 @@ bool removeNoteOnCell(T_Grid grid, int** cooTuple, int* tuple, int k)
 			}
 			if (!theSame)
 			{
-				printf("rmv : %d\n",t);
+				//printf("rmv : %d\n",t);
 				hasChanged |= unsetNoteCell(getCell(grid, cooTuple[w][0], cooTuple[w][1]), t);
 			}
 			theSame = false;
@@ -515,7 +515,7 @@ void initBaton(T_Grid grid, int* b, int xMin, int xMax, int yMin, int yMax)
 {
 	int size = getGridSize(grid);
 
-	printf("test\n");
+	//printf("test\n");
 
 	for (int z = 0; z < size; z++)
 	{
@@ -524,7 +524,7 @@ void initBaton(T_Grid grid, int* b, int xMin, int xMax, int yMin, int yMax)
 		b[z] = 0;
 	}
 
-	afficheBatonBis(b);
+	//afficheBatonBis(b);
 
 	int k = 0;
 
@@ -545,7 +545,7 @@ void initBaton(T_Grid grid, int* b, int xMin, int xMax, int yMin, int yMax)
 		}
 	}
 
-	afficheBatonBis(b);
+	//afficheBatonBis(b);
 }
 
 int howManyZero(T_Grid grid, int* b)
@@ -605,9 +605,9 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 
 	int possibility = coeffBinomial(k, size);
 	
-	printf("\nbefore\n");
+	//printf("\nbefore\n");
 	int** tuples = generateKTuples(k, possibility);
-	printf("\nafter\n");
+	//printf("\nafter\n");
 
 	while (stop < possibility && !hasChanged)
 	{
@@ -615,31 +615,31 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 		int ySquare = 0;
 		int sqrtS = getGridSqrtSize(grid);
 
-		printf("\ntest\n");
+		//printf("\ntest\n");
 		for (int i = 0; i < k; i++) {
-			printf("k : %d\n", k);
+			/*printf("k : %d\n", k);
 			printf("i : %d\n", i);
 			printf("stop : %d\n", stop);
-			printf("tuples[stop][i] : %d\n", tuples[stop][i]);
+			printf("tuples[stop][i] : %d\n", tuples[stop][i]);*/
 			variable[i] = tuples[stop][i];
 		}
-		printf("\ntest1\n");
+		//printf("\ntest1\n");
 
-		if (k == 1)
+		/*if (k == 1)
 		{
 			printf("\n\nTesting %d...\n",variable[0]);
 		}
 		if (k == 2)
 		{
 			printf("\n\nTesting %d %d...\n", variable[0], variable[1]);
-		}
+		}*/
 		
 		while (stopbis < size && hasChanged == false)
 		{
 
 			//SQUARE
 
-			printf("Square %d %d\n", xSquare, ySquare);
+			//printf("Square %d %d\n", xSquare, ySquare);
 
 			createBaton(grid, batonHidden);
 			initBaton(grid, batonNaked, xSquare, xSquare + sqrtS - 1, ySquare, ySquare + sqrtS - 1);
@@ -651,9 +651,9 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 
 			if (howManyT == k)
 			{
-				printf("\nHERE !\n");
+				//printf("\nHERE !\n");
 
-				afficheBaton(batonHidden);
+				//afficheBaton(batonHidden);
 
 				//findCooTupleSquare(sqrtS, batonHidden, cooTuple, xSquare, ySquare);
 
@@ -676,18 +676,18 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 				howManyT = 0;
 				
 				hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
-				printf("on cell : ");
+				//printf("on cell : ");
 				if (hasChanged) {
-					printf("Change occur !\n");
+					//printf("Change occur !\n");
 				}
 				else {
-					printf("No change !\n");
+					//printf("No change !\n");
 				}
 
 			}
 			if (howManyZ == k && !hasChanged)
 			{
-				printf("bouh\n");
+				//printf("bouh\n");
 				howManyZ = 0;
 
 				int bwa = 0;
@@ -707,35 +707,35 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 					}
 				}
 
-				printf("\nk : %d\n", k);
+				//printf("\nk : %d\n", k);
 
 				hasChanged |= removeNotesKUpletSquare(grid, cooTuple, variable, k, xSquare, ySquare);
-				printf("everywher : ");
+				//printf("everywher : ");
 				if (hasChanged) {
-					printf("Change occur !\n");
+					//printf("Change occur !\n");
 				}
 				else {
-					printf("No change !\n");
+					//printf("No change !\n");
 				}
 			}
 
 			nextSquare(getGridSqrtSize(grid), &xSquare, &ySquare);
 
-			printf("\nfin square hasChanged : %d\n", hasChanged);
+			//printf("\nfin square hasChanged : %d\n", hasChanged);
 
 			// LIGNE
 
-			printf("Line %d\n", stopbis);
+			//printf("Line %d\n", stopbis);
 			
 			if (!hasChanged)
 			{
-				printf("testLine\n");
+				//printf("testLine\n");
 				// Pour les k nombres compris entre 1 et 9 (k nombres distincts)
 						// Tableau de bool�ens t de taille 9 tous � faux
 				createBaton(grid, batonHidden);
-				printf("avant\n");
+				//printf("avant\n");
 				initBaton(grid, batonNaked, stopbis, stopbis, 0, size-1);
-				printf("apr�s\n");
+				//printf("apr�s\n");
 
 				// Pour les k nombres 
 						// Pour les 9 cases d'une zone, si la case contient k[i], t[case] = vrai
@@ -747,7 +747,7 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 
 				if (howManyT == k)
 				{
-					printf("HERE !\n");
+					//printf("HERE !\n");
 
 					int grr = 0;
 					for (int i = 0; i < size; i++)
@@ -782,15 +782,15 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 				howManyT = 0;
 			}
 
-			printf("\nfin line hasChanged : %d\n", hasChanged);
+			//printf("\nfin line hasChanged : %d\n", hasChanged);
 			//COLONNE
 
 
-			printf("Colonne %d\n", stopbis);
+			//printf("Colonne %d\n", stopbis);
 
 			if (!hasChanged)
 			{
-				printf("testColonne\n");
+				//printf("testColonne\n");
 				createBaton(grid, batonHidden);
 				initBaton(grid, batonNaked, 0, size-1, stopbis, stopbis);
 
@@ -799,7 +799,7 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 				howManyT = howManyTrue(grid, batonHidden);
 				howManyZ = howManyZero(grid, batonNaked);
 
-				afficheBatonBis(batonNaked);
+				//afficheBatonBis(batonNaked);
 
 				if (howManyT == k)
 				{

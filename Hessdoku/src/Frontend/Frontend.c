@@ -63,15 +63,20 @@ void exampleButton(int button, int clicks, void* userData)
     // do stuff...
 }
 
-void runFrontend(T_Frontend* frontend)
+void addButtons(T_Frontend* frontend)
 {
-    // small button example
     addButton(frontend->window, createButton(600, 50, "Open grid...", openGridFile, frontend));
     addButton(frontend->window, createButton(600, 100, "Show/Hide notes", showHideNotes, frontend));
-    addButton(frontend->window, createButton(600, 150, "Remove some notes", removeSomeNotes, &frontend->grid));
-    addButton(frontend->window, createButton(600, 200, "Example", exampleButton, frontend));
-    addButton(frontend->window, createButton(600, 250, "Quit", quit, frontend));
-    
+    addButton(frontend->window, createButton(600, 150, "Remove singletons", NULL, frontend));
+    addButton(frontend->window, createButton(600, 200, "Remove pairs", NULL, frontend));
+    addButton(frontend->window, createButton(600, 250, "Remove triples", NULL, frontend));
+    addButton(frontend->window, createButton(600, 300, "Quit", quit, frontend));
+}
+
+void runFrontend(T_Frontend* frontend)
+{
+    addButtons(frontend);
+
     while (frontend->isRunning && isWindowOpen(frontend->window))
     {
         updateWindow(frontend->window, frontend->font);

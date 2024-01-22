@@ -1,6 +1,7 @@
 #include <Frontend/Frontend.h>
 #include <Frontend/Window.h>
 #include <Frontend/Config.h>
+#include <Frontend/FileDialog.h>
 #include <Solver.h>
 #include <Log.h>
 #include <stdlib.h>
@@ -30,6 +31,18 @@ T_Frontend* createFrontend(T_Grid grid)
 
 void quit(int button, int clicks, void* userData) { ((T_Frontend*)userData)->isRunning = false; } // cool oneliner
 
+void openGridFile(int button, int clicks, void* userData)
+{
+    T_Frontend* frontend = (T_Frontend*)userData;
+
+    const char* filePath = openFileDialog();
+    if (filePath == NULL)
+        return;
+
+    freeGrid(frontend->grid);
+    frontend->grid = generateGridFromFile(filePath);
+}
+
 void showHideNotes(int button, int clicks, void* userData)
 {
     ((T_Frontend*)userData)->drawNotes ^= 1;
@@ -54,9 +67,10 @@ void runFrontend(T_Frontend* frontend)
 {
     // small button example
     addButton(frontend->window, createButton(600, 50, "Quit", quit, frontend));
-    addButton(frontend->window, createButton(600, 100, "Show/Hide notes", showHideNotes, frontend));
-    addButton(frontend->window, createButton(600, 150, "Remove some notes", removeSomeNotes, &frontend->grid));
-    addButton(frontend->window, createButton(600, 200, "Example", exampleButton, frontend));
+    addButton(frontend->window, createButton(600, 100, "Open grid...", openGridFile, frontend));
+    addButton(frontend->window, createButton(600, 150, "Show/Hide notes", showHideNotes, frontend));
+    addButton(frontend->window, createButton(600, 200, "Remove some notes", removeSomeNotes, &frontend->grid));
+    addButton(frontend->window, createButton(600, 250, "Example", exampleButton, frontend));
     
     while (frontend->isRunning && isWindowOpen(frontend->window))
     {

@@ -9,7 +9,7 @@
 typedef struct T_Frontend {
     T_Window* window;
     T_Font* font;
-    T_Grid grid;
+    T_GraphicsGrid* grid;
 
     bool isRunning;
 
@@ -22,7 +22,7 @@ T_Frontend* createFrontend(T_Grid grid)
 
     frontend->window = createWindow(FRONTEND_WINDOW_TITLE, FRONTEND_WINDOW_WIDTH, FRONTEND_WINDOW_HEIGHT);
     frontend->font = loadFont("OpenSans-Regular.ttf", 32);
-    frontend->grid = grid;
+    frontend->grid = createGraphicsGrid(grid, 5, 5, 64);
     frontend->isRunning = true;
     frontend->drawNotes = false;
 
@@ -39,14 +39,11 @@ void openGridFile(int button, int clicks, void* userData)
     if (filePath == NULL)
         return;
 
-    freeGrid(frontend->grid);
-    frontend->grid = generateGridFromFile(filePath);
+    freeGrid(getGrid(frontend->grid));
+    setGrid(frontend->grid, generateGridFromFile(filePath));
 }
 
-void showHideNotes(int button, int clicks, void* userData)
-{
-    ((T_Frontend*)userData)->drawNotes ^= 1;
-}
+void showHideNotes(int button, int clicks, void* userData) { setGraphicsGridDrawNotes(((T_Frontend*)userData)->grid, getGraphicsGridDrawNotes(((T_Frontend*)userData)->grid) ^ 1); } // even cooler oneliner
 
 void removeSomeNotes(int button, int clicks, void* userData) {
     T_Grid* grid = (T_Grid*)userData;
@@ -98,7 +95,7 @@ void runFrontend(T_Frontend* frontend)
         updateWindow(frontend->window, frontend->font);
         clearWindow(frontend->window, 127, 127, 127);
 
-        drawGrid(frontend, 10, 10, 64);
+        drawGrid(frontend, frontend->grid);
 
         drawWidgets(frontend->window, frontend->font);
         presentWindow(frontend->window);
@@ -115,15 +112,8 @@ T_Window* getWindow(T_Frontend* frontend)
 {
     return frontend->window;
 }
+
 T_Font* getFont(T_Frontend* frontend)
 {
     return frontend->font;
-}
-T_Grid getGrid(T_Frontend* frontend)
-{
-    return frontend->grid;
-}
-bool getDrawNotes(T_Frontend* frontend)
-{
-    return frontend->drawNotes;
 }

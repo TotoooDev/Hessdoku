@@ -1,6 +1,6 @@
 #include <Frontend/Frontend.h>
-#include <Frontend/Window.h>
 #include <Frontend/Config.h>
+#include <Frontend/GraphicsGrid.h>
 #include <Frontend/FileDialog.h>
 #include <Solver.h>
 #include <Log.h>
@@ -111,68 +111,19 @@ void freeFrontend(T_Frontend* frontend)
     free(frontend);
 }
 
-void drawNotes(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, unsigned int cellX, unsigned int cellY)
+T_Window* getWindow(T_Frontend* frontend)
 {
-    if (!frontend->drawNotes)
-        return;
-
-    int y = cellY * rectSize + yOffset + rectSize / 9;
-    for (unsigned int i = 0; i < getGridSize(frontend->grid); i++)
-    {
-        if (!isNoteInCell(getCell(frontend->grid, cellY, cellX), i + 1))
-            continue;
-        
-        int x = cellX * rectSize + xOffset + (i % 3) * 16 + rectSize / 9;
-        if (i % 3 == 0 && i != 0)
-            y += 16;
-
-        char text[2];
-        sprintf(text, "%d", i + 1);
-        drawText(frontend->window, frontend->font, (T_Color){ 127, 127, 127 }, text, x, y, 0.5f);
-    }
+    return frontend->window;
 }
-
-void drawValue(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, int value, unsigned int cellX, unsigned int cellY)
+T_Font* getFont(T_Frontend* frontend)
 {
-    char text[2];
-    sprintf(text, "%d", value);
-
-    int width, height;
-    getTextDimensions(frontend->font, text, &width, &height, 1.0f);
-
-    int x = cellX * rectSize + xOffset - width / 2 + rectSize / 2;
-    int y = cellY * rectSize + yOffset - height / 2 + rectSize / 2;
-    drawText(frontend->window, frontend->font, (T_Color){ 0, 0, 0 }, text, x, y, 1.0f);
+    return frontend->font;
 }
-
-void drawGrid(T_Frontend* frontend, int xOffset, int yOffset, int rectSize)
+T_Grid getGrid(T_Frontend* frontend)
 {
-    for (unsigned int i = 0; i < getGridSize(frontend->grid); i++)
-    {
-        for (unsigned int ii = 0; ii < getGridSize(frontend->grid); ii++)
-        {
-            int x = ii * rectSize + xOffset;
-            int y = i * rectSize + yOffset;
-            setDrawColor(frontend->window, 255, 255, 255);
-            drawRect(frontend->window, x, y, rectSize, rectSize);
-            
-            unsigned int value = getValue(frontend->grid, i, ii);
-            if (value == 0)
-                drawNotes(frontend, xOffset, yOffset, rectSize, ii, i);
-            else
-                drawValue(frontend, xOffset, yOffset, rectSize, value, ii, i);
-            
-        }
-    }
-
-    for (unsigned int i = 0; i < getGridSize(frontend->grid) + 1; i++)
-    {
-        if (i % 3 == 0)
-            setDrawColor(frontend->window, 0, 0, 0);
-        else
-            setDrawColor(frontend->window, 127, 127, 127);
-
-        drawLine(frontend->window, i * rectSize + xOffset, yOffset, i * rectSize + xOffset, rectSize * getGridSize(frontend->grid) + yOffset);
-        drawLine(frontend->window,  xOffset, i * rectSize + yOffset, rectSize * getGridSize(frontend->grid) + xOffset, i * rectSize + yOffset);
-    }
+    return frontend->grid;
+}
+bool getDrawNotes(T_Frontend* frontend)
+{
+    return frontend->drawNotes;
 }

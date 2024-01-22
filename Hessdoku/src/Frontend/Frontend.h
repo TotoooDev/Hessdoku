@@ -2,6 +2,7 @@
 #define FRONTEND_H
 
 #include <Grid.h>
+#include <Frontend/Window.h>
 
 /**
  * A frontend structure that holds everything related to the graphical interface.
@@ -35,5 +36,10 @@ void freeFrontend(T_Frontend* frontend);
  * @param rectSize The size of a grid square.
 */
 void drawGrid(T_Frontend* frontend, int xOffset, int yOffset, int rectSize);
+
+T_Window* getWindow(T_Frontend* frontend);
+T_Font* getFont(T_Frontend* frontend);
+T_Grid getGrid(T_Frontend* frontend);
+bool getDrawNotes(T_Frontend* frontend);
 
 #endif

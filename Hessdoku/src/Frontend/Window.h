@@ -12,6 +12,11 @@
  */
 typedef struct T_Window T_Window;
 
+typedef void(*T_ButtonDownFunction)(int, int, void*);
+typedef void(*T_ButtonUpFunction)(int, void*);
+typedef void(*T_MouseMovedFunction)(int, int, void*);
+typedef void(*T_KeyDownfunction)(int, void*);
+
 /**
  * Creates a window and displays it at the center of the screen.
  * @param title The title of the window.

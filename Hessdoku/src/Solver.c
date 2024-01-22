@@ -491,6 +491,13 @@ int** generateKTuples(const int k, const int size) {
 	return tuples;
 }
 
+void freeTuples(int** tuples, int nbTuples) {
+	for (int i = 0; i < nbTuples; i++) {
+		free(tuples[i]);
+	}
+	free(tuples);
+}
+
 void afficheBaton(unsigned char * baton)
 {
 	printf("Baton : ");
@@ -852,45 +859,7 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 	free(cooTuple);
 	free(batonHidden);
 	free(batonNaked);
-	// freeTuples(tuples, possibility);
+	freeTuples(tuples, possibility);
 
 	return hasChanged;
-}
-
-
-
-
-void testBouh(T_Grid grid) {
-	for (int j = 0; j < 9; j++) {
-		printf("\nTest %d : ", j);
-		for (int i = 0; i < 9; i++) {
-			if (isNoteInCell(getCell(grid, j, i), 1)) {
-				printf("o ");
-			}
-			else {
-				printf("x ");
-			}
-		}
-		printf("\n");
-	}
-}
-
-void testMwah(T_Grid grid) {
-	int xSquare = 0;
-	int ySquare = 0;
-	for (int k = 0; k < 9; k++) {
-		printf("\nTest square (%d,%d) : ", xSquare, ySquare);
-		for (int i = xSquare; i < xSquare + 3; i++) {
-			for (int j = ySquare; j < ySquare + 3; j++) {
-				//printf("(%d,%d) ", i, j);
-				if (isNoteInCell(getCell(grid, i, j), 1)) {
-					printf("o ; ");
-				}
-				else {
-					printf("x ; ");
-				}
-			}
-		}
-		nextSquare(3, &xSquare, &ySquare);
-	}
 }

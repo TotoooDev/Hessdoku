@@ -24,7 +24,7 @@ T_Frontend* createFrontend(T_Grid grid)
     frontend->font = loadFont("OpenSans-Regular.ttf", 32);
     frontend->grid = grid;
     frontend->isRunning = true;
-    frontend->drawNotes = true;
+    frontend->drawNotes = false;
 
     return frontend;
 }
@@ -66,11 +66,11 @@ void exampleButton(int button, int clicks, void* userData)
 void runFrontend(T_Frontend* frontend)
 {
     // small button example
-    addButton(frontend->window, createButton(600, 50, "Quit", quit, frontend));
-    addButton(frontend->window, createButton(600, 100, "Open grid...", openGridFile, frontend));
-    addButton(frontend->window, createButton(600, 150, "Show/Hide notes", showHideNotes, frontend));
-    addButton(frontend->window, createButton(600, 200, "Remove some notes", removeSomeNotes, &frontend->grid));
-    addButton(frontend->window, createButton(600, 250, "Example", exampleButton, frontend));
+    addButton(frontend->window, createButton(600, 50, "Open grid...", openGridFile, frontend));
+    addButton(frontend->window, createButton(600, 100, "Show/Hide notes", showHideNotes, frontend));
+    addButton(frontend->window, createButton(600, 150, "Remove some notes", removeSomeNotes, &frontend->grid));
+    addButton(frontend->window, createButton(600, 200, "Example", exampleButton, frontend));
+    addButton(frontend->window, createButton(600, 250, "Quit", quit, frontend));
     
     while (frontend->isRunning && isWindowOpen(frontend->window))
     {

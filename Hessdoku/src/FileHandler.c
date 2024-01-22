@@ -2,20 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "fileHandler.h";
-
-
-/**
-* FILE HANDLER
-* 
-* This library allows to read a file character by character.
-* When a file is open, we place a "cursor" on the first element of the file.
-* Then, when the next character is read, the cursor will move past it.
-* 
-* Considering a FILE, this library will allow to read it easyly, by either advancing the 
-* cursor until a given character or read the numbers until a character.
-*/
-
+#include "FileHandler.h"
 
 
 /**

@@ -24,7 +24,14 @@ void runFrontend();
  */
 void freeFrontend();
 
+/**
+ * @returns The window associated with the frontend.
+ */
 T_Window* getWindow();
+
+/**
+ * @returns The font associated with the frontend.
+ */
 T_Font* getFont();
 
 #endif

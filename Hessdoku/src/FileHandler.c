@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
 #include "FileHandler.h"
 
@@ -16,9 +17,30 @@
 * cursor until a given character or read the numbers until a character.
 */
 
+int getFileExtension(const char* filename, char* extension)
+{
+	unsigned int length = strlen(filename);
+	int index = -1;
+
+	for (unsigned int i = length - 1; i > 0; i--)
+	{
+		if (filename[i] == '.')
+		{
+			index = i;
+			strcpy(extension, &filename[index]);
+			return 0;
+		}
+	}
+
+	return -1;
+}
 
 FILE* openFile(const char * name)
 {
+	char extension[10];
+	if (getFileExtension(name, extension) == 0)
+		printf("extension: %s\n", extension);
+
 	FILE* fd = fopen(name, "r");
 	assert(fd != NULL);				// Asserts that the file has been opened
 	return fd;

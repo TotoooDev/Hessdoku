@@ -446,6 +446,12 @@ int** generateKTuples(const int k, const int size) {
 	return tuples;
 }
 
+void freeTuples(int** tuples, int nbTuples) {
+	for (int i = 0; i < nbTuples; i++) {
+		free(tuples[i]);
+	}
+	free(tuples);
+}
 
 void afficheBaton(unsigned char * baton)
 {
@@ -705,7 +711,7 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 				howManyT = howManyTrue(grid, batonHidden);
 				howManyZ = howManyZero(grid, batonNaked);
 
-				afficheBatonBis(batonNaked);
+				//afficheBatonBis(batonNaked);
 
 				if (howManyT == k)
 				{
@@ -755,6 +761,7 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 	free(cooTuple);
 	free(batonHidden);
 	free(batonNaked);
+	freeTuples(tuples, possibility);
 
 	return hasChanged;
 }

@@ -2,6 +2,8 @@
 #include <Frontend/Frontend.h>
 #include <Frontend/Window.h>
 #include <Frontend/Color.h>
+#include <Frontend/Mouse.h>
+#include <Frontend/Keyboard.h>
 #include <Log.h>
 #include <stdlib.h>
 
@@ -52,7 +54,7 @@ bool isMouseCursorInGraphicsGrid(T_GraphicsGrid* grid, int mouseX, int mouseY, i
 
 void graphicsGrid_ButtonDownFunction(int button, int clicks, void* userData)
 {
-    if (button != SDL_BUTTON_LEFT || clicks != 2)
+    if (button != BUTTON_LEFT || clicks != 2)
         return;
 
     T_GraphicsGrid* grid = (T_GraphicsGrid*)userData;
@@ -87,16 +89,16 @@ void graphicsGrid_KeyDownFunction(int key, void* userData)
 
     switch (key)
     {
-    case SDL_SCANCODE_0: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 0); break;
-    case SDL_SCANCODE_1: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 1); break;
-    case SDL_SCANCODE_2: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 2); break;
-    case SDL_SCANCODE_3: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 3); break;
-    case SDL_SCANCODE_4: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 4); break;
-    case SDL_SCANCODE_5: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 5); break;
-    case SDL_SCANCODE_6: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 6); break;
-    case SDL_SCANCODE_7: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 7); break;
-    case SDL_SCANCODE_8: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 8); break;
-    case SDL_SCANCODE_9: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 9); break;
+    case KEY_0: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 0); break;
+    case KEY_1: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 1); break;
+    case KEY_2: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 2); break;
+    case KEY_3: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 3); break;
+    case KEY_4: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 4); break;
+    case KEY_5: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 5); break;
+    case KEY_6: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 6); break;
+    case KEY_7: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 7); break;
+    case KEY_8: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 8); break;
+    case KEY_9: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 9); break;
     default: break;
     }
 }

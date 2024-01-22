@@ -1,5 +1,6 @@
 #include <Frontend/Button.h>
 #include <Frontend/Frontend.h>
+#include <Frontend/Mouse.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -31,7 +32,7 @@ void button_ButtonDownFunction(int button, int clicks, void* userData)
 {
     T_Button* realButton = (T_Button*)userData;
 
-    if (realButton->isHovered && button == SDL_BUTTON_LEFT)
+    if (realButton->isHovered && button == BUTTON_LEFT)
     {
         realButton->isClicked = true;
         if (realButton->function != NULL)

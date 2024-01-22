@@ -27,7 +27,7 @@ bool isCursorInButton(int mouseX, int mouseY, T_Button* button)
     return (mouseX > buttonX && mouseX < buttonX + buttonWidth) && (mouseY > buttonY && mouseY < buttonY + buttonHeight);
 }
 
-void buttonDownFunction(int button, int clicks, void* userData)
+void button_ButtonDownFunction(int button, int clicks, void* userData)
 {
     T_Button* realButton = (T_Button*)userData;
 
@@ -39,13 +39,13 @@ void buttonDownFunction(int button, int clicks, void* userData)
     }
 }
 
-void buttonUpFunction(int button, void* userData)
+void button_ButtonUpFunction(int button, void* userData)
 {
     T_Button* realButton = (T_Button*)userData;
     realButton->isClicked = false;
 }
 
-void mouseMovedFunction(int x, int y, void* userData)
+void button_MouseMovedFunction(int x, int y, void* userData)
 {
     T_Button* button = (T_Button*)userData;
     button->isHovered = isCursorInButton(x, y, button);
@@ -70,9 +70,9 @@ T_Button* createButton(int x, int y, const char* text, T_ButtonFunction function
     button->text = malloc(sizeof(char) * strlen(text));
     strcpy(button->text, text);
 
-    addButtonDownFunction(getWindow(), buttonDownFunction, button);
-    addButtonUpFunction(getWindow(), buttonUpFunction, button);
-    addMouseMovedFunction(getWindow(), mouseMovedFunction, button);
+    addButtonDownFunction(getWindow(), button_ButtonDownFunction, button);
+    addButtonUpFunction(getWindow(), button_ButtonUpFunction, button);
+    addMouseMovedFunction(getWindow(), button_MouseMovedFunction, button);
 
     return button;
 }

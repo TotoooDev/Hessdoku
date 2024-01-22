@@ -1,6 +1,7 @@
 #include <Frontend/Frontend.h>
 #include <Frontend/Window.h>
 #include <Frontend/Config.h>
+#include <Solver.h>
 #include <Log.h>
 #include <stdlib.h>
 
@@ -34,6 +35,11 @@ void showHideNotes(int button, int clicks, void* userData)
     ((T_Frontend*)userData)->drawNotes ^= 1;
 }
 
+void removeSomeNotes(int, int, void* userData) {
+    T_Grid* grid = (T_Grid*)userData;
+    removeNotesInGridByZones(*grid);
+}
+
 // Example for a button that does something
 void exampleButton(int button, int clicks, void* userData)
 {
@@ -49,7 +55,8 @@ void runFrontend(T_Frontend* frontend)
     // small button example
     addButton(frontend->window, createButton(600, 50, "Quit", quit, frontend));
     addButton(frontend->window, createButton(600, 100, "Show/Hide notes", showHideNotes, frontend));
-    addButton(frontend->window, createButton(600, 150, "Example", exampleButton, frontend));
+    addButton(frontend->window, createButton(600, 150, "Remove some notes", removeSomeNotes, &frontend->grid));
+    addButton(frontend->window, createButton(600, 200, "Example", exampleButton, frontend));
     
     while (frontend->isRunning && isWindowOpen(frontend->window))
     {
@@ -75,9 +82,9 @@ void drawNotes(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, uns
         return;
 
     int y = cellY * rectSize + yOffset + rectSize / 9;
-    for (unsigned int i = 0; i < getGridSqrtSize(frontend->grid); i++)
+    for (unsigned int i = 0; i < getGridSize(frontend->grid); i++)
     {
-        if (!isNoteInCell(getCell(frontend->grid, cellX, cellY), i))
+        if (!isNoteInCell(getCell(frontend->grid, cellY, cellX), i + 1))
             continue;
         
         int x = cellX * rectSize + xOffset + (i % 3) * 16 + rectSize / 9;
@@ -105,16 +112,16 @@ void drawValue(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, int
 
 void drawGrid(T_Frontend* frontend, int xOffset, int yOffset, int rectSize)
 {
-    for (unsigned int i = 0; i < getGridSqrtSize(frontend->grid); i++)
+    for (unsigned int i = 0; i < getGridSize(frontend->grid); i++)
     {
-        for (unsigned int ii = 0; ii < getGridSqrtSize(frontend->grid); ii++)
+        for (unsigned int ii = 0; ii < getGridSize(frontend->grid); ii++)
         {
             int x = ii * rectSize + xOffset;
             int y = i * rectSize + yOffset;
             setDrawColor(frontend->window, 255, 255, 255);
             drawRect(frontend->window, x, y, rectSize, rectSize);
             
-            unsigned int value = getValue(frontend->grid, ii, i);
+            unsigned int value = getValue(frontend->grid, i, ii);
             if (value == 0)
                 drawNotes(frontend, xOffset, yOffset, rectSize, ii, i);
             else
@@ -123,14 +130,14 @@ void drawGrid(T_Frontend* frontend, int xOffset, int yOffset, int rectSize)
         }
     }
 
-    for (unsigned int i = 0; i < getGridSqrtSize(frontend->grid) + 1; i++)
+    for (unsigned int i = 0; i < getGridSize(frontend->grid) + 1; i++)
     {
         if (i % 3 == 0)
             setDrawColor(frontend->window, 0, 0, 0);
         else
             setDrawColor(frontend->window, 127, 127, 127);
 
-        drawLine(frontend->window, i * rectSize + xOffset, yOffset, i * rectSize + xOffset, rectSize * getGridSqrtSize(frontend->grid) + yOffset);
-        drawLine(frontend->window,  xOffset, i * rectSize + yOffset, rectSize * getGridSqrtSize(frontend->grid) + xOffset, i * rectSize + yOffset);
+        drawLine(frontend->window, i * rectSize + xOffset, yOffset, i * rectSize + xOffset, rectSize * getGridSize(frontend->grid) + yOffset);
+        drawLine(frontend->window,  xOffset, i * rectSize + yOffset, rectSize * getGridSize(frontend->grid) + xOffset, i * rectSize + yOffset);
     }
 }

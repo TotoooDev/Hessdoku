@@ -16,10 +16,12 @@ typedef struct T_Frontend {
     bool drawNotes;
 } T_Frontend;
 
-T_Frontend* FrontendInstance;
+T_Frontend* FrontendInstance = NULL;
 
 void createFrontend(T_Grid grid)
 {
+    ASSERT(FrontendInstance != NULL, "A frontend already exists!");
+
     FrontendInstance = (T_Frontend*)malloc(sizeof(T_Frontend));
 
     FrontendInstance->window = createWindow(FRONTEND_WINDOW_TITLE, FRONTEND_WINDOW_WIDTH, FRONTEND_WINDOW_HEIGHT);

@@ -10,7 +10,8 @@
 #include <stdlib.h>
 
 // arbitrary number lol
-#define WINDOW_MAX_BUTTONS 128
+#define WINDOW_MAX_BUTTONS 1024
+#define WINDOW_MAX_EVENT_FUNCTIONS 2048
 
 static unsigned int NumWindows = 0;
 
@@ -23,6 +24,22 @@ typedef struct T_Window
 
     T_Button* buttons[WINDOW_MAX_BUTTONS];
     unsigned int numButtons;
+
+    T_ButtonDownFunction buttonDownFunctions[WINDOW_MAX_EVENT_FUNCTIONS];
+    void* buttonDownUserData[WINDOW_MAX_EVENT_FUNCTIONS];
+    unsigned int numButtonDownFunctions;
+
+    T_ButtonUpFunction buttonUpFunctions[WINDOW_MAX_EVENT_FUNCTIONS];
+    void* buttonUpUserData[WINDOW_MAX_EVENT_FUNCTIONS];
+    unsigned int numButtonUpFunctions;
+
+    T_MouseMovedFunction mouseMovedFunctions[WINDOW_MAX_EVENT_FUNCTIONS];
+    void* mouseMovedUserData[WINDOW_MAX_EVENT_FUNCTIONS];
+    unsigned int numMouseMovedFunctions;
+
+    T_KeyDownFunction keyDownFunctions[WINDOW_MAX_EVENT_FUNCTIONS];
+    void* keyDownUserData[WINDOW_MAX_EVENT_FUNCTIONS];
+    unsigned int numKeyDownFunctions;
 } T_Window;
 
 bool isCursorInButton(int mouseX, int mouseY, T_Button* button, T_Font* font);
@@ -67,6 +84,11 @@ T_Window* createWindow(const char* title, int width, int height)
     for (unsigned int i = 0; i < WINDOW_MAX_BUTTONS; i++)
         window->buttons[i] = NULL;
     window->numButtons = 0;
+
+    window->numButtonDownFunctions = 0;
+    window->numButtonUpFunctions = 0;
+    window->numMouseMovedFunctions = 0;
+    window->numKeyDownFunctions = 0;
 
     NumWindows++;
 
@@ -138,15 +160,23 @@ void updateWindow(T_Window* window, T_Font* font)
             break;
 
         case SDL_MOUSEBUTTONDOWN:
-            buttonDown(window, font, event);
+            for (unsigned int i = 0; i < window->numButtonDownFunctions; i++)
+                window->buttonDownFunctions[i](event.button.button, event.button.clicks, window->buttonDownUserData[i]);
             break;
 
         case SDL_MOUSEBUTTONUP:
-            buttonUp(window, font, event);
+             for (unsigned int i = 0; i < window->numButtonUpFunctions; i++)
+                window->buttonUpFunctions[i](event.button.button, window->buttonUpUserData[i]);
             break;
 
         case SDL_MOUSEMOTION:
-            mouseMoved(window, font, event);
+            for (unsigned int i = 0; i < window->numMouseMovedFunctions; i++)
+                window->mouseMovedFunctions[i](event.button.button, event.button.clicks, window->mouseMovedUserData[i]);
+            break;
+
+        case SDL_KEYDOWN:
+            for (unsigned int i = 0; i < window->numKeyDownFunctions; i++)
+                window->keyDownFunctions[i](event.key.keysym.scancode, window->keyDownUserData[i]);
             break;
 
         default:
@@ -275,6 +305,35 @@ bool isCursorInButton(int mouseX, int mouseY, T_Button* button, T_Font* font)
     getButtonDimensions(button, font, 0.5f, &buttonWidth, &buttonHeight);
 
     return (mouseX > buttonX && mouseX < buttonX + buttonWidth) && (mouseY > buttonY && mouseY < buttonY + buttonHeight);
+}
+
+void addButtonDownFunction(T_Window* window, T_ButtonDownFunction func, void* userData)
+{
+    ASSERT(window->numButtonDownFunctions < WINDOW_MAX_EVENT_FUNCTIONS, "Failed to add button down function! The array is not big enough.");
+    window->buttonDownFunctions[window->numButtonDownFunctions] = func;
+    window->buttonDownUserData[window->numButtonDownFunctions] = userData;
+    window->numButtonDownFunctions++;
+}
+void addButtonUpFunction(T_Window* window, T_ButtonUpFunction func, void* userData)
+{
+    ASSERT(window->numButtonUpFunctions < WINDOW_MAX_EVENT_FUNCTIONS, "Failed to add button up function! The array is not big enough.");
+    window->buttonUpFunctions[window->numButtonUpFunctions] = func;
+    window->buttonUpUserData[window->numButtonUpFunctions] = userData;
+    window->numButtonUpFunctions++;
+}
+void addMouseMovedFunction(T_Window* window, T_MouseMovedFunction func, void* userData)
+{
+    ASSERT(window->numMouseMovedFunctions < WINDOW_MAX_EVENT_FUNCTIONS, "Failed to add mouse moved function! The array is not big enough.");
+    window->mouseMovedFunctions[window->numMouseMovedFunctions] = func;
+    window->mouseMovedUserData[window->numMouseMovedFunctions] = userData;
+    window->numMouseMovedFunctions++;
+}
+void addKeyDownFunction(T_Window* window, T_KeyDownFunction func, void* userData)
+{
+    ASSERT(window->numKeyDownFunctions < WINDOW_MAX_EVENT_FUNCTIONS, "Failed to add key down function! The array is not big enough.");
+    window->keyDownFunctions[window->numKeyDownFunctions] = func;
+    window->keyDownUserData[window->numKeyDownFunctions] = userData;
+    window->numKeyDownFunctions++;
 }
 
 #endif

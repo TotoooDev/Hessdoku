@@ -1,5 +1,8 @@
 #include <Frontend/GraphicsGrid.h>
+#include <Frontend/Frontend.h>
+#include <Frontend/Window.h>
 #include <Frontend/Color.h>
+#include <Log.h>
 #include <stdlib.h>
 
 typedef struct T_GraphicsGrid
@@ -10,11 +13,93 @@ typedef struct T_GraphicsGrid
     int y;
     int squareSize;
 
+    int hoveredCellX;
+    int hoveredCellY;
     int selectedCellX;
     int selectedCellY;
 
     bool drawNotes;
 } T_GraphicsGrid;
+
+bool isMouseCursorInGraphicsGrid(T_GraphicsGrid* grid, int mouseX, int mouseY, int* cellX, int* cellY)
+{
+    for (unsigned int i = 0; i < getGridSize(grid->grid); i++)
+    {
+        for (unsigned int ii = 0; ii < getGridSize(grid->grid); ii++)
+        {
+            int x = ii * grid->squareSize + grid->x;
+            int y = i * grid->squareSize + grid->y;   
+
+            if ((mouseX > x && mouseX < x + grid->squareSize) && (mouseY > y && mouseY < y + grid->squareSize))
+            {
+                if (cellX != NULL)
+                    *cellX = ii;
+                if (cellY != NULL)
+                    *cellY = i;
+
+                return true;
+            }
+        }
+    }
+
+    if (cellX != NULL)
+        *cellX = -1;
+    if (cellY != NULL)
+        *cellY = -1;
+
+    return false;
+}
+
+void graphicsGrid_ButtonDownFunction(int button, int clicks, void* userData)
+{
+    if (button != SDL_BUTTON_LEFT || clicks != 2)
+        return;
+
+    T_GraphicsGrid* grid = (T_GraphicsGrid*)userData;
+
+    grid->selectedCellX = grid->hoveredCellX;
+    grid->selectedCellY = grid->hoveredCellY;
+}
+
+void graphicsGrid_MouseMovedFunction(int x, int y, void* userData)
+{
+    T_GraphicsGrid* grid = (T_GraphicsGrid*)userData;
+
+    int cellX, cellY;
+    if (isMouseCursorInGraphicsGrid(grid, x, y, &cellX, &cellY))
+    {
+        grid->hoveredCellX = cellX;
+        grid->hoveredCellY = cellY;
+    }
+    else
+    {
+        grid->hoveredCellX = -1;
+        grid->hoveredCellY = -1;
+    }
+}
+
+void graphicsGrid_KeyDownFunction(int key, void* userData)
+{
+    T_GraphicsGrid* grid = (T_GraphicsGrid*)userData;
+
+    if (grid->selectedCellX == -1 || grid->selectedCellY == -1)
+        return;
+
+    switch (key)
+    {
+    case SDL_SCANCODE_0: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 0); break;
+    case SDL_SCANCODE_1: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 1); break;
+    case SDL_SCANCODE_2: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 2); break;
+    case SDL_SCANCODE_3: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 3); break;
+    case SDL_SCANCODE_4: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 4); break;
+    case SDL_SCANCODE_5: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 5); break;
+    case SDL_SCANCODE_6: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 6); break;
+    case SDL_SCANCODE_7: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 7); break;
+    case SDL_SCANCODE_8: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 8); break;
+    case SDL_SCANCODE_9: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 9); break;
+    default: break;
+    }
+}
 
 T_GraphicsGrid* createGraphicsGrid(T_Grid grid, int x, int y, int squareSize)
 {
@@ -23,10 +108,16 @@ T_GraphicsGrid* createGraphicsGrid(T_Grid grid, int x, int y, int squareSize)
     graphicsGrid->grid = grid;
     graphicsGrid->x = x;
     graphicsGrid->y = y;
+    graphicsGrid->hoveredCellX = -1;
+    graphicsGrid->hoveredCellY = -1;
     graphicsGrid->selectedCellX = -1;
     graphicsGrid->selectedCellY = -1;
     graphicsGrid->squareSize = squareSize;
     graphicsGrid->drawNotes = false;
+
+    addButtonDownFunction(getWindow(), graphicsGrid_ButtonDownFunction, graphicsGrid);
+    addMouseMovedFunction(getWindow(), graphicsGrid_MouseMovedFunction, graphicsGrid);
+    addKeyDownFunction(getWindow(), graphicsGrid_KeyDownFunction, graphicsGrid);
 
     return graphicsGrid;
 }
@@ -86,31 +177,6 @@ bool getGraphicsGridDrawNotes(T_GraphicsGrid* grid)
     return grid->drawNotes;
 }
 
-bool isMouseCursorInGraphicsGrid(T_GraphicsGrid* grid, int mouseX, int mouseY, int* cellX, int* cellY)
-{
-    for (unsigned int i = 0; i < getGridSize(grid->grid); i++)
-    {
-        for (unsigned int ii = 0; ii < getGridSize(grid->grid); ii++)
-        {
-            int x = ii * grid->squareSize + grid->x;
-            int y = i * grid->squareSize + grid->y;   
-
-            if ((x < mouseX && x + grid->squareSize < mouseX) && (y < mouseY && y + grid->squareSize < mouseY))
-            {
-                if (cellX != NULL)
-                    *cellX = x;
-                if (cellY != NULL)
-                    *cellY = y;
-            }
-        }
-    }
-
-    if (cellX != NULL)
-        *cellX = -1;
-    if (cellY != NULL)
-        *cellY = -1;
-}
-
 void drawNotes(T_Frontend* frontend, T_GraphicsGrid* grid, int cellX, int cellY)
 {
     if (!grid->drawNotes)
@@ -155,7 +221,7 @@ void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid)
             int y = i * grid->squareSize + grid->y;
 
             if (ii == grid->selectedCellX && i == grid->selectedCellY)
-                setDrawColor(getWindow(frontend), 255, 0, 255);
+                setDrawColor(getWindow(frontend), 221, 220, 220);
             else
                 setDrawColor(getWindow(frontend), 255, 255, 255);
             drawRect(getWindow(frontend), x, y, grid->squareSize, grid->squareSize);

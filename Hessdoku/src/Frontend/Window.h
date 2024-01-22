@@ -15,7 +15,7 @@ typedef struct T_Window T_Window;
 typedef void(*T_ButtonDownFunction)(int, int, void*);
 typedef void(*T_ButtonUpFunction)(int, void*);
 typedef void(*T_MouseMovedFunction)(int, int, void*);
-typedef void(*T_KeyDownfunction)(int, void*);
+typedef void(*T_KeyDownFunction)(int, void*);
 
 /**
  * Creates a window and displays it at the center of the screen.
@@ -121,5 +121,10 @@ void drawRect(T_Window* window, int x, int y, int width, int height);
  * @param sizeRatio A multiplicator for the size of the text.
 */
 void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, int x, int y, float sizeRatio);
+
+void addButtonDownFunction(T_Window* window, T_ButtonDownFunction func, void* userData);
+void addButtonUpFunction(T_Window* window, T_ButtonUpFunction func, void* userData);
+void addMouseMovedFunction(T_Window* window, T_MouseMovedFunction func, void* userData);
+void addKeyDownFunction(T_Window* window, T_KeyDownFunction func, void* userData);
 
 #endif

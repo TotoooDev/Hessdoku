@@ -1,5 +1,7 @@
 #include <Grid.h>
 #include <Log.h>
+#include <String.h>
+#include <assert.h>
 #include "FileHandler.h"
 
 T_Grid generateGrid(int size, int sqrtSize)
@@ -23,8 +25,31 @@ T_Grid generateGrid(int size, int sqrtSize)
     return game;
 }
 
-// TODO: docs in .h
-T_Grid generateGridFromFile(const char* path)
+T_Grid generateGridFromSequence(const char* path)
+{
+    FILE* fd = openFile(path);
+
+    int gridSize = 9;
+    T_Grid grid = generateGrid(gridSize, gridSize / 3);
+
+    for (int i = 0; i < gridSize; i++)
+    {
+        for (int j = 0; j < gridSize; j++)
+        {
+            int next = readNextInteger(fd);
+            setCell(grid, i, j, next);
+        }
+    }
+
+    printf("Test");
+
+    closeFile(fd);
+    displayGridToConsole(grid);
+
+    return grid;
+}
+
+T_Grid generateGridFromTable(const char* path)
 {
     FILE* fd = openFile(path);
 
@@ -51,6 +76,29 @@ T_Grid generateGridFromFile(const char* path)
     closeFile(fd);
 
     return grid;
+}
+
+// TODO: docs in .h
+T_Grid generateGridFromFile(const char* path)
+{
+    int dotIndex = 0;
+
+    char* extension = ".seq";
+    char fileExtension[10];
+
+    int res = getFileExtension(path, fileExtension);
+    assert(res == 0);
+
+    printf("%s %s %d\n", fileExtension, extension, strcmp(fileExtension, extension));
+
+    if (strcmp(fileExtension, extension) == 0)
+    {
+        printf("Génération du fichier séquenciel");
+        return generateGridFromSequence(path);
+    }
+
+    printf("Génération du fichier en table");
+    return generateGridFromTable(path);
 }
 
 unsigned int getGridSize(T_Grid grid)

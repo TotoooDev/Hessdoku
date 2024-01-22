@@ -37,10 +37,6 @@ int getFileExtension(const char* filename, char* extension)
 
 FILE* openFile(const char * name)
 {
-	char extension[10];
-	if (getFileExtension(name, extension) == 0)
-		printf("extension: %s\n", extension);
-
 	FILE* fd = fopen(name, "r");
 	assert(fd != NULL);				// Asserts that the file has been opened
 	return fd;
@@ -112,6 +108,18 @@ unsigned int readNumbersUntil(FILE* fd, char c)
 	}
 
 	return nb;
+}
+
+unsigned int readNextInteger(FILE* fd)
+{
+	char nextInteger;
+
+	unsigned int size = fread(&nextInteger, sizeof(char), 1, fd);
+	assert(size == sizeof(char));
+
+	unsigned int res = (unsigned int)atoi(&nextInteger);
+
+	return res;
 }
 
 /*

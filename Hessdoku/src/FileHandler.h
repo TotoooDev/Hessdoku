@@ -3,6 +3,11 @@
 
 
 /**
+* Returns a file extension
+*/
+int getFileExtension(const char* filename, char* extension);
+
+/**
 * Returns a file descriptor for a given file.
 * 
 * @param name the path to the file
@@ -25,5 +30,11 @@ void skipUntil(FILE* fd, char c, int occurences);
 * Reads numbers from the file until c is read.
 */
 unsigned int readNumbersUntil(FILE* fd, char c);
+
+/**
+* Reads an integer from the fd
+*/
+unsigned int readNextInteger(FILE* fd);
+
 
 #endif

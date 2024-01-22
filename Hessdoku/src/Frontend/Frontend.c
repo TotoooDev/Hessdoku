@@ -28,14 +28,14 @@ T_Frontend* createFrontend(T_Grid grid)
     return frontend;
 }
 
-void quit(int, int, void* userData) { ((T_Frontend*)userData)->isRunning = false; } // cool oneliner
+void quit(int button, int clicks, void* userData) { ((T_Frontend*)userData)->isRunning = false; } // cool oneliner
 
 void showHideNotes(int button, int clicks, void* userData)
 {
     ((T_Frontend*)userData)->drawNotes ^= 1;
 }
 
-void removeSomeNotes(int, int, void* userData) {
+void removeSomeNotes(int button, int clicks, void* userData) {
     T_Grid* grid = (T_Grid*)userData;
     removeNotesInGridByZones(*grid);
 }

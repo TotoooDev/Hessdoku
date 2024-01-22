@@ -77,7 +77,7 @@ void drawNotes(T_Frontend* frontend, int xOffset, int yOffset, int rectSize, uns
     int y = cellY * rectSize + yOffset + rectSize / 9;
     for (unsigned int i = 0; i < getGridSqrtSize(frontend->grid); i++)
     {
-        if (!hasNote(getCell(frontend->grid, cellX, cellY), i))
+        if (!isNoteInCell(getCell(frontend->grid, cellX, cellY), i))
             continue;
         
         int x = cellX * rectSize + xOffset + (i % 3) * 16 + rectSize / 9;

@@ -552,7 +552,6 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 
 
 	// CODE POUR MONTRER QUE �A MARCHE
-	// int** tuples = generateKTuples(k, possibility);
 	int** tuples = generateKTuples(k);
 
 	if (tuples != NULL)

@@ -47,19 +47,22 @@ project "Hessdoku"
 		links
 		{
 			"SDL2",
-			"SDL2main"
+			"SDL2main",
+			"SDL2_ttf"
 		}
 		postbuildcommands ("xcopy ..\\libs\\dlls\\ ..\\bin\\" .. outputDir .. "\\%{prj.name}\\ /s /e /y /i")
 		postbuildcommands ("xcopy ..\\dev-assets\\ ..\\bin\\" .. outputDir .. "\\%{prj.name}\\ /s /e /y /i")
-
+		
 	filter "system:linux"
 		staticruntime "off"
 		systemversion "latest"
 		links
 		{
 			"SDL2",
-			"SDL2main"
+			"SDL2main",
+			"SDL2_ttf"
 		}
+		postbuildcommands ("cp ../dev-assets/* ../bin/" .. outputDir .. "/%{prj.name}/ -r")
 
 	filter "configurations:Debug"
 		defines

@@ -551,12 +551,13 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 	//int possibility = 1;
 
 
-	// CODE POUR MONTRER QUE ÇA MARCHE
-	int** tuples = generateKtuples(k, possibility);
+	// CODE POUR MONTRER QUE ï¿½A MARCHE
+	// int** tuples = generateKTuples(k, possibility);
+	int** tuples = generateKTuples(k);
 
 	if (tuples != NULL)
 	{
-		printf("Liste de kuplets générés :\n");
+		printf("Liste de kuplets gï¿½nï¿½rï¿½s :\n");
 		for (int i = 0; i < possibility; i++)
 		{
 			for (int j = 0; j < k; j++)
@@ -566,10 +567,10 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 			printf("\n");
 		}
 
-		// Libérer la mémoire allouée
+		// Libï¿½rer la mï¿½moire allouï¿½e
 		//freeTuples(tuples, possibility);
 	}
-	// CODE POUR MONTRER QUE ÇA MARCHE
+	// CODE POUR MONTRER QUE ï¿½A MARCHE
 
 
 	int stop = 0;
@@ -711,17 +712,17 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 			{
 				printf("testLine\n");
 				// Pour les k nombres compris entre 1 et 9 (k nombres distincts)
-						// Tableau de booléens t de taille 9 tous à faux
+						// Tableau de boolï¿½ens t de taille 9 tous ï¿½ faux
 				createBaton(grid, batonHidden);
 				printf("avant\n");
 				initBaton(grid, batonNaked, stopbis, stopbis, 0, size-1);
-				printf("après\n");
+				printf("aprï¿½s\n");
 
 				// Pour les k nombres 
 						// Pour les 9 cases d'une zone, si la case contient k[i], t[case] = vrai
 				checkRectKUpletSolve(grid, batonHidden, batonNaked, stopbis, stopbis+1, 0, size, k, variable);
 
-				// Si exactement 3 cases de t sont à true, alors on a un triplet
+				// Si exactement 3 cases de t sont ï¿½ true, alors on a un triplet
 				howManyT = howManyTrue(grid, batonHidden);
 				howManyZ = howManyZero(grid, batonNaked);
 
@@ -832,7 +833,7 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 	free(cooTuple);
 	free(batonHidden);
 	free(batonNaked);
-	freeTuples(tuples, possibility);
+	// freeTuples(tuples, possibility);
 
 	return hasChanged;
 }

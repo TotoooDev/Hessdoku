@@ -7,7 +7,7 @@
 * 
 * @param name the path to the file
 */
-FILE* openFile(char* name);
+FILE* openFile(const char* name);
 
 /**
 * Closes a file descriptor
@@ -24,6 +24,6 @@ void skipUntil(FILE* fd, char c, int occurences);
 /**
 * Reads numbers from the file until c is read.
 */
-int readNumbersUntil(FILE* fd, char c);
+unsigned int readNumbersUntil(FILE* fd, char c);
 
 #endif

@@ -359,7 +359,7 @@ bool removeNotesKUpletSquare(T_Grid grid, int** cooTuple, int* variable, int k, 
 		}
 	}
 
-	printf("\n\n");
+	//printf("\n\n");
 
 	return hasChanged;
 }

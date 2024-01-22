@@ -454,16 +454,6 @@ void afficheBaton(unsigned char * baton)
 	printf("\n");
 }
 
-// Fonction pour libérer la mémoire allouée au tableau de tuples
-void freeTuples(int** tuples, int numTuples)
-{
-	for (int i = 0; i < numTuples; i++)
-	{
-		free(tuples[i]);
-	}
-	free(tuples);
-}
-
 void afficheBatonBis(int* b)
 {
 	printf("Baton : ");

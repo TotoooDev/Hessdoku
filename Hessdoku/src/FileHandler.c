@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "fileHandler.h";
+#include "FileHandler.h"
 
 FILE* openFile(char * name)
 {
@@ -49,7 +49,7 @@ void skipUntil(FILE* fd, char c, int occurences)
 unsigned int readNumbersUntil(FILE* fd, char c)
 {
 	char characterRead = ' ';
-	int nb = 0;
+	unsigned int nb = 0;
 	int repetitions = 0;
 
 	while (characterRead != c)
@@ -82,7 +82,7 @@ char readNext(FILE* fd, char* ignore)
 
 /* A faire pour la bibliotheque et dans grid
 
-  - une fonction readNext, qui permet de lire le prochain caractère en ignorant tous les caractères du tableau ignore.
-  - Il faudra peut-être une fonction qui lit jusqu'à un certain élément (en l'occurence, "|") et, si elle trouve une valeur elle la renvoie sinon elle renvoie 0 ou un truc comme ça
-  - une fois cela fait, l'utiliser dans une boucle infinie pour générer le tableau
+  - une fonction readNext, qui permet de lire le prochain caractï¿½re en ignorant tous les caractï¿½res du tableau ignore.
+  - Il faudra peut-ï¿½tre une fonction qui lit jusqu'ï¿½ un certain ï¿½lï¿½ment (en l'occurence, "|") et, si elle trouve une valeur elle la renvoie sinon elle renvoie 0 ou un truc comme ï¿½a
+  - une fois cela fait, l'utiliser dans une boucle infinie pour gï¿½nï¿½rer le tableau
 */

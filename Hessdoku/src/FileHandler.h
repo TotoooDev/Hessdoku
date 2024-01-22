@@ -13,6 +13,6 @@ void closeFile(FILE* file);
 
 void skipUntil(FILE* fd, char c, int occurences);
 
-int readNumbersUntil(FILE* fd, char c);
+unsigned int readNumbersUntil(FILE* fd, char c);
 
 #endif

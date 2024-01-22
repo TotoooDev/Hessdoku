@@ -104,18 +104,51 @@ void removeNotes3TupleUntilUnchanged(int button, int clicks, void* userData) {
     }
 }
 
+void resolveSudokuGrid(int button, int clicks, void* userData) {
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+
+    bool hasChanged = false;
+    bool end = false;
+
+    while (!end) {
+        hasChanged = false;
+
+        hasChanged |= removeNotesInGridByZones(grid);
+
+        if (!hasChanged) {
+            hasChanged |= kUpletsSolve(grid, 1);
+
+            if (!hasChanged) {
+                hasChanged |= kUpletsSolve(grid, 2);
+
+                if (!hasChanged) {
+                    hasChanged |= kUpletsSolve(grid, 3);
+
+                    if (!hasChanged) {
+                        end = true; // Only set end to true if no changes occurred after all functions
+                    }
+                }
+            }
+        }
+    }
+
+}
+
 void addButtons()
 {
     addButton(FrontendInstance->window, createButton(600, 50, "Open grid...", openGridFile, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 100, "Show/Hide notes", showHideNotes, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 150, "Remove some notes", removeSomeNotes, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 200, "Remove singletons", removeNotes1Tuple, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 250, "Remove pairs", removeNotes2Tuple, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 300, "Remove triples", removeNotes3Tuple, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 350, "Remove singletons until...", removeNotes1TupleUntilUnchanged, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 400, "Remove pairs until...", removeNotes2TupleUntilUnchanged, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 450, "Remove triples until...", removeNotes3TupleUntilUnchanged, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 500, "Quit", quit, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 90, "Show/Hide notes", showHideNotes, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 130, "Clean notes", removeSomeNotes, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 170, "Remove singletons", removeNotes1Tuple, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 210, "Remove pairs", removeNotes2Tuple, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 250, "Remove triples", removeNotes3Tuple, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 290, "Remove singletons until...", removeNotes1TupleUntilUnchanged, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 330, "Remove pairs until...", removeNotes2TupleUntilUnchanged, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 370, "Remove triples until...", removeNotes3TupleUntilUnchanged, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 410, "Solve", resolveSudokuGrid, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 450, "Quit", quit, FrontendInstance));
 }
 
 void runFrontend()

@@ -45,7 +45,7 @@ T_Grid generateGridFromFile(const char* path)
                 setCell(grid, x, y, nb);
             }
         }
-        skipUntil(fd, '|', sizeX + 2);                  // TODO: Peut être détecter les fins avec \n
+        skipUntil(fd, '|', sizeX + 2);                  // TODO: Peut ï¿½tre dï¿½tecter les fins avec \n
     }
 
     closeFile(fd);

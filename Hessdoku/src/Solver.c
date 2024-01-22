@@ -432,23 +432,63 @@ int tuplesSize4[][4] = { {1,2,3,4}, {1,2,3,5},{1,2,3,6},{1,2,3,7},{1,2,3,8},{1,2
 * @returns A pointer to the ktuples array. Returns NULL if the value is invalid (ie. not between 1 and 4)
 * @author Baptiste
 */
-int** generateKTuples(const int k) {
-	if (k == 1) {
-		return (int**)tuplesSize1;
-	}
-	else if (k == 2) {
-		return (int**)tuplesSize2;
-	}
-	else if (k == 3) {
-		return (int**)tuplesSize3;
-	}
-	else if (k == 4) {
-		return (int**)tuplesSize4;
-	}
-	else {
+int** generateKTuples(const int k, const int size) {
+	if (k < 1 || k > 4) {
 		printf("Invalid value of k. Supported values are 1, 2, 3, or 4. Was given %d.\n", k);
 		return NULL;
 	}
+
+	int** tuples = (int**)malloc(size * sizeof(int*));
+
+	if (k == 1) {
+		for (int i = 0; i < size; i++) {
+			tuples[i] = (int*)malloc(sizeof(int));
+			tuples[i][0] = tuplesSize1[i][0];
+		}
+	}
+	else {
+		int(*sourceTuple)[4] = (int(*)[4])malloc(size * 4 * sizeof(int));
+		int count = 0;
+
+		if (k == 2) {
+			int(*source)[2] = tuplesSize2;
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < k; j++) {
+					sourceTuple[i][j] = source[count][j];
+				}
+				count++;
+			}
+		}
+		else if (k == 3) {
+			int(*source)[3] = tuplesSize3;
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < k; j++) {
+					sourceTuple[i][j] = source[count][j];
+				}
+				count++;
+			}
+		}
+		else if (k == 4) {
+			int(*source)[4] = tuplesSize4;
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < k; j++) {
+					sourceTuple[i][j] = source[count][j];
+				}
+				count++;
+			}
+		}
+
+		for (int i = 0; i < size; i++) {
+			tuples[i] = (int*)malloc(k * sizeof(int));
+			for (int j = 0; j < k; j++) {
+				tuples[i][j] = sourceTuple[i][j];
+			}
+		}
+
+		free(sourceTuple);
+	}
+
+	return tuples;
 }
 
 void afficheBaton(unsigned char * baton)
@@ -507,8 +547,6 @@ void initBaton(T_Grid grid, int* b, int xMin, int xMax, int yMin, int yMax)
 
 	afficheBatonBis(b);
 }
-
-
 
 int howManyZero(T_Grid grid, int* b)
 {

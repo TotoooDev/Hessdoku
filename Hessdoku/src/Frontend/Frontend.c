@@ -71,6 +71,39 @@ void removeNotes3Tuple(int button, int clicks, void* userData) {
     kUpletsSolve(grid, 3);
 }
 
+void removeNotes1TupleUntilUnchanged(int button, int clicks, void* userData) {
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+
+    bool hasChanged = true;
+    while (hasChanged) {
+        hasChanged = kUpletsSolve(grid, 1);
+    }
+}
+
+void removeNotes2TupleUntilUnchanged(int button, int clicks, void* userData) {
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+
+    bool hasChanged = true;
+    while (hasChanged) {
+        hasChanged = kUpletsSolve(grid, 2);
+    }
+}
+
+void removeNotes3TupleUntilUnchanged(int button, int clicks, void* userData) {
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+
+    bool hasChanged = true;
+    while (hasChanged) {
+        hasChanged = kUpletsSolve(grid, 3);
+    }
+}
+
 void addButtons()
 {
     addButton(FrontendInstance->window, createButton(600, 50, "Open grid...", openGridFile, FrontendInstance));
@@ -79,7 +112,10 @@ void addButtons()
     addButton(FrontendInstance->window, createButton(600, 200, "Remove singletons", removeNotes1Tuple, FrontendInstance));
     addButton(FrontendInstance->window, createButton(600, 250, "Remove pairs", removeNotes2Tuple, FrontendInstance));
     addButton(FrontendInstance->window, createButton(600, 300, "Remove triples", removeNotes3Tuple, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 350, "Quit", quit, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 350, "Remove singletons until...", removeNotes1TupleUntilUnchanged, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 400, "Remove pairs until...", removeNotes2TupleUntilUnchanged, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 450, "Remove triples until...", removeNotes3TupleUntilUnchanged, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 500, "Quit", quit, FrontendInstance));
 }
 
 void runFrontend()

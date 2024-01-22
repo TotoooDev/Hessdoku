@@ -3,16 +3,27 @@
 
 
 /**
-* Returns a file descriptor usable to read the file.
+* Returns a file descriptor for a given file.
 * 
 * @param name the path to the file
 */
-FILE* openFile(char* name);
+FILE* openFile(const char* name);
 
+/**
+* Closes a file descriptor
+*
+* @param name the path to the file
+*/
 void closeFile(FILE* file);
 
+/**
+* Skip characters on the file until c is encountered occurences times.
+*/
 void skipUntil(FILE* fd, char c, int occurences);
 
-int readNumbersUntil(FILE* fd, char c);
+/**
+* Reads numbers from the file until c is read.
+*/
+unsigned int readNumbersUntil(FILE* fd, char c);
 
 #endif

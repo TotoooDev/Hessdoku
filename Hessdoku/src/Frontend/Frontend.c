@@ -16,34 +16,32 @@ typedef struct T_Frontend {
     bool drawNotes;
 } T_Frontend;
 
-T_Frontend* createFrontend(T_Grid grid)
+T_Frontend* FrontendInstance;
+
+void createFrontend(T_Grid grid)
 {
-    T_Frontend* frontend = (T_Frontend*)malloc(sizeof(T_Frontend));
+    FrontendInstance = (T_Frontend*)malloc(sizeof(T_Frontend));
 
-    frontend->window = createWindow(FRONTEND_WINDOW_TITLE, FRONTEND_WINDOW_WIDTH, FRONTEND_WINDOW_HEIGHT);
-    frontend->font = loadFont("OpenSans-Regular.ttf", 32);
-    frontend->grid = createGraphicsGrid(grid, 5, 5, 64);
-    frontend->isRunning = true;
-    frontend->drawNotes = false;
-
-    return frontend;
+    FrontendInstance->window = createWindow(FRONTEND_WINDOW_TITLE, FRONTEND_WINDOW_WIDTH, FRONTEND_WINDOW_HEIGHT);
+    FrontendInstance->font = loadFont("OpenSans-Regular.ttf", 32);
+    FrontendInstance->grid = createGraphicsGrid(grid, 5, 5, 64);
+    FrontendInstance->isRunning = true;
+    FrontendInstance->drawNotes = false;
 }
 
-void quit(int button, int clicks, void* userData) { ((T_Frontend*)userData)->isRunning = false; } // cool oneliner
+void quit(int button, int clicks, void* userData) { FrontendInstance->isRunning = false; } // cool oneliner
 
 void openGridFile(int button, int clicks, void* userData)
 {
-    T_Frontend* frontend = (T_Frontend*)userData;
-
     const char* filePath = openFileDialog();
     if (filePath == NULL)
         return;
 
-    freeGrid(getGrid(frontend->grid));
-    setGrid(frontend->grid, generateGridFromFile(filePath));
+    freeGrid(getGrid(FrontendInstance->grid));
+    setGrid(FrontendInstance->grid, generateGridFromFile(filePath));
 }
 
-void showHideNotes(int button, int clicks, void* userData) { setGraphicsGridDrawNotes(((T_Frontend*)userData)->grid, getGraphicsGridDrawNotes(((T_Frontend*)userData)->grid) ^ 1); } // even cooler oneliner
+void showHideNotes(int button, int clicks, void* userData) { setGraphicsGridDrawNotes(FrontendInstance->grid, getGraphicsGridDrawNotes(FrontendInstance->grid) ^ 1); } // even cooler oneliner
 
 void removeSomeNotes(int button, int clicks, void* userData) {
     T_Grid* grid = (T_Grid*)userData;
@@ -65,55 +63,45 @@ void removeNotes3Tuple(int button, int clicks, void* userData) {
     kUpletsSolve(*grid, 3);
 }
 
-// Example for a button that does something
-void exampleButton(int button, int clicks, void* userData)
+void addButtons()
 {
-    LOG("Example button was clicked!");
-    LOG("button: %d, clicks: %d, userData: %p", button, clicks, userData);
-    
-    T_Frontend* frontend = (T_Frontend*)userData;
-    // do stuff...
+    addButton(FrontendInstance->window, createButton(600, 50, "Open grid...", openGridFile, NULL));
+    addButton(FrontendInstance->window, createButton(600, 100, "Show/Hide notes", showHideNotes, NULL));
+    addButton(FrontendInstance->window, createButton(600, 150, "Remove some notes", removeSomeNotes, &(FrontendInstance->grid)));
+    addButton(FrontendInstance->window, createButton(600, 200, "Remove singletons", removeNotes1Tuple, &(FrontendInstance->grid)));
+    addButton(FrontendInstance->window, createButton(600, 250, "Remove pairs", removeNotes2Tuple, &(FrontendInstance->grid)));
+    addButton(FrontendInstance->window, createButton(600, 300, "Remove triples", removeNotes3Tuple, &(FrontendInstance->grid)));
+    addButton(FrontendInstance->window, createButton(600, 350, "Quit", quit, NULL));
 }
 
-void addButtons(T_Frontend* frontend)
+void runFrontend()
 {
-    addButton(frontend->window, createButton(600, 50, "Open grid...", openGridFile, frontend));
-    addButton(frontend->window, createButton(600, 100, "Show/Hide notes", showHideNotes, frontend));
-    addButton(frontend->window, createButton(600, 150, "Remove some notes", removeSomeNotes, &(frontend->grid)));
-    addButton(frontend->window, createButton(600, 200, "Remove singletons", removeNotes1Tuple, &(frontend->grid)));
-    addButton(frontend->window, createButton(600, 250, "Remove pairs", removeNotes2Tuple, &(frontend->grid)));
-    addButton(frontend->window, createButton(600, 300, "Remove triples", removeNotes3Tuple, &(frontend->grid)));
-    addButton(frontend->window, createButton(600, 350, "Quit", quit, frontend));
-}
+    addButtons();
 
-void runFrontend(T_Frontend* frontend)
-{
-    addButtons(frontend);
-
-    while (frontend->isRunning && isWindowOpen(frontend->window))
+    while (FrontendInstance->isRunning && isWindowOpen(FrontendInstance->window))
     {
-        updateWindow(frontend->window, frontend->font);
-        clearWindow(frontend->window, 127, 127, 127);
+        updateWindow(FrontendInstance->window, FrontendInstance->font);
+        clearWindow(FrontendInstance->window, 127, 127, 127);
 
-        drawGrid(frontend, frontend->grid);
+        drawGrid(FrontendInstance, FrontendInstance->grid);
 
-        drawWidgets(frontend->window, frontend->font);
-        presentWindow(frontend->window);
+        drawWidgets(FrontendInstance->window, FrontendInstance->font);
+        presentWindow(FrontendInstance->window);
     }
 }
 
-void freeFrontend(T_Frontend* frontend)
+void freeFrontend()
 {
-    freeWindow(frontend->window);
-    free(frontend);
+    freeWindow(FrontendInstance->window);
+    free(FrontendInstance);
 }
 
-T_Window* getWindow(T_Frontend* frontend)
+T_Window* getWindow()
 {
-    return frontend->window;
+    return FrontendInstance->window;
 }
 
-T_Font* getFont(T_Frontend* frontend)
+T_Font* getFont()
 {
-    return frontend->font;
+    return FrontendInstance->font;
 }

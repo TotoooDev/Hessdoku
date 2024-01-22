@@ -85,11 +85,11 @@ void setGridToDemoGrid(T_Grid grid)
 int main(int argc, char* argv[])
 {
     T_Grid grid = generateGrid(0, 0);
-    T_Frontend* frontend = createFrontend(grid);
+    createFrontend(grid);
 
-    runFrontend(frontend);
+    runFrontend();
 
-    freeFrontend(frontend);
+    freeFrontend();
     freeGrid(grid);
 
     return 0;

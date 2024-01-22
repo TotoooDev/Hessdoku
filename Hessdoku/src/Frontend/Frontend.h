@@ -11,23 +11,20 @@ typedef struct T_Frontend T_Frontend;
 /**
  * Creates a frontend structure
  * @param game The game to display to the frontend.
- * @return The new frontend.
 */
-T_Frontend* createFrontend(T_Grid grid);
+void createFrontend(T_Grid grid);
 
 /**
  * Run the frontend. This executes the main loop of the frontend.
- * @param frontend The frontend to run.
  */
-void runFrontend(T_Frontend* frontend);
+void runFrontend();
 
 /**
  * Free a frontend. The game associated to the frontend is NOT freed, and it is the responsability of the backend to free the memory.
- * @param frontend The frontend to free.
  */
-void freeFrontend(T_Frontend* frontend);
+void freeFrontend();
 
-T_Window* getWindow(T_Frontend* frontend);
-T_Font* getFont(T_Frontend* frontend);
+T_Window* getWindow();
+T_Font* getFont();
 
 #endif

@@ -46,23 +46,31 @@ void openGridFile(int button, int clicks, void* userData)
 void showHideNotes(int button, int clicks, void* userData) { setGraphicsGridDrawNotes(((T_Frontend*)userData)->grid, getGraphicsGridDrawNotes(((T_Frontend*)userData)->grid) ^ 1); } // even cooler oneliner
 
 void removeSomeNotes(int button, int clicks, void* userData) {
-    T_Grid* grid = (T_Grid*)userData;
-    removeNotesInGridByZones(*grid);
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+    removeNotesInGridByZones(grid);
 }
 
 void removeNotes1Tuple(int button, int clicks, void* userData) {
-    T_Grid* grid = (T_Grid*)userData;
-    kUpletsSolve(*grid, 1);
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+    kUpletsSolve(grid, 1);
 }
 
 void removeNotes2Tuple(int button, int clicks, void* userData) {
-    T_Grid* grid = (T_Grid*)userData;
-    kUpletsSolve(*grid, 2);
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+    kUpletsSolve(grid, 2);
 }
 
 void removeNotes3Tuple(int button, int clicks, void* userData) {
-    T_Grid* grid = (T_Grid*)userData;
-    kUpletsSolve(*grid, 3);
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+    kUpletsSolve(grid, 3);
 }
 
 // Example for a button that does something
@@ -79,10 +87,10 @@ void addButtons(T_Frontend* frontend)
 {
     addButton(frontend->window, createButton(600, 50, "Open grid...", openGridFile, frontend));
     addButton(frontend->window, createButton(600, 100, "Show/Hide notes", showHideNotes, frontend));
-    addButton(frontend->window, createButton(600, 150, "Remove some notes", removeSomeNotes, &(frontend->grid)));
-    addButton(frontend->window, createButton(600, 200, "Remove singletons", removeNotes1Tuple, &(frontend->grid)));
-    addButton(frontend->window, createButton(600, 250, "Remove pairs", removeNotes2Tuple, &(frontend->grid)));
-    addButton(frontend->window, createButton(600, 300, "Remove triples", removeNotes3Tuple, &(frontend->grid)));
+    addButton(frontend->window, createButton(600, 150, "Remove some notes", removeSomeNotes, frontend));
+    addButton(frontend->window, createButton(600, 200, "Remove singletons", removeNotes1Tuple, frontend));
+    addButton(frontend->window, createButton(600, 250, "Remove pairs", removeNotes2Tuple, frontend));
+    addButton(frontend->window, createButton(600, 300, "Remove triples", removeNotes3Tuple, frontend));
     addButton(frontend->window, createButton(600, 350, "Quit", quit, frontend));
 }
 

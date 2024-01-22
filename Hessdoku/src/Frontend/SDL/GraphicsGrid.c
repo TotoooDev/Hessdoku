@@ -10,6 +10,9 @@ typedef struct T_GraphicsGrid
     int y;
     int squareSize;
 
+    int selectedCellX;
+    int selectedCellY;
+
     bool drawNotes;
 } T_GraphicsGrid;
 
@@ -20,6 +23,8 @@ T_GraphicsGrid* createGraphicsGrid(T_Grid grid, int x, int y, int squareSize)
     graphicsGrid->grid = grid;
     graphicsGrid->x = x;
     graphicsGrid->y = y;
+    graphicsGrid->selectedCellX = -1;
+    graphicsGrid->selectedCellY = -1;
     graphicsGrid->squareSize = squareSize;
     graphicsGrid->drawNotes = false;
 
@@ -47,9 +52,15 @@ void setGraphicsGridSquareSize(T_GraphicsGrid* grid, int squareSize)
     grid->squareSize = squareSize;
 }
 
-bool setGraphicsGridDrawNotes(T_GraphicsGrid* grid, bool drawNotes)
+void setGraphicsGridDrawNotes(T_GraphicsGrid* grid, bool drawNotes)
 {
     grid->drawNotes = drawNotes;
+}
+
+void setGraphicsGridSelectedCell(T_GraphicsGrid* grid, int x, int y)
+{
+    grid->selectedCellX = x;
+    grid->selectedCellY = y;
 }
 
 T_Grid getGrid(T_GraphicsGrid* grid)
@@ -73,6 +84,31 @@ int getGraphicsGridSquareSize(T_GraphicsGrid* grid)
 bool getGraphicsGridDrawNotes(T_GraphicsGrid* grid)
 {
     return grid->drawNotes;
+}
+
+bool isMouseCursorInGraphicsGrid(T_GraphicsGrid* grid, int mouseX, int mouseY, int* cellX, int* cellY)
+{
+    for (unsigned int i = 0; i < getGridSize(grid->grid); i++)
+    {
+        for (unsigned int ii = 0; ii < getGridSize(grid->grid); ii++)
+        {
+            int x = ii * grid->squareSize + grid->x;
+            int y = i * grid->squareSize + grid->y;   
+
+            if ((x < mouseX && x + grid->squareSize < mouseX) && (y < mouseY && y + grid->squareSize < mouseY))
+            {
+                if (cellX != NULL)
+                    *cellX = x;
+                if (cellY != NULL)
+                    *cellY = y;
+            }
+        }
+    }
+
+    if (cellX != NULL)
+        *cellX = -1;
+    if (cellY != NULL)
+        *cellY = -1;
 }
 
 void drawNotes(T_Frontend* frontend, T_GraphicsGrid* grid, int cellX, int cellY)
@@ -117,7 +153,11 @@ void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid)
         {
             int x = ii * grid->squareSize + grid->x;
             int y = i * grid->squareSize + grid->y;
-            setDrawColor(getWindow(frontend), 255, 255, 255);
+
+            if (ii == grid->selectedCellX && i == grid->selectedCellY)
+                setDrawColor(getWindow(frontend), 255, 0, 255);
+            else
+                setDrawColor(getWindow(frontend), 255, 255, 255);
             drawRect(getWindow(frontend), x, y, grid->squareSize, grid->squareSize);
             
             unsigned int value = getValue(grid->grid, i, ii);

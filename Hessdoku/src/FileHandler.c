@@ -4,40 +4,57 @@
 
 #include "FileHandler.h"
 
-FILE* openFile(char * name)
+
+/**
+* FILE HANDLER
+* 
+* This library allows to read a file character by character.
+* When a file is open, we place a "cursor" on the first element of the file.
+* Then, when the next character is read, the cursor will move past it.
+* 
+* Considering a FILE, this library will allow to read it easyly, by either advancing the 
+* cursor until a given character or read the numbers until a character.
+*/
+
+
+FILE* openFile(const char * name)
 {
 	FILE* fd = fopen(name, "r");
-	assert(fd != NULL);
+	assert(fd != NULL);				// Asserts that the file has been opened
 	return fd;
 }
 
 void closeFile(FILE* file)
 {
 	int res = fclose(file);
-	assert(res == 0);
+	assert(res == 0);				// Asserts that the file has been closed
 }
 
-// TODO: doc dans le .h
-// TODO: handle infinite loop cases
 void skipUntil(FILE* fd, char c, int occurences)
 {
+	const int maxRepetitions = 1000;
+
 	char characterRead = ' '; 
-	char repetitions = 0;
+	int repetitions = 0;		// Infinite loop protection : if code iterates over maxRepetitions times without changes the file is incorrect
+	
+	// Looping until either c is found or the loop is too long
 	while (occurences != 0)
 	{
 		fread(&characterRead, sizeof(char), 1, fd);
 		if (characterRead == c)
 		{
 			occurences--;
+			repetitions = 0;
 		} 
 		
+		// If ' is read, we are at the end of the file !
 		else if (characterRead == '\'')
 		{
 			occurences = 0;
 		}
 
 		repetitions++;
-		if (repetitions == 1000)
+		if (repetitions == maxRepetitions)
 		{
 			printf("Attention, le formatage du fichier est mauvais !  (attente)");
 			exit(EXIT_FAILURE);
@@ -45,13 +62,15 @@ void skipUntil(FILE* fd, char c, int occurences)
 	}
 }
 
-/* fread version*/
 unsigned int readNumbersUntil(FILE* fd, char c)
 {
+	const int maxRepetitions = 1000;
+
 	char characterRead = ' ';
 	unsigned int nb = 0;
 	int repetitions = 0;
 
+	// Looping until either c is found or the loop is too long
 	while (characterRead != c)
 	{
 		unsigned int size = fread(&characterRead, sizeof(char), 1, fd);
@@ -63,7 +82,7 @@ unsigned int readNumbersUntil(FILE* fd, char c)
 		}
 
 		repetitions++;
-		if (repetitions == 10000)
+		if (repetitions == maxRepetitions)
 		{
 			printf("Attention, le formatage du fichier est mauvais ! (lecture d'un nombre)");
 			exit(EXIT_FAILURE);

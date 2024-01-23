@@ -20,6 +20,8 @@ typedef struct T_GraphicsGrid
     int selectedCellX;
     int selectedCellY;
 
+    bool* lockedCells;
+
     bool drawNotes;
 } T_GraphicsGrid;
 
@@ -87,19 +89,47 @@ void graphicsGrid_KeyDownFunction(int key, void* userData)
     if (grid->selectedCellX == -1 || grid->selectedCellY == -1)
         return;
 
+    unsigned int gridSize = getGridSize(grid->grid);
+    // if (grid->lockedCells[grid->selectedCellX * gridSize + grid->selectedCellY])
+    //     return;
+
     switch (key)
     {
-    case KEY_0: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 0); break;
-    case KEY_1: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 1); break;
-    case KEY_2: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 2); break;
-    case KEY_3: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 3); break;
-    case KEY_4: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 4); break;
-    case KEY_5: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 5); break;
-    case KEY_6: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 6); break;
-    case KEY_7: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 7); break;
-    case KEY_8: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 8); break;
-    case KEY_9: setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 9); break;
+    // wtf
+    case KEY_0: case KEY_KP_0: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 0); break;
+    case KEY_1: case KEY_KP_1: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 1); break;
+    case KEY_2: case KEY_KP_2: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 2); break;
+    case KEY_3: case KEY_KP_3: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 3); break;
+    case KEY_4: case KEY_KP_4: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 4); break;
+    case KEY_5: case KEY_KP_5: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 5); break;
+    case KEY_6: case KEY_KP_6: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 6); break;
+    case KEY_7: case KEY_KP_7: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 7); break;
+    case KEY_8: case KEY_KP_8: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 8); break;
+    case KEY_9: case KEY_KP_9: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 9); break;
+
+    case KEY_UP:    if (grid->selectedCellY > 0)            grid->selectedCellY--; break;
+    case KEY_DOWN:  if (grid->selectedCellY < gridSize - 1) grid->selectedCellY++; break;
+    case KEY_LEFT:  if (grid->selectedCellX > 0)            grid->selectedCellX--; break;
+    case KEY_RIGHT: if (grid->selectedCellX < gridSize - 1) grid->selectedCellX++; break;
+
     default: break;
+    }
+}
+
+void lockCells(T_GraphicsGrid* grid, int gridSize)
+{
+    for (unsigned int i = 0; i < gridSize; i++)
+    {
+        for (unsigned int ii = 0; ii < gridSize; ii++)
+        {
+            if (getValueOfCell(getCell(grid->grid, i, ii)) == 0)
+            {
+                grid->lockedCells[i * gridSize + ii] = false;
+                continue;
+            }
+
+            grid->lockedCells[i * gridSize + ii] = true;
+        }
     }
 }
 
@@ -117,6 +147,10 @@ T_GraphicsGrid* createGraphicsGrid(T_Grid grid, int x, int y, int squareSize)
     graphicsGrid->squareSize = squareSize;
     graphicsGrid->drawNotes = false;
 
+    unsigned int gridSize = getGridSize(grid);
+    graphicsGrid->lockedCells = (bool*)malloc(sizeof(bool) * gridSize * gridSize);
+    lockCells(graphicsGrid, gridSize);
+
     addButtonDownFunction(getWindow(), graphicsGrid_ButtonDownFunction, graphicsGrid);
     addMouseMovedFunction(getWindow(), graphicsGrid_MouseMovedFunction, graphicsGrid);
     addKeyDownFunction(getWindow(), graphicsGrid_KeyDownFunction, graphicsGrid);
@@ -132,6 +166,9 @@ void freeGraphicsGrid(T_GraphicsGrid* grid)
 void setGrid(T_GraphicsGrid* graphicsGrid, T_Grid grid)
 {
     graphicsGrid->grid = grid;
+    unsigned int gridSize = getGridSize(grid);
+    graphicsGrid->lockedCells = (bool*)malloc(sizeof(bool) * gridSize * gridSize);
+    lockCells(graphicsGrid, gridSize);
 }
 
 void setGraphicsGridPos(T_GraphicsGrid* grid, int x, int y)

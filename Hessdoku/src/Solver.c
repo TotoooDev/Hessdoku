@@ -733,6 +733,7 @@ bool kUpletsSolve (T_Grid grid, const int k) {
 
 	free(variable);
 	free(cooTuple);
+	//TODO mauvais free cooTuple
 	free(batonHidden);
 	free(batonNaked);
 	freeTuples(tuples, possibility);

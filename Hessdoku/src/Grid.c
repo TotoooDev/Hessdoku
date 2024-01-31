@@ -1,6 +1,6 @@
 #include <Grid.h>
 #include <Log.h>
-#include <String.h>
+#include <string.h>
 #include <assert.h>
 #include "FileHandler.h"
 

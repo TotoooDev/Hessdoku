@@ -33,7 +33,12 @@ bool unsetNoteCell(T_Cell* cell, unsigned int noteValue) {
 
 void setValueOfCell(T_Cell* cell, unsigned int value)
 {
-    // 
+    if (value == 0)
+    {
+        cell->notes = 0b111111111;
+        return;
+    }
+
     cell->notes = 0 << (GRID_SIZE - value - 1);
     // We place the bit 
     cell->notes++;

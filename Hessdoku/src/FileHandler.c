@@ -13,7 +13,7 @@
 * When a file is open, we place a "cursor" on the first element of the file.
 * Then, when the next character is read, the cursor will move past it.
 * 
-* Considering a FILE, this library will allow to read it easyly, by either advancing the 
+* Considering a FILE, this library will allow to read it easily, by either advancing the 
 * cursor until a given character or read the numbers until a character.
 */
 
@@ -95,9 +95,7 @@ unsigned int readNumbersUntil(FILE* fd, char c)
 		assert(size == sizeof(char));
 
 		if (characterRead >= '1' && characterRead <= '9')
-		{
 			nb = nb * 10 + (unsigned int)atoi(&characterRead);
-		}
 
 		repetitions++;
 		if (repetitions == maxRepetitions)
@@ -132,6 +130,6 @@ char readNext(FILE* fd, char* ignore)
 /* A faire pour la bibliotheque et dans grid
 
   - une fonction readNext, qui permet de lire le prochain caract�re en ignorant tous les caract�res du tableau ignore.
-  - Il faudra peut-�tre une fonction qui lit jusqu'� un certain �l�ment (en l'occurence, "|") et, si elle trouve une valeur elle la renvoie sinon elle renvoie 0 ou un truc comme �a
+  - Il faudra peut-être une fonction qui lit jusqu'à un certain élément (en l'occurence, "|") et, si elle trouve une valeur elle la renvoie sinon elle renvoie 0 ou un truc comme ça
   - une fois cela fait, l'utiliser dans une boucle infinie pour g�n�rer le tableau
 */

@@ -366,6 +366,18 @@ void afficheBatonBis(int* b)
 	printf(" \n");
 }
 
+/**
+/* Initialize an array of int with the number of notes on each cell of a zone
+* 
+* @param grid : the sudoku grid
+* @param b : the array of int
+* @param xMin : minimum x of the zone
+* @param xMax : maximum x of the zone
+* @param yMin : minimum y of the zone
+* @param yMax : maximum y of the zone
+* 
+* @author Marie
+*/
 void initBaton(T_Grid grid, int* b, int xMin, int xMax, int yMin, int yMax)
 {
 	int size = getGridSize(grid);
@@ -393,6 +405,16 @@ void initBaton(T_Grid grid, int* b, int xMin, int xMax, int yMin, int yMax)
 	}
 }
 
+/**
+* Count how many 0 there are in b
+* 
+* @param grid : the sudoku grid
+* @param b : an array of int
+* 
+* @return the amount of 0 there are in b
+* 
+* @author Marie
+*/
 int howManyZero(T_Grid grid, int* b)
 {
 	int res = 0;

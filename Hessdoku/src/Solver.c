@@ -151,7 +151,6 @@ int coeffBinomial(int k, int n)
 * @param variable : an array with the element of the k-uplet (ex: for the 3-uplet (1, 2, 3) -> [1,2,3])
 * 
 * @author Marie
-* 
 */
 void checkRectKUpletSolve(T_Grid grid, unsigned char* bH, int*bN, int minX, int maxX, int minY, int maxY, int k, int * variable)
 {
@@ -174,6 +173,15 @@ void checkRectKUpletSolve(T_Grid grid, unsigned char* bH, int*bN, int minX, int 
 	}
 }
 
+/**
+* Calculating the next coordinate of the square in the grid
+* 
+* @param step : the size of a square
+* @param xSquare : the current coordinate x of the square
+* @param ySquare : the current coordinate y of the square
+* 
+* @author Marie
+*/
 void nextSquare (int step, int* xSquare, int* ySquare)
 {
 	*(ySquare) += step;
@@ -190,7 +198,6 @@ void nextSquare (int step, int* xSquare, int* ySquare)
 
 bool removeNotesKUpletRows(T_Grid grid,int ** cooTuple, int * variable, int k, int x)
 {
-
 	bool hasChanged = false;
 	bool theSame = false;
 	

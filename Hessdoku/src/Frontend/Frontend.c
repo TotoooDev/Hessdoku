@@ -6,6 +6,9 @@
 #include <Log.h>
 #include <stdlib.h>
 
+bool isCheckPressed = false;
+bool isValid = false;
+
 typedef struct T_Frontend {
     T_Window* window;
     T_Font* font;
@@ -141,15 +144,14 @@ void buttoncheckValidityOfGrid(int button, int clicks, void* userData) {
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
+    isCheckPressed = true;
     if (checkValidityOfGrid(grid))
     {
-        printf("ok\n");
-        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 255, 0 }, "Grid valid !", 600, 490, 1.0f);
+        isValid = true;
     }
     else
     {
-        printf("pas ok\n");
-        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 255, 0, 0 }, "Grid invalid !", 600, 490, 1.0f);
+        isValid = false;
     }
 }
 
@@ -184,7 +186,10 @@ void runFrontend()
         clearWindow(FrontendInstance->window, 127, 127, 127);
 
         drawText(FrontendInstance->window, FrontendInstance->font, (T_Color){ 0, 0, 0 }, "No grid loaded...", 40, 270, 1.0f);
-        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 255, 0 }, "Grid valid !", 600, 490, 1.0f);
+        if (isCheckPressed && isValid)
+            drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 255, 0 }, "Grid valid !", 600, 490, 1.0f);
+        else if (isCheckPressed && !isValid)
+            drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 255, 0, 0 }, "Grid invalid !", 600, 490, 1.0f);
         drawWhatHappen();
         drawGrid(FrontendInstance, FrontendInstance->grid);
 

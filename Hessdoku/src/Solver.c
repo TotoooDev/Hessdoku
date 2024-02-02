@@ -1,7 +1,6 @@
 #include <Solver.h>
 
 
-
 bool removeNotesInGridByRows(T_Grid grid, T_Cell* currentCell, unsigned int currentValue, int x, int y)
 {
 	bool hasChanged = false;

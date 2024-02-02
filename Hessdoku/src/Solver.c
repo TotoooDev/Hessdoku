@@ -154,7 +154,7 @@ int coeffBinomial(int k, int n)
 * 
 * @author Marie
 */
-void checkRectKUpletSolve(T_Grid grid, unsigned char* bH, int*bN, int minX, int maxX, int minY, int maxY, int k, int * variable)
+void checkRectKUpletSolve(T_Grid grid, unsigned char* bH, int*bN, int minX, int maxX, int minY, int maxY, int k, int* variable)
 {
 	int whichCell = 0;
 
@@ -188,12 +188,12 @@ void nextSquare (int step, int* xSquare, int* ySquare)
 {
 	*(ySquare) += step;
 
-	if (*(ySquare) == (step*step))
+	if (*(ySquare) == (step * step))
 	{
 		*(ySquare) = 0;
 		*(xSquare) += step;
 	}
-	if (*(xSquare) == (step*step))
+	if (*(xSquare) == (step * step))
 		*(xSquare) = 0;
 }
 
@@ -201,7 +201,7 @@ void nextSquare (int step, int* xSquare, int* ySquare)
 * Remove notes on a rows given a k-uplet
 * 
 * @param grid : the sudoku grid
-* @param cooTuple : the coordinate of the k-uplet
+* @param coordsTuple : the coordinate of the k-uplet
 * @param variable : the k-uplet
 * @param k : the k of k-uplet
 * @param x : the coordinate of the row
@@ -210,7 +210,7 @@ void nextSquare (int step, int* xSquare, int* ySquare)
 * 
 * @author Marie
 */
-bool removeNotesKUpletRows(T_Grid grid,int ** cooTuple, int * variable, int k, int x)
+bool removeNotesKUpletRows(T_Grid grid,int** coordsTuple, int* variable, int k, int x)
 {
 	bool hasChanged = false;
 	bool theSame = false;
@@ -218,12 +218,12 @@ bool removeNotesKUpletRows(T_Grid grid,int ** cooTuple, int * variable, int k, i
 	for (int i = 0; i < 9; i++)
 	{
 		for (int j = 0; j < k; j++)
-			if (cooTuple[j][1] == i)
+			if (coordsTuple[j][1] == i)
 				theSame = true;
 
 		if (!theSame)
 			for (int m = 0; m < k; m++)
-				hasChanged |= unsetNoteCell(getCell(grid, cooTuple[0][0], i), variable[m]);
+				hasChanged |= unsetNoteCell(getCell(grid, coordsTuple[0][0], i), variable[m]);
 
 		theSame = false;
 	}
@@ -286,9 +286,9 @@ bool removeNotesKUpletSquare(T_Grid grid, int** coordinatesTuple, int* variable,
 
 	int sqrtSize = getGridSqrtSize(grid);
 	
-	for (int i = x; i < x+sqrtSize; i++)
+	for (int i = x; i < x + sqrtSize; i++)
 	{
-		for (int j = y; j < y+sqrtSize; j++)
+		for (int j = y; j < y + sqrtSize; j++)
 		{
 			for (int it_k = 0; it_k < k; it_k++)
 				if (coordinatesTuple[it_k][0] == i && coordinatesTuple[it_k][1] == j)
@@ -357,56 +357,64 @@ int tuplesSize4[][4] = { {1,2,3,4}, {1,2,3,5},{1,2,3,6},{1,2,3,7},{1,2,3,8},{1,2
 * @author Baptiste
 */
 int** generateKTuples(const int k, const int size) {
-	if (k < 1 || k > 4) {
+
+	if (k < 1 || k > 4)
+	{
 		printf("Invalid value of k. Supported values are 1, 2, 3, or 4. Was given %d.\n", k);
 		return NULL;
 	}
 
 	int** tuples = (int**)malloc(size * sizeof(int*));
 
-	if (k == 1) {
-		for (int i = 0; i < size; i++) {
+	if (k == 1)
+	{
+		for (int i = 0; i < size; i++)
+		{
 			tuples[i] = (int*)malloc(sizeof(int));
 			tuples[i][0] = tuplesSize1[i][0];
 		}
 	}
-	else {
+	else 
+	{
 		int(*sourceTuple)[4] = (int(*)[4])malloc(size * 4 * sizeof(int));
 		int count = 0;
 
-		if (k == 2) {
+		if (k == 2)
+		{
 			int(*source)[2] = tuplesSize2;
-			for (int i = 0; i < size; i++) {
-				for (int j = 0; j < k; j++) {
+			for (int i = 0; i < size; i++)
+			{
+				for (int j = 0; j < k; j++)
 					sourceTuple[i][j] = source[count][j];
-				}
 				count++;
 			}
 		}
-		else if (k == 3) {
+		else if (k == 3)
+		{
 			int(*source)[3] = tuplesSize3;
-			for (int i = 0; i < size; i++) {
-				for (int j = 0; j < k; j++) {
+			for (int i = 0; i < size; i++)
+			{
+				for (int j = 0; j < k; j++)
 					sourceTuple[i][j] = source[count][j];
-				}
 				count++;
 			}
 		}
-		else if (k == 4) {
+		else if (k == 4) 
+		{
 			int(*source)[4] = tuplesSize4;
-			for (int i = 0; i < size; i++) {
-				for (int j = 0; j < k; j++) {
+			for (int i = 0; i < size; i++)
+			{
+				for (int j = 0; j < k; j++)
 					sourceTuple[i][j] = source[count][j];
-				}
 				count++;
 			}
 		}
 
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++)
+		{
 			tuples[i] = (int*)malloc(k * sizeof(int));
-			for (int j = 0; j < k; j++) {
+			for (int j = 0; j < k; j++)
 				tuples[i][j] = sourceTuple[i][j];
-			}
 		}
 
 		free(sourceTuple);
@@ -468,7 +476,7 @@ void initBaton(T_Grid grid, int* b, int xMin, int xMax, int yMin, int yMax)
 	{
 		for (int y = yMin; y < yMax + 1; y++)
 		{
-			for (int i = 1; i < size+1; i++)
+			for (int i = 1; i < size + 1; i++)
 				if (isNoteInCell(getCell(grid, x, y), i))
 					b[k] += 1;
 
@@ -674,11 +682,11 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 	unsigned char* batonHidden = malloc(size * sizeof(unsigned char));
 	int* batonNaked = malloc(size * sizeof(int));
 
-	int possibility = coeffBinomial(k, size);
+	int nbTuples = coeffBinomial(k, size);
 
-	int** tuples = generateKTuples(k, possibility);
+	int** tuples = generateKTuples(k, nbTuples);
 
-	while (stop < possibility && !hasChanged)
+	while (stop < nbTuples && !hasChanged)
 	{
 		int xSquare = 0;
 		int ySquare = 0;
@@ -782,7 +790,7 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 	//TODO mauvais free cooTuple
 	free(batonHidden);
 	free(batonNaked);
-	freeTuples(tuples, possibility);
+	freeTuples(tuples, nbTuples);
 
 	return hasChanged;
 }

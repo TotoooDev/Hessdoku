@@ -156,14 +156,15 @@ void displayGridToConsole(T_Grid grid)
 
     for(unsigned int i = 0; i < size; i++)
     {
-        if(i % getGridSqrtSize(grid) == 0)
+        if(i % sqrtSize == 0)
         {
-            for(unsigned int k = 0; k < size; k++) printf("####");
+            for(unsigned int k = 0; k < size; k++) 
+                printf("####");
             printf("#\n");
         }
 
         for(unsigned int k = 0; k < size; k++) {
-            printf(k % getGridSqrtSize(grid) == 0 ? "#" : "|");
+            printf(k % sqrtSize == 0 ? "#" : "|");
 
             if(getValue(grid, i, k) == 0) 
             {
@@ -177,13 +178,14 @@ void displayGridToConsole(T_Grid grid)
         }
         printf("#\n");
 
-        for (unsigned int k = 0; k < size && i % getGridSqrtSize(grid) != (getGridSqrtSize(grid) - 1); k++)
+        for (unsigned int k = 0; (k < size) && (i % sqrtSize != (sqrtSize - 1)); k++)
         {
-            printf(k % getGridSqrtSize(grid) == 0 ? "#" : "+");
+            printf(k % sqrtSize == 0 ? "#" : "+");
             printf("---");
 
         }
-        if(i % getGridSqrtSize(grid) != (getGridSqrtSize(grid) -1)) printf("#\n");
+        if(i % sqrtSize != (sqrtSize -1))
+            printf("#\n");
     }
 
     // Ending line
@@ -203,7 +205,7 @@ void displayNotesToConsole(T_Grid grid)
         for (unsigned int y = 0; y < size; y++)
         {
             for (unsigned int i = 1; i <= 9; ++i) {
-                if ((getCell(grid, x, y)->notes & (1 << (i - 1))) != 0) 
+                if (isNoteInCell(getCell(grid, x, y), i))
                 {
                     printf("%d", i);
                 }

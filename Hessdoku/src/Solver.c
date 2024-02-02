@@ -406,6 +406,17 @@ int howManyZero(T_Grid grid, int* b)
 	return res;
 }
 
+/**
+ * Find the coordinate of the (hidden) k-uplet in a square.
+ *
+ * @param sqrtS : the square root of the size of the grid
+ * @param b : an array of bool (=unsigned char), if it's true (=1) it's an element of the k-uplet
+ * @param coo : a matrix where we put the coordinate of the k-uplet
+ * @param addX : the coordinate x of the first cell of the square were the k-uplet is
+ * @param addY : the coordinate y of the first cell of the square were the k-uplet is
+ *
+ * @author Marie
+ */
 void findCooTupleSquareHidden(int sqrtS, unsigned char * b, int** coo, int addX, int addY)
 {
 	int count = 0;
@@ -425,6 +436,17 @@ void findCooTupleSquareHidden(int sqrtS, unsigned char * b, int** coo, int addX,
 	}
 }
 
+/**
+ * Find the coordinate of the (naked) k-uplet in square.
+ *
+ * @param sqrtS : the square root of the size of the grid
+ * @param b : an array of int, if it's a 0 it's an element of the k-uplet
+ * @param coo : a matrix where we put the coordinate of the k-uplet
+ * @param addX : the coordinate x of the first cell of the square were the k-uplet is
+ * @param addY : the coordinate y of the first cell of the square were the k-uplet is
+ *
+ * @author Marie
+ */
 void findCooTupleSquareNaked(int sqrtS, int* b, int** coo, int addX, int addY)
 {
 	int count = 0;
@@ -444,6 +466,16 @@ void findCooTupleSquareNaked(int sqrtS, int* b, int** coo, int addX, int addY)
 	}
 }
 
+/**
+ * Find the coordinate (y) of the (hidden) k-uplet in a line.
+ *
+ * @param size : the size of the array b
+ * @param b : an array of bool (=unsigned char), if it's true (=1) it's an element of the k-uplet
+ * @param coo : a matrix where we put the coordinate of the k-uplet
+ * @param addX : the coordinate x of the k-uplet
+ *
+ * @author Marie
+ */
 void findCooTupleLineHidden(int size, unsigned char* b, int** coo, int addX)
 {
 	int count = 0;
@@ -458,6 +490,16 @@ void findCooTupleLineHidden(int size, unsigned char* b, int** coo, int addX)
 	}
 }
 
+/**
+ * Find the coordinate (y) of the (naked) k-uplet in a line.
+ *
+ * @param size : the size of the array b
+ * @param b : an array of int, if it's a 0 it's an element of the k-uplet
+ * @param coo : a matrix where we put the coordinate of the k-uplet
+ * @param addX : the coordinate x of the k-uplet
+ *
+ * @author Marie
+ */
 void findCooTupleLineNaked(int size, int* b, int** coo, int addX)
 {
 	int count = 0;
@@ -472,6 +514,16 @@ void findCooTupleLineNaked(int size, int* b, int** coo, int addX)
 	}
 }
 
+/**
+ * Find the coordinate (x) of the (hidden) k-uplet in a column.
+ *
+ * @param size : the size of the array b
+ * @param b : an array of bool (=unsigned char), if it's true (=1) it's an element of the k-uplet
+ * @param coo : a matrix where we put the coordinate of the k-uplet
+ * @param addY : the coordinate y of the k-uplet
+ *
+ * @author Marie
+ */
 void findCooTupleColumnHidden(int size, unsigned char* b, int** coo, int addY)
 {
 	int count = 0;
@@ -486,6 +538,16 @@ void findCooTupleColumnHidden(int size, unsigned char* b, int** coo, int addY)
 	}
 }
 
+/**
+ * Find the coordinate (x) of the (naked) k-uplet in a column.
+ *
+ * @param size : the size of the array b
+ * @param b : an array of int, if it's a 0 it's an element of the k-uplet
+ * @param coo : a matrix where we put the coordinate of the k-uplet
+ * @param addY : the coordinate y of the k-uplet
+ *
+ * @author Marie
+ */
 void findCooTupleColumnNaked(int size, int* b, int** coo, int addY)
 {
 	int count = 0;

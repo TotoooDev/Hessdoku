@@ -279,7 +279,7 @@ bool removeNotesKUpletColumns(T_Grid grid, int** cooTuple, int* variable, int k,
 *
 * @author Marie
 */
-bool removeNotesKUpletSquare(T_Grid grid, int** cooTuple, int* variable, int k, int x, int y)
+bool removeNotesKUpletSquare(T_Grid grid, int** coordinatesTuple, int* variable, int k, int x, int y)
 {
 	bool hasChanged = false;
 	bool theSame = false;

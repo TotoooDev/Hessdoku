@@ -93,11 +93,11 @@ T_Grid generateGridFromFile(const char* path)
 
     if (strcmp(fileExtension, extension) == 0)
     {
-        printf("Génération du fichier séquenciel");
+        LOG("Génération du fichier séquenciel");
         return generateGridFromSequence(path);
     }
 
-    printf("Génération du fichier en table");
+    LOG("Génération du fichier en table");
     return generateGridFromTable(path);
 }
 

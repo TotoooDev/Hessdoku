@@ -456,7 +456,7 @@ int howManyZero(T_Grid grid, int* b)
  *
  * @author Marie
  */
-void findCooTupleSquareHidden(int sqrtS, unsigned char* b, int** coo, int addX, int addY)
+void findCooTupleSquareHidden(int sqrtS, unsigned char* b, int** coords, int addX, int addY)
 {
 	int count = 0;
 	int count2 = 0;
@@ -466,8 +466,8 @@ void findCooTupleSquareHidden(int sqrtS, unsigned char* b, int** coo, int addX, 
 		{
 			if (b[count] == 1)
 			{
-				coo[count2][0] = addX + i;
-				coo[count2][1] = addY + j;
+				coords[count2][0] = addX + i;
+				coords[count2][1] = addY + j;
 				count2++;
 			}
 			count++;

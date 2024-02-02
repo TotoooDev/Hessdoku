@@ -346,6 +346,7 @@ void freeTuples(int** tuples, int nbTuples) {
 	free(tuples);
 }
 
+/* only for debug : display an unsigned char (aka bool) of int of size 9 */
 void afficheBaton(unsigned char * baton)
 {
 	printf("Baton : ");
@@ -356,6 +357,7 @@ void afficheBaton(unsigned char * baton)
 	printf("\n");
 }
 
+/* only for debug : display an array of int of size 9 */
 void afficheBatonBis(int* b)
 {
 	printf("Baton : ");

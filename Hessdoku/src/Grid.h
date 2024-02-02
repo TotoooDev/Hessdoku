@@ -111,6 +111,16 @@ void displayNotesToConsole(T_Grid grid);
 T_Cell* getCell(T_Grid grid, int i, int j);
 
 /**
+ * Initialize an array of boolean to false
+ *
+ * @param grid : the sudoku
+ * @param b : the array
+ *
+ * @author Marie
+ */
+void createBaton(T_Grid grid, unsigned char* b);
+
+/**
  * Verif the sudoku entirely
  *
  * @param grid : the sudoku

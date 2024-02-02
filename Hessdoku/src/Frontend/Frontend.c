@@ -135,7 +135,16 @@ void resolveSudokuGrid(int button, int clicks, void* userData) {
             }
         }
     }
+}
 
+void buttoncheckValidityOfGrid(int button, int clicks, void* userData) {
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+    if (checkValidityOfGrid(grid))
+        printf("ok\n");
+    else
+        printf("pas ok\n");
 }
 
 void addButtons()
@@ -150,7 +159,8 @@ void addButtons()
     addButton(FrontendInstance->window, createButton(600, 330, "Remove pairs until...", removeNotes2TupleUntilUnchanged, FrontendInstance));
     addButton(FrontendInstance->window, createButton(600, 370, "Remove triples until...", removeNotes3TupleUntilUnchanged, FrontendInstance));
     addButton(FrontendInstance->window, createButton(600, 410, "Solve", resolveSudokuGrid, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(750, 450, "Quit", quit, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(600, 450, "Check", buttoncheckValidityOfGrid, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(750, 480, "Quit", quit, FrontendInstance));
 }
 
 void runFrontend()

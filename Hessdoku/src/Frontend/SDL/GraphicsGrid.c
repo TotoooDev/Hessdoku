@@ -247,7 +247,14 @@ void drawValue(T_Frontend* frontend, T_GraphicsGrid* grid, int value, int cellX,
 
     int x = cellX * grid->squareSize + grid->x - width / 2 + grid->squareSize / 2;
     int y = cellY * grid->squareSize + grid->y - height / 2 + grid->squareSize / 2;
-    drawText(getWindow(frontend), getFont(frontend), (T_Color){ 0, 0, 0 }, text, x, y, 1.0f);
+    if (grid->lockedCells[cellY * getGridSize(grid->grid) + cellX])
+    {
+        drawText(getWindow(frontend), getFont(frontend), (T_Color) { 0, 0, 0 }, text, x, y, 1.0f);
+    }
+    else
+    {
+        drawText(getWindow(frontend), getFont(frontend), (T_Color) { 0, 0, 255 }, text, x, y, 1.0f);
+    }
 }
 
 void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid)

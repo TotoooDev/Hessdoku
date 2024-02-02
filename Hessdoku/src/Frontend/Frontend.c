@@ -3,6 +3,7 @@
 #include <Frontend/GraphicsGrid.h>
 #include <Frontend/FileDialog.h>
 #include <Solver.h>
+#include <PointingKTuples.h>
 #include <Log.h>
 #include <stdlib.h>
 
@@ -153,6 +154,13 @@ void buttoncheckValidityOfGrid(int button, int clicks, void* userData) {
     }
 }
 
+void buttonCheckPointingTuples(int button, int clicks, void* userData) {
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+    solvePointingTuples(grid);
+}
+
 void addButtons()
 {
     addButton(FrontendInstance->window, createButton(600, 50, "Open grid...", openGridFile, FrontendInstance));
@@ -167,6 +175,7 @@ void addButtons()
     addButton(FrontendInstance->window, createButton(600, 410, "Solve", resolveSudokuGrid, FrontendInstance));
     addButton(FrontendInstance->window, createButton(600, 450, "Check", buttoncheckValidityOfGrid, FrontendInstance));
     addButton(FrontendInstance->window, createButton(750, 540, "Quit", quit, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(500, 640, "Solve pointing K-tuples (EXPERIMENTAL)", buttonCheckPointingTuples, FrontendInstance));
 }
 
 void drawWhatHappen()

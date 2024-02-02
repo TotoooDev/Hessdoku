@@ -137,6 +137,22 @@ int coeffBinomial(int k, int n)
 	return num / deno;
 }
 
+/**
+* Verify if there is a k-uplet in zone
+* 
+* @param grid : the sudoku grid
+* @param bH : an array to search the hidden k-uplet
+* @param bN : an array to search the naked k-uplet
+* @param xMin : minimum x of the zone
+* @param xMax : maximum x of the zone
+* @param yMin : minimum y of the zone
+* @param yMax : maximum y of the zone
+* @param k : the number of element of the k-uplet
+* @param variable : an array with the element of the k-uplet (ex: for the 3-uplet (1, 2, 3) -> [1,2,3])
+* 
+* @author Marie
+* 
+*/
 void checkRectKUpletSolve(T_Grid grid, unsigned char* bH, int*bN, int minX, int maxX, int minY, int maxY, int k, int * variable)
 {
 	int whichCell = 0;

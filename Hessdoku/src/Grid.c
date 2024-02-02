@@ -152,6 +152,7 @@ void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y)
 void displayGridToConsole(T_Grid grid) 
 {
     unsigned int size = getGridSize(grid);
+    unsigned int sqrtSize = getGridSqrtSize(grid);
 
     for(unsigned int i = 0; i < size; i++)
     {
@@ -247,31 +248,28 @@ void createBaton(T_Grid grid, unsigned char* b)
 }
 
 /**
- * Verif if the number of a cell has already been seen
+ * Verify if the number of a cell has already been seen
  *
- * @param baton : a table of 9 unsigned char
- * @param val : the value of the cell
+ * @param baton : an array of 9 unsigned char
+ * @param val   : the value of the cell
  *
- * @return false if we already see this value
+ * @return false if we already saw this value, 
  *			true if not
  *
  * @author Marie
  */
 bool checkValidityOfCell(unsigned char* baton, int val)
 {
-    if (val != 0)
+    if (val == 0)
+        return true;
+
+    if (baton[val - 1] == 0)
     {
-        if (baton[val - 1] != 0)
-        {
-            return false;
-        }
-        else
-        {
-            baton[val - 1] = 1;
-            return true;
-        }
+        baton[val - 1] = 1;
+        return true;
     }
-    return true;
+
+    return false;
 }
 
 /**

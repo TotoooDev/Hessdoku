@@ -10,13 +10,12 @@ T_Grid generateGrid(int size, int sqrtSize)
     T_Cell* ** grid = malloc(size * sizeof(T_Cell**));
     for (int x = 0; x < size; x++)
     {
-         grid[x] = malloc(size * sizeof(T_Cell*));     // FIXME : handle the NULL case (assertion ?)
+        grid[x] = malloc(size * sizeof(T_Cell*));     // FIXME : handle the NULL case (assertion ?)
 
         // initializing the new cells
         for (int y = 0; y < size; y++)
-        {
             grid[x][y] = createCell(0);                 // FIXME : handle the NULL case (assertion ?)
-        }  
+
     }
     game.grid = grid;
     game.size = size;
@@ -66,11 +65,10 @@ T_Grid generateGridFromTable(const char* path)
             int nb = readNumbersUntil(fd, '|');
 
             if (nb != 0)
-            {
                 setCell(grid, x, y, nb);
-            }
+
         }
-        skipUntil(fd, '|', sizeX + 2);                  // TODO: Peut �tre d�tecter les fins avec \n
+        skipUntil(fd, '|', sizeX + 2);                  // TODO: Peut être détecter les fins avec \n
     }
 
     closeFile(fd);
@@ -119,9 +117,8 @@ void freeGrid(T_Grid grid)
     for (unsigned int x = 0; x < size; x++)
     {
         for (unsigned int y = 0; y < size; y++)
-        {
             freeCell(getCell(grid, x, y));
-        }
+
         free(grid.grid[x]);
     }
     free(grid.grid);
@@ -190,9 +187,8 @@ void displayGridToConsole(T_Grid grid)
 
     // Ending line
     for(unsigned int k = 0; k < size; k++)
-    {
         printf("####");
-    }
+
     printf("#\n");
 
 }
@@ -206,10 +202,12 @@ void displayNotesToConsole(T_Grid grid)
         for (unsigned int y = 0; y < size; y++)
         {
             for (unsigned int i = 1; i <= 9; ++i) {
-                if ((getCell(grid, x, y)->notes & (1 << (i - 1))) != 0) {
+                if ((getCell(grid, x, y)->notes & (1 << (i - 1))) != 0) 
+                {
                     printf("%d", i);
                 }
-                else {
+                else
+                {
                     printf(" ");
                 }
             }
@@ -245,9 +243,7 @@ T_Cell* getCell(T_Grid grid, int i, int j)
 void createBaton(T_Grid grid, unsigned char* b)
 {
     for (unsigned int i = 0; i < getGridSize(grid); i++)
-    {
         b[i] = 0;
-    }
 }
 
 /**
@@ -295,15 +291,10 @@ bool checkValidityOfCell(unsigned char* baton, int val)
 bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char* baton)
 {
     for (int i = minX; i < maxX; i++)
-    {
         for (int j = minY; j < maxY; j++)
-        {
             if (!checkValidityOfCell(baton, getValue(grid, i, j)))
-            {
                 return false;
-            }
-        }
-    }
+
     return true;
 }
 
@@ -324,11 +315,11 @@ bool checkValidityOfLine(T_Grid grid)
     for (unsigned int i = 0; i < getGridSize(grid); i++)
     {
         if (!checkValidityOfRect(grid, i, i + 1, 0, getGridSize(grid), baton))
-        {
             return false;
-        }
+
         createBaton(grid, baton);
     }
+
     free(baton);
     return true;
 }
@@ -347,14 +338,15 @@ bool checkValidityOfColumn(T_Grid grid)
 {
     unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
     createBaton(grid, baton);
+
     for (unsigned int i = 0; i < getGridSize(grid); i++)
     {
         if (!checkValidityOfRect(grid, 0, getGridSize(grid), i, i + 1, baton))
-        {
             return false;
-        }
+
         createBaton(grid, baton);
     }
+
     free(baton);
     return true;
 }
@@ -378,9 +370,8 @@ bool checkValidityOfSquare(T_Grid grid)
     for (unsigned int k = 0; k < getGridSize(grid); k++)
     {
         if (!checkValidityOfRect(grid, X, X + getGridSqrtSize(grid), Y, Y + getGridSqrtSize(grid), baton))
-        {
             return false;
-        }
+
         Y += getGridSqrtSize(grid);
         if (Y == getGridSize(grid))
         {
@@ -393,6 +384,7 @@ bool checkValidityOfSquare(T_Grid grid)
         }
         createBaton(grid, baton);
     }
+
     free(baton);
     return true;
 }

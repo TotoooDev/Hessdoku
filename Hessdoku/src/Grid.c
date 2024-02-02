@@ -224,3 +224,180 @@ T_Cell* getCell(T_Grid grid, int i, int j)
 {
     return grid.grid[i][j];
 }
+
+
+
+
+/* ----------------------------------------------------------------- */
+/*                                                                   */
+/*            Function for testing the validity of a Grid            */
+/*                                                                   */
+/* ----------------------------------------------------------------- */
+
+/**
+ * Reset/set a table to 0
+ *
+ * @param grid : the grid (for the size)
+ * @param b : a table of 9 unsigned char
+ *
+ * @author Marie
+ */
+void createBaton(T_Grid grid, unsigned char* b)
+{
+    for (unsigned int i = 0; i < getGridSize(grid); i++)
+    {
+        b[i] = 0;
+    }
+}
+
+/**
+ * Verif if the number of a cell has already been seen
+ *
+ * @param baton : a table of 9 unsigned char
+ * @param val : the value of the cell
+ *
+ * @return false if we already see this value
+ *			true if not
+ *
+ * @author Marie
+ */
+bool checkValidityOfCell(unsigned char* baton, int val)
+{
+    if (val != 0)
+    {
+        if (baton[val - 1] != 0)
+        {
+            return false;
+        }
+        else
+        {
+            baton[val - 1] = 1;
+            return true;
+        }
+    }
+    return true;
+}
+
+/**
+ * Verif the validity of a zone
+ *
+ * @param grid : the sudoku
+ * @param minX, maxX, minY, maxY
+ * @param baton : a table of 9 unsigned char
+ *					baton[i-1] = 0 if we didn't see i in the zone
+ *					baton[i-1] = 1 if we already see i
+ *
+ * @return false if the zone isn't valid
+ *			true if it is
+ *
+ * @author Marie
+ */
+bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char* baton)
+{
+    for (int i = minX; i < maxX; i++)
+    {
+        for (int j = minY; j < maxY; j++)
+        {
+            if (!checkValidityOfCell(baton, getValue(grid, i, j)))
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+/**
+ * Verif if the lines of a sudoku are valid
+ *
+ * @param grid : the sudoku
+ *
+ * @return false if it isn't valid
+ *			true if it is
+ *
+ * @author Marie
+ */
+bool checkValidityOfLine(T_Grid grid)
+{
+    unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
+    createBaton(grid, baton);
+    for (unsigned int i = 0; i < getGridSize(grid); i++)
+    {
+        if (!checkValidityOfRect(grid, i, i + 1, 0, getGridSize(grid), baton))
+        {
+            return false;
+        }
+        createBaton(grid, baton);
+    }
+    free(baton);
+    return true;
+}
+
+/**
+ * Verif if the columns of a sudoku are valid
+ *
+ * @param grid : the sudoku
+ *
+ * @return false if it isn't valid
+ *			true if it is
+ *
+ * @author Marie
+ */
+bool checkValidityOfColumn(T_Grid grid)
+{
+    unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
+    createBaton(grid, baton);
+    for (unsigned int i = 0; i < getGridSize(grid); i++)
+    {
+        if (!checkValidityOfRect(grid, 0, getGridSize(grid), i, i + 1, baton))
+        {
+            return false;
+        }
+        createBaton(grid, baton);
+    }
+    free(baton);
+    return true;
+}
+
+/**
+ * Verif if the squares of a sudoku are valid
+ *
+ * @param grid : the sudoku
+ *
+ * @return false if it isn't valid
+ *			true if it is
+ *
+ * @author Marie
+ */
+bool checkValidityOfSquare(T_Grid grid)
+{
+    unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
+    createBaton(grid, baton);
+    int X = 0;
+    int Y = 0;
+    for (unsigned int k = 0; k < getGridSize(grid); k++)
+    {
+        if (!checkValidityOfRect(grid, X, X + getGridSqrtSize(grid), Y, Y + getGridSqrtSize(grid), baton))
+        {
+            return false;
+        }
+        Y += getGridSqrtSize(grid);
+        if (Y == getGridSize(grid))
+        {
+            Y = 0;
+            X += getGridSqrtSize(grid);
+        }
+        if (X == getGridSize(grid))
+        {
+            X = 0;
+        }
+        createBaton(grid, baton);
+    }
+    free(baton);
+    return true;
+}
+
+bool checkValidityOfGrid(T_Grid grid)
+{
+    return (checkValidityOfLine(grid) && checkValidityOfColumn(grid) && checkValidityOfSquare(grid));
+}

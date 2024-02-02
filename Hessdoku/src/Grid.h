@@ -110,5 +110,17 @@ void displayNotesToConsole(T_Grid grid);
  */
 T_Cell* getCell(T_Grid grid, int i, int j);
 
+/**
+ * Verif the sudoku entirely
+ *
+ * @param grid : the sudoku
+ *
+ * @return false if it isn't valid
+ *			true if it is
+ *
+ * @author Marie
+ */
+bool checkValidityOfGrid(T_Grid grid);
+
 
 #endif

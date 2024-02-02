@@ -10,13 +10,12 @@ T_Grid generateGrid(int size, int sqrtSize)
     T_Cell* ** grid = malloc(size * sizeof(T_Cell**));
     for (int x = 0; x < size; x++)
     {
-         grid[x] = malloc(size * sizeof(T_Cell*));     // FIXME : handle the NULL case (assertion ?)
+        grid[x] = malloc(size * sizeof(T_Cell*));     // FIXME : handle the NULL case (assertion ?)
 
         // initializing the new cells
         for (int y = 0; y < size; y++)
-        {
             grid[x][y] = createCell(0);                 // FIXME : handle the NULL case (assertion ?)
-        }  
+
     }
     game.grid = grid;
     game.size = size;
@@ -66,11 +65,10 @@ T_Grid generateGridFromTable(const char* path)
             int nb = readNumbersUntil(fd, '|');
 
             if (nb != 0)
-            {
                 setCell(grid, x, y, nb);
-            }
+
         }
-        skipUntil(fd, '|', sizeX + 2);                  // TODO: Peut �tre d�tecter les fins avec \n
+        skipUntil(fd, '|', sizeX + 2);                  // TODO: Peut être détecter les fins avec \n
     }
 
     closeFile(fd);
@@ -119,9 +117,8 @@ void freeGrid(T_Grid grid)
     for (unsigned int x = 0; x < size; x++)
     {
         for (unsigned int y = 0; y < size; y++)
-        {
             freeCell(getCell(grid, x, y));
-        }
+
         free(grid.grid[x]);
     }
     free(grid.grid);
@@ -155,17 +152,19 @@ void setCellEmpty(T_Grid grid, unsigned char x, unsigned char y)
 void displayGridToConsole(T_Grid grid) 
 {
     unsigned int size = getGridSize(grid);
+    unsigned int sqrtSize = getGridSqrtSize(grid);
 
     for(unsigned int i = 0; i < size; i++)
     {
-        if(i % getGridSqrtSize(grid) == 0)
+        if(i % sqrtSize == 0)
         {
-            for(unsigned int k = 0; k < size; k++) printf("####");
+            for(unsigned int k = 0; k < size; k++) 
+                printf("####");
             printf("#\n");
         }
 
         for(unsigned int k = 0; k < size; k++) {
-            printf(k % getGridSqrtSize(grid) == 0 ? "#" : "|");
+            printf(k % sqrtSize == 0 ? "#" : "|");
 
             if(getValue(grid, i, k) == 0) 
             {
@@ -179,20 +178,20 @@ void displayGridToConsole(T_Grid grid)
         }
         printf("#\n");
 
-        for (unsigned int k = 0; k < size && i % getGridSqrtSize(grid) != (getGridSqrtSize(grid) - 1); k++)
+        for (unsigned int k = 0; (k < size) && (i % sqrtSize != (sqrtSize - 1)); k++)
         {
-            printf(k % getGridSqrtSize(grid) == 0 ? "#" : "+");
+            printf(k % sqrtSize == 0 ? "#" : "+");
             printf("---");
 
         }
-        if(i % getGridSqrtSize(grid) != (getGridSqrtSize(grid) -1)) printf("#\n");
+        if(i % sqrtSize != (sqrtSize -1))
+            printf("#\n");
     }
 
     // Ending line
     for(unsigned int k = 0; k < size; k++)
-    {
         printf("####");
-    }
+
     printf("#\n");
 
 }
@@ -206,10 +205,12 @@ void displayNotesToConsole(T_Grid grid)
         for (unsigned int y = 0; y < size; y++)
         {
             for (unsigned int i = 1; i <= 9; ++i) {
-                if ((getCell(grid, x, y)->notes & (1 << (i - 1))) != 0) {
+                if (isNoteInCell(getCell(grid, x, y), i))
+                {
                     printf("%d", i);
                 }
-                else {
+                else
+                {
                     printf(" ");
                 }
             }
@@ -245,37 +246,32 @@ T_Cell* getCell(T_Grid grid, int i, int j)
 void createBaton(T_Grid grid, unsigned char* b)
 {
     for (unsigned int i = 0; i < getGridSize(grid); i++)
-    {
         b[i] = 0;
-    }
 }
 
 /**
- * Verif if the number of a cell has already been seen
+ * Verify if the number of a cell has already been seen
  *
- * @param baton : a table of 9 unsigned char
- * @param val : the value of the cell
+ * @param baton : an array of 9 unsigned char
+ * @param val   : the value of the cell
  *
- * @return false if we already see this value
+ * @return false if we already saw this value, 
  *			true if not
  *
  * @author Marie
  */
 bool checkValidityOfCell(unsigned char* baton, int val)
 {
-    if (val != 0)
+    if (val == 0)
+        return true;
+
+    if (baton[val - 1] == 0)
     {
-        if (baton[val - 1] != 0)
-        {
-            return false;
-        }
-        else
-        {
-            baton[val - 1] = 1;
-            return true;
-        }
+        baton[val - 1] = 1;
+        return true;
     }
-    return true;
+
+    return false;
 }
 
 /**
@@ -295,15 +291,10 @@ bool checkValidityOfCell(unsigned char* baton, int val)
 bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char* baton)
 {
     for (int i = minX; i < maxX; i++)
-    {
         for (int j = minY; j < maxY; j++)
-        {
             if (!checkValidityOfCell(baton, getValue(grid, i, j)))
-            {
                 return false;
-            }
-        }
-    }
+
     return true;
 }
 
@@ -324,11 +315,11 @@ bool checkValidityOfLine(T_Grid grid)
     for (unsigned int i = 0; i < getGridSize(grid); i++)
     {
         if (!checkValidityOfRect(grid, i, i + 1, 0, getGridSize(grid), baton))
-        {
             return false;
-        }
+
         createBaton(grid, baton);
     }
+
     free(baton);
     return true;
 }
@@ -347,14 +338,15 @@ bool checkValidityOfColumn(T_Grid grid)
 {
     unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
     createBaton(grid, baton);
+
     for (unsigned int i = 0; i < getGridSize(grid); i++)
     {
         if (!checkValidityOfRect(grid, 0, getGridSize(grid), i, i + 1, baton))
-        {
             return false;
-        }
+
         createBaton(grid, baton);
     }
+
     free(baton);
     return true;
 }
@@ -378,9 +370,8 @@ bool checkValidityOfSquare(T_Grid grid)
     for (unsigned int k = 0; k < getGridSize(grid); k++)
     {
         if (!checkValidityOfRect(grid, X, X + getGridSqrtSize(grid), Y, Y + getGridSqrtSize(grid), baton))
-        {
             return false;
-        }
+
         Y += getGridSqrtSize(grid);
         if (Y == getGridSize(grid))
         {
@@ -393,6 +384,7 @@ bool checkValidityOfSquare(T_Grid grid)
         }
         createBaton(grid, baton);
     }
+
     free(baton);
     return true;
 }

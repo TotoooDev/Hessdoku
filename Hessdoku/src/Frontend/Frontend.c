@@ -7,7 +7,11 @@
 #include <Log.h>
 #include <stdlib.h>
 
-typedef struct T_Frontend {
+bool isCheckPressed = false;
+bool isValid = false;
+
+typedef struct T_Frontend
+{
     T_Window* window;
     T_Font* font;
     T_GraphicsGrid* grid;
@@ -32,7 +36,10 @@ void createFrontend(T_Grid grid)
     FrontendInstance->drawNotes = false;
 }
 
-void quit(int button, int clicks, void* userData) { FrontendInstance->isRunning = false; } // cool oneliner
+void quit(int button, int clicks, void* userData)
+{ 
+    FrontendInstance->isRunning = false; // cool oneliner
+} 
 
 void openGridFile(int button, int clicks, void* userData)
 {
@@ -44,37 +51,45 @@ void openGridFile(int button, int clicks, void* userData)
     setGrid(FrontendInstance->grid, generateGridFromFile(filePath));
 }
 
-void showHideNotes(int button, int clicks, void* userData) { setGraphicsGridDrawNotes(FrontendInstance->grid, getGraphicsGridDrawNotes(FrontendInstance->grid) ^ 1); } // even cooler oneliner
+void showHideNotes(int button, int clicks, void* userData) 
+{
+    setGraphicsGridDrawNotes(FrontendInstance->grid, getGraphicsGridDrawNotes(FrontendInstance->grid) ^ 1);  // even cooler oneliner
+}
 
-void removeSomeNotes(int button, int clicks, void* userData) {
+void removeSomeNotes(int button, int clicks, void* userData)
+{
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
     removeNotesInGridByZones(grid);
 }
 
-void removeNotes1Tuple(int button, int clicks, void* userData) {
+void removeNotes1Tuple(int button, int clicks, void* userData)
+{
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
     kUpletsSolve(grid, 1);
 }
 
-void removeNotes2Tuple(int button, int clicks, void* userData) {
+void removeNotes2Tuple(int button, int clicks, void* userData)
+{
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
     kUpletsSolve(grid, 2);
 }
 
-void removeNotes3Tuple(int button, int clicks, void* userData) {
+void removeNotes3Tuple(int button, int clicks, void* userData)
+{
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
     kUpletsSolve(grid, 3);
 }
 
-void removeNotes1TupleUntilUnchanged(int button, int clicks, void* userData) {
+void removeNotes1TupleUntilUnchanged(int button, int clicks, void* userData)
+{
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
@@ -85,29 +100,30 @@ void removeNotes1TupleUntilUnchanged(int button, int clicks, void* userData) {
     }
 }
 
-void removeNotes2TupleUntilUnchanged(int button, int clicks, void* userData) {
+void removeNotes2TupleUntilUnchanged(int button, int clicks, void* userData)
+{
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
 
     bool hasChanged = true;
-    while (hasChanged) {
+    while (hasChanged)
         hasChanged = kUpletsSolve(grid, 2);
-    }
 }
 
-void removeNotes3TupleUntilUnchanged(int button, int clicks, void* userData) {
+void removeNotes3TupleUntilUnchanged(int button, int clicks, void* userData)
+{
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
 
     bool hasChanged = true;
-    while (hasChanged) {
+    while (hasChanged)
         hasChanged = kUpletsSolve(grid, 3);
-    }
 }
 
-void resolveSudokuGrid(int button, int clicks, void* userData) {
+void resolveSudokuGrid(int button, int clicks, void* userData)
+{
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
@@ -115,21 +131,26 @@ void resolveSudokuGrid(int button, int clicks, void* userData) {
     bool hasChanged = false;
     bool end = false;
 
-    while (!end) {
+    while (!end) 
+    {
         hasChanged = false;
 
         hasChanged |= removeNotesInGridByZones(grid);
 
-        if (!hasChanged) {
+        if (!hasChanged)
+        {
             hasChanged |= kUpletsSolve(grid, 1);
 
-            if (!hasChanged) {
+            if (!hasChanged)
+            {
                 hasChanged |= kUpletsSolve(grid, 2);
 
-                if (!hasChanged) {
+                if (!hasChanged)
+                {
                     hasChanged |= kUpletsSolve(grid, 3);
 
-                    if (!hasChanged) {
+                    if (!hasChanged) 
+                    {
                         end = true; // Only set end to true if no changes occurred after all functions
                     }
                 }
@@ -138,19 +159,20 @@ void resolveSudokuGrid(int button, int clicks, void* userData) {
     }
 }
 
-void buttoncheckValidityOfGrid(int button, int clicks, void* userData) {
+void buttoncheckValidityOfGrid(int button, int clicks, void* userData)
+{
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
+    isCheckPressed = true;
+
     if (checkValidityOfGrid(grid))
     {
-        printf("ok\n");
-        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 255, 0 }, "Grid valid !", 600, 490, 1.0f);
+        isValid = true;
     }
     else
     {
-        printf("pas ok\n");
-        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 255, 0, 0 }, "Grid invalid !", 600, 490, 1.0f);
+        isValid = false;
     }
 }
 
@@ -193,7 +215,10 @@ void runFrontend()
         clearWindow(FrontendInstance->window, 127, 127, 127);
 
         drawText(FrontendInstance->window, FrontendInstance->font, (T_Color){ 0, 0, 0 }, "No grid loaded...", 40, 270, 1.0f);
-        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 255, 0 }, "Grid valid !", 600, 490, 1.0f);
+        if (isCheckPressed && isValid)
+            drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 255, 0 }, "Grid valid !", 600, 490, 1.0f);
+        else if (isCheckPressed && !isValid)
+            drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 255, 0, 0 }, "Grid invalid !", 600, 490, 1.0f);
         drawWhatHappen();
         drawGrid(FrontendInstance, FrontendInstance->grid);
 

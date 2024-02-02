@@ -11,6 +11,7 @@
     void** * doubleTableThatContainsPointers; // Tableau à deux dimensions qui contient des pointeurs
 ```
 - Les types prennent `T_` en préfixe, sont écrits en `camelCase` et en anglais correct : `T_CoolTypeName`.
+- On sépare deux valeurs autour d'un opérateur binaire (`+`, `-`, ...) d'espaces, comme ceci : `1 + 3`
 - Les parenthèses sont :
     - Pour les fonctions, collées au nom de la fonction : `void coolFunction(int coolParam);`.
     - Pour les instructions de contrôle de flot (`for`, `if`, `switch`, ...), séparées par l'instruction avec un espace : `if (coolCondition)`.

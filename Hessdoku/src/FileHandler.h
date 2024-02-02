@@ -3,7 +3,7 @@
 
 
 /**
-* Returns a file extension
+* @return Returns a file extension
 */
 int getFileExtension(const char* filename, char* extension);
 
@@ -22,12 +22,12 @@ FILE* openFile(const char* name);
 void closeFile(FILE* file);
 
 /**
-* Skip characters on the file until c is encountered occurences times.
+* Skip characters on the file until c is encountered a set number of times.
 */
 void skipUntil(FILE* fd, char c, int occurences);
 
 /**
-* Reads numbers from the file until c is read.
+* Reads numbers from the file until the character c is read.
 */
 unsigned int readNumbersUntil(FILE* fd, char c);
 

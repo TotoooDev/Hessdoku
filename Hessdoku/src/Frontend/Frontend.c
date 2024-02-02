@@ -142,9 +142,15 @@ void buttoncheckValidityOfGrid(int button, int clicks, void* userData) {
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
     if (checkValidityOfGrid(grid))
+    {
         printf("ok\n");
+        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 255, 0 }, "Grid valid !", 600, 490, 1.0f);
+    }
     else
+    {
         printf("pas ok\n");
+        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 255, 0, 0 }, "Grid invalid !", 600, 490, 1.0f);
+    }
 }
 
 void addButtons()
@@ -160,7 +166,12 @@ void addButtons()
     addButton(FrontendInstance->window, createButton(600, 370, "Remove triples until...", removeNotes3TupleUntilUnchanged, FrontendInstance));
     addButton(FrontendInstance->window, createButton(600, 410, "Solve", resolveSudokuGrid, FrontendInstance));
     addButton(FrontendInstance->window, createButton(600, 450, "Check", buttoncheckValidityOfGrid, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(750, 480, "Quit", quit, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(750, 540, "Quit", quit, FrontendInstance));
+}
+
+void drawWhatHappen()
+{
+    drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 0, 0 }, "Blahblahblahblahblahblahkzdoizdpj.....", 40, 610, 0.5f);
 }
 
 void runFrontend()
@@ -173,9 +184,8 @@ void runFrontend()
         clearWindow(FrontendInstance->window, 127, 127, 127);
 
         drawText(FrontendInstance->window, FrontendInstance->font, (T_Color){ 0, 0, 0 }, "No grid loaded...", 40, 270, 1.0f);
-
-        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 0, 0 }, "Blahblahblahblahblahblahkzdoizdpj.....", 40, 610, 0.5f);
-
+        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 255, 0 }, "Grid valid !", 600, 490, 1.0f);
+        drawWhatHappen();
         drawGrid(FrontendInstance, FrontendInstance->grid);
 
         drawWidgets(FrontendInstance->window, FrontendInstance->font);

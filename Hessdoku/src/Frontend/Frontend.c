@@ -173,6 +173,9 @@ void runFrontend()
         clearWindow(FrontendInstance->window, 127, 127, 127);
 
         drawText(FrontendInstance->window, FrontendInstance->font, (T_Color){ 0, 0, 0 }, "No grid loaded...", 40, 270, 1.0f);
+
+        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 0, 0 }, "Blahblahblahblahblahblahkzdoizdpj.....", 40, 610, 0.5f);
+
         drawGrid(FrontendInstance, FrontendInstance->grid);
 
         drawWidgets(FrontendInstance->window, FrontendInstance->font);

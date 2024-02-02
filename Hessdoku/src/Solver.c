@@ -90,6 +90,16 @@ bool removeNotesInGridByZones(T_Grid grid)
 	return hasChanged;
 }
 
+/**
+* Count how many true there are in an array
+* 
+* @param grid : the sudoku grid
+* @param baton : an array of unsigned char (bool) where we count the true
+* 
+* @return How many true there are in baton
+* 
+* @author Marie
+*/
 int howManyTrue(T_Grid grid, unsigned char* baton)
 {
 	int howMany = 0;
@@ -103,6 +113,16 @@ int howManyTrue(T_Grid grid, unsigned char* baton)
 	return howMany;
 }
 
+/**
+* calculating the binomial coefficient of two values
+* 
+* @param k
+* @param n
+* 
+* @return the result
+* 
+* @author Marie
+*/
 int coeffBinomial(int k, int n)
 {
 	int num = 1;
@@ -277,7 +297,9 @@ int tuplesSize4[][4] = { {1,2,3,4}, {1,2,3,5},{1,2,3,6},{1,2,3,7},{1,2,3,8},{1,2
 * Returns every ktuples (k choose n) of a certain k size.
 * 
 * @param k The size of the tuples
+* 
 * @returns A pointer to the ktuples array. Returns NULL if the value is invalid (ie. not between 1 and 4)
+* 
 * @author Baptiste
 */
 int** generateKTuples(const int k, const int size) {
@@ -369,7 +391,7 @@ void afficheBatonBis(int* b)
 }
 
 /**
-/* Initialize an array of int with the number of notes on each cell of a zone
+* Initialize an array of int with the number of notes on each cell of a zone
 * 
 * @param grid : the sudoku grid
 * @param b : the array of int

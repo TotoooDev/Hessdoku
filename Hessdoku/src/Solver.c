@@ -196,6 +196,19 @@ void nextSquare (int step, int* xSquare, int* ySquare)
 	}
 }
 
+/**
+* Remove notes on a rows given a k-uplet
+* 
+* @param grid : the sudoku grid
+* @param cooTuple : the coordinate of the k-uplet
+* @param variable : the k-uplet
+* @param k : the k of k-uplet
+* @param x : the coordinate of the row
+* 
+* @return true if the grid has changed or else false
+* 
+* @author Marie
+*/
 bool removeNotesKUpletRows(T_Grid grid,int ** cooTuple, int * variable, int k, int x)
 {
 	bool hasChanged = false;
@@ -223,6 +236,19 @@ bool removeNotesKUpletRows(T_Grid grid,int ** cooTuple, int * variable, int k, i
 	return hasChanged;
 }
 
+/**
+* Remove notes on a column given a k-uplet
+*
+* @param grid : the sudoku grid
+* @param cooTuple : the coordinate of the k-uplet
+* @param variable : the k-uplet
+* @param k : the k of k-uplet
+* @param y : the coordinate of the column
+*
+* @return true if the grid has changed or else false
+*
+* @author Marie
+*/
 bool removeNotesKUpletColumns(T_Grid grid, int** cooTuple, int* variable, int k, int y)
 {
 	bool hasChanged = false;
@@ -250,6 +276,20 @@ bool removeNotesKUpletColumns(T_Grid grid, int** cooTuple, int* variable, int k,
 	return hasChanged;
 }
 
+/**
+* Remove notes on a square given a k-uplet
+*
+* @param grid : the sudoku grid
+* @param cooTuple : the coordinate of the k-uplet
+* @param variable : the k-uplet
+* @param k : the k of k-uplet
+* @param x : the coordinate x of the first cell of the square
+* @param y : the coordinate y of the first cell of the square
+*
+* @return true if the grid has changed or else false
+*
+* @author Marie
+*/
 bool removeNotesKUpletSquare(T_Grid grid, int** cooTuple, int* variable, int k, int x, int y)
 {
 	bool hasChanged = false;
@@ -282,6 +322,18 @@ bool removeNotesKUpletSquare(T_Grid grid, int** cooTuple, int* variable, int k, 
 	return hasChanged;
 }
 
+/**
+* Remove notes on the cell where is the k-uplet
+*
+* @param grid : the sudoku grid
+* @param cooTuple : the coordinate of the k-uplet
+* @param tuple : the k-uplet
+* @param k : the k of k-uplet
+*
+* @return true if the grid has changed or else false
+*
+* @author Marie
+*/
 bool removeNoteOnCell(T_Grid grid, int** cooTuple, int* tuple, int k)
 {
 	int size = getGridSize(grid);

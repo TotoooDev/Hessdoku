@@ -59,7 +59,6 @@ unsigned int** getIntersectionZoneSquare(unsigned int** square, unsigned int** z
     unsigned int currentIndex = 0;
     for (unsigned int i = 0; i < gridSize; i++)
     {
-
         bool isIncluded = false;
         for (unsigned int ii = 0; ii < gridSize; ii++)
         {
@@ -221,35 +220,32 @@ void removeNotesZone(T_Grid grid, unsigned int** zoneExclusions, unsigned int nu
 
 void removePointingTuplesOfSquare(T_Grid grid, unsigned int noteValue, unsigned int** square, unsigned int** zone, unsigned int gridSize, unsigned int sqrtGridSize)
 {
-    for (unsigned int i = 0; i < sqrtGridSize; i++)
+    unsigned int** intersections = getIntersectionZoneSquare(square, zone, gridSize, sqrtGridSize);
+    
+    unsigned int numExclusions = gridSize - sqrtGridSize;
+    unsigned int** squareExclusions = getSquareExclusionZoneSquare(square, zone, gridSize, sqrtGridSize);
+    unsigned int** zoneExclusions = getZoneExclusionZoneSquare(square, zone, gridSize, sqrtGridSize);
+
+    unsigned int numValuesInIntersection = countValuesInIntersection(grid, intersections, noteValue, gridSize, sqrtGridSize);
+
+    bool isPointing = true;
+    bool isBox = true;
+
+    if (numValuesInIntersection >= 2)
     {
-        unsigned int** intersections = getIntersectionZoneSquare(square, zone, gridSize, sqrtGridSize);
-        
-        unsigned int numExclusions = gridSize - sqrtGridSize;
-        unsigned int** squareExclusions = getSquareExclusionZoneSquare(square, zone, gridSize, sqrtGridSize);
-        unsigned int** zoneExclusions = getZoneExclusionZoneSquare(square, zone, gridSize, sqrtGridSize);
-
-        unsigned int numValuesInIntersection = countValuesInIntersection(grid, intersections, noteValue, gridSize, sqrtGridSize);
-
-        bool isPointing = true;
-        bool isBox = true;
-
-        if (numValuesInIntersection >= 2)
-        {
-            isPointing = getIsPointing(grid, squareExclusions, numExclusions, noteValue);
-            isBox = getIsBox(grid, zoneExclusions, numExclusions, noteValue);
-        }
-
-        if (isBox)
-            removeNotesSquare(grid, squareExclusions, numExclusions, noteValue);
-
-        if (isPointing)
-            removeNotesZone(grid, zoneExclusions, numExclusions, noteValue);
-
-        freeExclusions(squareExclusions, gridSize, sqrtGridSize);
-        freeExclusions(zoneExclusions, gridSize, sqrtGridSize);
-        freeIntersections(intersections, sqrtGridSize);
+        isPointing = getIsPointing(grid, squareExclusions, numExclusions, noteValue);
+        isBox = getIsBox(grid, zoneExclusions, numExclusions, noteValue);
     }
+
+    if (isBox)
+        removeNotesSquare(grid, squareExclusions, numExclusions, noteValue);
+
+    if (isPointing)
+        removeNotesZone(grid, zoneExclusions, numExclusions, noteValue);
+
+    freeExclusions(squareExclusions, gridSize, sqrtGridSize);
+    freeExclusions(zoneExclusions, gridSize, sqrtGridSize);
+    freeIntersections(intersections, sqrtGridSize);
 }
 
 void solvePointingTuples(T_Grid grid)
@@ -265,16 +261,21 @@ void solvePointingTuples(T_Grid grid)
         // Loop through every note value
         for (unsigned int noteValue = 0; noteValue < gridSize; noteValue++)
         {
+            // Loop through every line that intersects the current square
             for (unsigned int currentLine = 0; currentLine < sqrtGridSize; currentLine++)
             {
+                // The y coordinate of the current line
                 unsigned int y = (i / sqrtGridSize) * sqrtGridSize + currentLine;
 
                 unsigned int** line = getLineIndices(gridSize, y);
                 removePointingTuplesOfSquare(grid, noteValue, square, line, gridSize, sqrtGridSize);
                 freeZone(line, gridSize);
             }
+
+            // Loop through every column that intersects the current square
             for (unsigned int currentColumn = 0; currentColumn < sqrtGridSize; currentColumn++)
             {
+                // The x coordinate of the current column
                 unsigned int x = (i % sqrtGridSize) * sqrtGridSize + currentColumn;
 
                 unsigned int** column = getColumnIndices(gridSize, x);

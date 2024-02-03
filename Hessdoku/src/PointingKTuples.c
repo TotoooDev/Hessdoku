@@ -12,8 +12,6 @@ unsigned int** getSquareCellIndices(unsigned int gridSize, unsigned int sqrtGrid
         squareCellsIndices[i] = (unsigned int*)malloc(2 * sizeof(unsigned int));
         squareCellsIndices[i][0] = (squareIndex % sqrtGridSize) * sqrtGridSize + i % sqrtGridSize;
         squareCellsIndices[i][1] = (squareIndex / sqrtGridSize) * sqrtGridSize + i / sqrtGridSize;
-
-        // LOG("squareCellsIndices[%d][1]: %d", i, squareCellsIndices[i][1]);
     }
     return squareCellsIndices;
 }
@@ -53,6 +51,8 @@ void freeZone(unsigned int** array, unsigned int gridSize)
     free(array);
 }
 
+// Returns the intersection between a zone and a square (which are represented as arrays of `gridSize` coordinates). 
+// It returns an array of the common coordinates. The array must be freed with `freeIntersections`.
 unsigned int** getIntersectionZoneSquare(unsigned int** square, unsigned int** zone, unsigned int gridSize, unsigned int sqrtGridSize)
 {
     unsigned int** intersections = (unsigned int**)malloc(sqrtGridSize * sizeof(unsigned int*));
@@ -63,9 +63,6 @@ unsigned int** getIntersectionZoneSquare(unsigned int** square, unsigned int** z
         bool isIncluded = false;
         for (unsigned int ii = 0; ii < gridSize; ii++)
         {
-            LOG("square[%d]: %d, %d", i, square[i][0], square[i][1]);
-            LOG("zone[%d]: %d, %d", i, zone[ii][0], zone[ii][1]);
-
             if (square[i][0] == zone[ii][0] && square[i][1] == zone[ii][1])
                 isIncluded = true;
         }
@@ -80,9 +77,6 @@ unsigned int** getIntersectionZoneSquare(unsigned int** square, unsigned int** z
 
     }
 
-    LOG("Expected intersections: %d", sqrtGridSize);
-    LOG("Found intersections: %d", currentIndex);
-
     return intersections;
 }
 
@@ -93,6 +87,8 @@ void freeIntersections(unsigned int** intersection, unsigned int sqrtGridSize)
     free(intersection);
 }
 
+// Returns the exclusion (like an exclusive or) of a zone and a square (represented by an array of `gridSize` coordinates).
+// It returns an array of the exclusive coordinates of the square. The array must be freed with `freeExclusions`.
 unsigned int** getSquareExclusionZoneSquare(unsigned int** square, unsigned int** zone, unsigned int gridSize, unsigned int sqrtGridSize)
 {
     unsigned int numExclusions = gridSize - sqrtGridSize;
@@ -104,10 +100,6 @@ unsigned int** getSquareExclusionZoneSquare(unsigned int** square, unsigned int*
         bool isIncluded = false;
         for (unsigned int ii = 0; ii < gridSize; ii++)
         {
-            // LOG("Current i: %d", i);
-            // LOG("square[i]: %d, %d", square[i][0], square[i][1]);
-            // LOG("zone[ii]: %d, %d", zone[ii][0], zone[ii][1]);
-
             if (square[i][0] == zone[ii][0] && square[i][1] == zone[ii][1])
                 isIncluded = true;
         }
@@ -121,12 +113,10 @@ unsigned int** getSquareExclusionZoneSquare(unsigned int** square, unsigned int*
         }
     }
 
-    // LOG("numExclusions: %d", numExclusions);
-    // LOG("Found exclusions: %d", currentIndex);
-
     return exclusions;
 }
 
+// Same as `getSquareExclusionZoneSquare`, but returns the array of the exclusive coordinates if the zone. 
 unsigned int** getZoneExclusionZoneSquare(unsigned int** square, unsigned int** zone, unsigned int gridSize, unsigned int sqrtGridSize)
 {
     unsigned int numExclusions = gridSize - sqrtGridSize;
@@ -138,10 +128,6 @@ unsigned int** getZoneExclusionZoneSquare(unsigned int** square, unsigned int** 
         bool isIncluded = false;
         for (unsigned int ii = 0; ii < gridSize; ii++)
         {
-            // LOG("Current i: %d", i);
-            // LOG("square[i]: %d, %d", square[i][0], square[i][1]);
-            // LOG("zone[ii]: %d, %d", zone[ii][0], zone[ii][1]);
-
             if (square[i][0] == zone[ii][0] && square[i][1] == zone[ii][1])
                 isIncluded = true;
         }
@@ -155,9 +141,6 @@ unsigned int** getZoneExclusionZoneSquare(unsigned int** square, unsigned int** 
         }
     }
 
-    // LOG("numExclusions: %d", numExclusions);
-    // LOG("Found exclusions: %d", currentIndex);
-
     return exclusions;
 }
 
@@ -169,68 +152,99 @@ void freeExclusions(unsigned int** exclusion, unsigned int gridSize, unsigned in
     free(exclusion);
 }
 
-// TODO: rename this function.
-void bam(T_Grid grid, unsigned int x, unsigned int** square, unsigned int** zone, unsigned int gridSize, unsigned int sqrtGridSize)
+unsigned int countValuesInIntersection(T_Grid grid, unsigned int** intersections, unsigned int noteValue, unsigned int gridSize, unsigned int sqrtGridSize)
+{
+    unsigned int numValuesInIntersection = 0;
+
+    for (unsigned int i = 0; i < sqrtGridSize; i++)
+    {
+        unsigned int intersectionCellX = intersections[i][0];
+        unsigned int intersectionCellY = intersections[i][1];
+        if (isNoteInCell(getCell(grid, intersectionCellX, intersectionCellY), noteValue))
+            numValuesInIntersection++;
+    }
+
+    return numValuesInIntersection;
+}
+
+bool getIsPointing(T_Grid grid, unsigned int** squareExclusions, unsigned int numExclusions, unsigned int noteValue)
+{
+    bool isPointing = true;
+
+    for (unsigned int i = 0; i < numExclusions; i++)
+    {
+        unsigned int exclusionCellX = squareExclusions[i][0];
+        unsigned int exclusionCellY = squareExclusions[i][1];
+
+        if (isNoteInCell(getCell(grid, exclusionCellX, exclusionCellY), noteValue))
+            isPointing = false;
+    }
+
+    return isPointing;
+}
+
+bool getIsBox(T_Grid grid, unsigned int** zoneExclusions, unsigned int numExclusions, unsigned int noteValue)
+{
+    bool isBox = true;
+
+    for (unsigned int ii = 0; ii < numExclusions; ii++)
+    {
+        unsigned int exclusionCellX = zoneExclusions[ii][0];
+        unsigned int exclusionCellY = zoneExclusions[ii][1];
+
+        if (isNoteInCell(getCell(grid, exclusionCellX, exclusionCellY), noteValue))
+            isBox = false;
+    }
+
+    return isBox;
+}
+
+void removeNotesSquare(T_Grid grid, unsigned int** squareExclusions, unsigned int numExclusions, unsigned int noteValue)
+{
+    for (unsigned int i = 0; i < numExclusions; i++)
+    {
+        unsigned int exclusionCellX = squareExclusions[i][0];
+        unsigned int exclusionCellY = squareExclusions[i][1];
+        unsetNoteCell(getCell(grid, exclusionCellX, exclusionCellY), noteValue);
+    }
+}
+
+void removeNotesZone(T_Grid grid, unsigned int** zoneExclusions, unsigned int numExclusions, unsigned int noteValue)
+{
+    for (unsigned int ii = 0; ii < numExclusions; ii++)
+    {
+        unsigned int exclusionCellX = zoneExclusions[ii][0];
+        unsigned int exclusionCellY = zoneExclusions[ii][1];
+        unsetNoteCell(getCell(grid, exclusionCellX, exclusionCellY), noteValue);
+    }
+}
+
+void removePointingTuplesOfSquare(T_Grid grid, unsigned int noteValue, unsigned int** square, unsigned int** zone, unsigned int gridSize, unsigned int sqrtGridSize)
 {
     for (unsigned int i = 0; i < sqrtGridSize; i++)
     {
-        // LOG("Bam i: %d", i);
-
-        unsigned int k = 0;
-        
         unsigned int** intersections = getIntersectionZoneSquare(square, zone, gridSize, sqrtGridSize);
         
         unsigned int numExclusions = gridSize - sqrtGridSize;
         unsigned int** squareExclusions = getSquareExclusionZoneSquare(square, zone, gridSize, sqrtGridSize);
         unsigned int** zoneExclusions = getZoneExclusionZoneSquare(square, zone, gridSize, sqrtGridSize);
 
-        for (unsigned int ii = 0; ii < sqrtGridSize; ii++)
-        {
-            unsigned int intersectionCellX = intersections[ii][0];
-            unsigned int intersectionCellY = intersections[ii][1];
-            if (isNoteInCell(getCell(grid, intersectionCellX, intersectionCellY), x))
-                k++;
-        }
+        unsigned int numValuesInIntersection = countValuesInIntersection(grid, intersections, noteValue, gridSize, sqrtGridSize);
 
         bool isPointing = true;
         bool isBox = true;
 
-        if (k >= 2)
+        if (numValuesInIntersection >= 2)
         {
-            for (unsigned int ii = 0; ii < numExclusions; ii++)
-            {
-                unsigned int exclusionCellX = squareExclusions[ii][0];
-                unsigned int exclusionCellY = squareExclusions[ii][1];
-                isPointing = !isNoteInCell(getCell(grid, exclusionCellX, exclusionCellY), x);
-            }
-
-            for (unsigned int ii = 0; ii < numExclusions; ii++)
-            {
-                unsigned int exclusionCellX = zoneExclusions[ii][0];
-                unsigned int exclusionCellY = zoneExclusions[ii][1];
-                isPointing = !isNoteInCell(getCell(grid, exclusionCellX, exclusionCellY), x);
-            }
+            isPointing = getIsPointing(grid, squareExclusions, numExclusions, noteValue);
+            isBox = getIsBox(grid, zoneExclusions, numExclusions, noteValue);
         }
 
         if (isBox)
-        {
-            for (unsigned int ii = 0; ii < numExclusions; ii++)
-            {
-                unsigned int exclusionCellX = squareExclusions[ii][0];
-                unsigned int exclusionCellY = squareExclusions[ii][1];
-                unsetNoteCell(getCell(grid, exclusionCellX, exclusionCellY), x);
-            }
-        }
+            removeNotesSquare(grid, squareExclusions, numExclusions, noteValue);
 
         if (isPointing)
-        {
-            for (unsigned int ii = 0; ii < numExclusions; ii++)
-            {
-                unsigned int exclusionCellX = zoneExclusions[ii][0];
-                unsigned int exclusionCellY = zoneExclusions[ii][1];
-                unsetNoteCell(getCell(grid, exclusionCellX, exclusionCellY), x);
-            }
-        }
+            removeNotesZone(grid, zoneExclusions, numExclusions, noteValue);
 
         freeExclusions(squareExclusions, gridSize, sqrtGridSize);
         freeExclusions(zoneExclusions, gridSize, sqrtGridSize);
@@ -246,31 +260,25 @@ void solvePointingTuples(T_Grid grid)
     // Loop through every square of the grid
     for (unsigned int i = 0; i < gridSize; i++)
     {
-        // LOG("i: %d", i);
         unsigned int** square = getSquareCellIndices(gridSize, sqrtGridSize, i);
 
-        for (unsigned int x = 0; x < 9; x++)
+        // Loop through every note value
+        for (unsigned int noteValue = 0; noteValue < gridSize; noteValue++)
         {
             for (unsigned int currentLine = 0; currentLine < sqrtGridSize; currentLine++)
             {
                 unsigned int y = (i / sqrtGridSize) * sqrtGridSize + currentLine;
 
-                // LOG("Current line: %d", currentLine);
-                LOG("y: %d", y);
-
                 unsigned int** line = getLineIndices(gridSize, y);
-                bam(grid, x, square, line, gridSize, sqrtGridSize);
+                removePointingTuplesOfSquare(grid, noteValue, square, line, gridSize, sqrtGridSize);
                 freeZone(line, gridSize);
             }
             for (unsigned int currentColumn = 0; currentColumn < sqrtGridSize; currentColumn++)
             {
                 unsigned int x = (i % sqrtGridSize) * sqrtGridSize + currentColumn;
 
-                LOG("Current column: %d", currentColumn);
-                LOG("x: %d", x);
-
                 unsigned int** column = getColumnIndices(gridSize, x);
-                bam(grid, x, square, column, gridSize, sqrtGridSize);
+                removePointingTuplesOfSquare(grid, noteValue, square, column, gridSize, sqrtGridSize);
                 freeZone(column, gridSize);
             }
         }

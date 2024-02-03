@@ -9,10 +9,12 @@
 // That way we can define stuff only in debug mode or release mode.
 #ifdef SUDOKU_DEBUG
 
+	void logImplementation(const char* message, ...);
+
 	/**
 	 * Simple logging macro
 	 */
-	#define LOG(msg, ...) printf("%s:%d %s: "msg"\n", __FILE__, __LINE__, __func__, ##__VA_ARGS__)
+	#define LOG(msg, ...) printf("%s:%d %s: "msg"\n", __FILE__, __LINE__, __func__, ##__VA_ARGS__); logImplementation("%s:%d %s: "msg"\n", __FILE__, __LINE__, __func__, ##__VA_ARGS__)
 
 	/**
 	 * Terminates the program if x is false, and prints msg.

@@ -9,14 +9,12 @@
 
 bool isCheckPressed = false;
 bool isValid = false;
-const char* filename = "whatHappen.txt";
+const char* FILENAME = "whatHappened.txt";
 FILE* output_file;
 
 void openDoc()
 {
-    //const char* filename = "whatHappen.txt";
-
-    output_file = fopen(filename, "w+");
+    output_file = fopen(FILENAME, "w+");
     if (!output_file) {
         perror("fopen");
         exit(EXIT_FAILURE);
@@ -208,7 +206,7 @@ void buttoncheckValidityOfGrid(int button, int clicks, void* userData)
     }
 }
 
-void getWhatHappen(int button, int clicks, void* userData)
+void getWhatHappened(int button, int clicks, void* userData)
 {
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
@@ -238,7 +236,7 @@ void addButtons()
     addButton(FrontendInstance->window, createButton(600, 410, "Solve", resolveSudokuGrid, FrontendInstance));
     addButton(FrontendInstance->window, createButton(600, 450, "Check", buttoncheckValidityOfGrid, FrontendInstance));
     addButton(FrontendInstance->window, createButton(750, 540, "Quit", quit, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(400, 610, "Surprise motherfucker", getWhatHappen, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(400, 610, "Surprise motherfucker", getWhatHappened, FrontendInstance));
     addButton(FrontendInstance->window, createButton(500, 640, "Solve pointing K-tuples (EXPERIMENTAL)", buttonCheckPointingTuples, FrontendInstance));
 }
 

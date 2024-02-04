@@ -25,7 +25,7 @@ bool removeNotesInGridByZones(T_Grid grid);
  * 
  * @author Marie
  */
-bool kUpletsSolve(T_Grid grid, const int k);
+bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file);
 
 
 #endif

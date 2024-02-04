@@ -8,6 +8,31 @@
 
 bool isCheckPressed = false;
 bool isValid = false;
+const char* filename = "whatHappen.txt";
+FILE* output_file;
+
+void openDoc()
+{
+    //const char* filename = "whatHappen.txt";
+
+    output_file = fopen(filename, "w+");
+    if (!output_file) {
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(output_file, "It's time to solve a sudoku !\n\n");
+}
+
+void writeDoc(const char* str)
+{
+    fprintf(output_file, str);
+}
+
+void closeDoc()
+{
+    fclose(output_file);
+}
 
 typedef struct T_Frontend {
     T_Window* window;
@@ -49,6 +74,7 @@ void openGridFile(int button, int clicks, void* userData)
 void showHideNotes(int button, int clicks, void* userData) { setGraphicsGridDrawNotes(FrontendInstance->grid, getGraphicsGridDrawNotes(FrontendInstance->grid) ^ 1); } // even cooler oneliner
 
 void removeSomeNotes(int button, int clicks, void* userData) {
+    writeDoc("\nRemoving some notes...\n\n");
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
@@ -56,60 +82,67 @@ void removeSomeNotes(int button, int clicks, void* userData) {
 }
 
 void removeNotes1Tuple(int button, int clicks, void* userData) {
+    writeDoc("\nSearching an 1-uplet...\n\n");
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
-    kUpletsSolve(grid, 1);
+    kUpletsSolve(grid, 1, output_file);
 }
 
 void removeNotes2Tuple(int button, int clicks, void* userData) {
+    writeDoc("\nSearching a 2-uplet...\n\n");
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
-    kUpletsSolve(grid, 2);
+    kUpletsSolve(grid, 2, output_file);
 }
 
 void removeNotes3Tuple(int button, int clicks, void* userData) {
+    writeDoc("\nSearching a 3-uplet...\n\n");
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
-    kUpletsSolve(grid, 3);
+    kUpletsSolve(grid, 3, output_file);
 }
 
 void removeNotes1TupleUntilUnchanged(int button, int clicks, void* userData) {
+    writeDoc("\nSearching all 1-uplets...\n\n");
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
 
     bool hasChanged = true;
     while (hasChanged) {
-        hasChanged = kUpletsSolve(grid, 1);
+        hasChanged = kUpletsSolve(grid, 1, output_file);
     }
 }
 
 void removeNotes2TupleUntilUnchanged(int button, int clicks, void* userData) {
+    writeDoc("\nSearching all 2-uplets...\n\n");
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
 
     bool hasChanged = true;
     while (hasChanged) {
-        hasChanged = kUpletsSolve(grid, 2);
+        hasChanged = kUpletsSolve(grid, 2, output_file);
     }
 }
 
 void removeNotes3TupleUntilUnchanged(int button, int clicks, void* userData) {
+    writeDoc("\nSearching all 3-uplet...\n\n");
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
 
     bool hasChanged = true;
     while (hasChanged) {
-        hasChanged = kUpletsSolve(grid, 3);
+        hasChanged = kUpletsSolve(grid, 3, output_file);
     }
 }
 
 void resolveSudokuGrid(int button, int clicks, void* userData) {
+    writeDoc("\nBig solving !...\n\n");
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
@@ -123,13 +156,13 @@ void resolveSudokuGrid(int button, int clicks, void* userData) {
         hasChanged |= removeNotesInGridByZones(grid);
 
         if (!hasChanged) {
-            hasChanged |= kUpletsSolve(grid, 1);
+            hasChanged |= kUpletsSolve(grid, 1, output_file);
 
             if (!hasChanged) {
-                hasChanged |= kUpletsSolve(grid, 2);
+                hasChanged |= kUpletsSolve(grid, 2, output_file);
 
                 if (!hasChanged) {
-                    hasChanged |= kUpletsSolve(grid, 3);
+                    hasChanged |= kUpletsSolve(grid, 3, output_file);
 
                     if (!hasChanged) {
                         end = true; // Only set end to true if no changes occurred after all functions
@@ -155,6 +188,14 @@ void buttoncheckValidityOfGrid(int button, int clicks, void* userData) {
     }
 }
 
+void getWhatHappen(int button, int clicks, void* userData) {
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+
+    //TODO
+}
+
 void addButtons()
 {
     addButton(FrontendInstance->window, createButton(600, 50, "Open grid...", openGridFile, FrontendInstance));
@@ -169,16 +210,21 @@ void addButtons()
     addButton(FrontendInstance->window, createButton(600, 410, "Solve", resolveSudokuGrid, FrontendInstance));
     addButton(FrontendInstance->window, createButton(600, 450, "Check", buttoncheckValidityOfGrid, FrontendInstance));
     addButton(FrontendInstance->window, createButton(750, 540, "Quit", quit, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(400, 610, "Surprise motherfucker", getWhatHappen, FrontendInstance));
 }
 
 void drawWhatHappen()
 {
-    drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 0, 0 }, "Blahblahblahblahblahblahkzdoizdpj.....", 40, 610, 0.5f);
+    drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 0, 0 }, "Click here when you are done solving -------->", 40, 610, 0.5f);
 }
+
+
 
 void runFrontend()
 {
     addButtons();
+
+    openDoc();
 
     while (FrontendInstance->isRunning && isWindowOpen(FrontendInstance->window))
     {
@@ -196,6 +242,8 @@ void runFrontend()
         drawWidgets(FrontendInstance->window, FrontendInstance->font);
         presentWindow(FrontendInstance->window);
     }
+
+    closeDoc();
 }
 
 void freeFrontend()

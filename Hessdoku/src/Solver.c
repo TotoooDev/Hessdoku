@@ -653,7 +653,17 @@ void findCooTupleColumnNaked(int size, int* b, int** coo, int addY)
 	}
 }
 
-bool kUpletsSolve(T_Grid grid, const int k) {
+void writeInDoc(int* variable, FILE* output_file, const char* info1, const char* info2, int k)
+{
+	fprintf(output_file, "Find %d-uplet %s on a %s : {%d", k, info1, info2, variable[0]);
+	for (int i = 1; i < k; i++)
+	{
+		fprintf(output_file, ", %d", variable[i]);
+	}
+	fprintf(output_file, "}\n");
+}
+
+bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
 
 	bool hasChanged = false;
 
@@ -702,14 +712,22 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 			if (howManyT == k)
 			{
 				findCooTupleSquareHidden(sqrtS, batonHidden, cooTuple, xSquare, ySquare);
-
 				hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
+
+				if (hasChanged)
+				{
+					writeInDoc(variable, output_file, "hidden", "square", k);
+				}
 			}
 			if (howManyZ == k && !hasChanged)
 			{
 				findCooTupleSquareNaked(sqrtS, batonNaked, cooTuple, xSquare, ySquare);
-
 				hasChanged |= removeNotesKUpletSquare(grid, cooTuple, variable, k, xSquare, ySquare);
+
+				if (hasChanged)
+				{
+					writeInDoc(variable, output_file, "naked", "square", k);
+				}
 			}
 
 			nextSquare(getGridSqrtSize(grid), &xSquare, &ySquare);
@@ -729,14 +747,22 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 				if (howManyT == k)
 				{
 					findCooTupleLineHidden(size, batonHidden, cooTuple, stopbis);
-
 					hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
+
+					if (hasChanged)
+					{
+						writeInDoc(variable, output_file, "hidden", "line", k);
+					}
 				}
 				if (howManyZ == k && !hasChanged)
 				{
 					findCooTupleLineNaked(size, batonNaked, cooTuple, stopbis);
-
 					hasChanged |= removeNotesKUpletRows(grid, cooTuple, variable, k, stopbis);
+
+					if (hasChanged)
+					{
+						writeInDoc(variable, output_file, "naked", "line", k);
+					}
 				}
 				howManyT = 0;
 			}
@@ -756,17 +782,22 @@ bool kUpletsSolve(T_Grid grid, const int k) {
 				if (howManyT == k)
 				{
 					findCooTupleColumnHidden(size, batonHidden, cooTuple, stopbis);
-
-					howManyT = 0;
-
 					hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
+
+					if (hasChanged)
+					{
+						writeInDoc(variable, output_file, "hidden", "colonne", k);
+					}
 				}
 				if (howManyZ == k && !hasChanged)
 				{
 					findCooTupleColumnNaked(size, batonNaked, cooTuple, stopbis);
-
-					howManyT = 0;
 					hasChanged |= removeNotesKUpletColumns(grid, cooTuple, variable, k, stopbis);
+
+					if (hasChanged)
+					{
+						writeInDoc(variable, output_file, "naked", "colonne", k);
+					}
 				}
 			}
 

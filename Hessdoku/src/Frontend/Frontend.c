@@ -138,7 +138,7 @@ void removeNotes2TupleUntilUnchanged(int button, int clicks, void* userData)
 
     bool hasChanged = true;
     while (hasChanged)
-        hasChanged = kUpletsSolve(grid, 2);
+        hasChanged = kUpletsSolve(grid, 2, output_file);
 }
 
 void removeNotes3TupleUntilUnchanged(int button, int clicks, void* userData)
@@ -150,7 +150,7 @@ void removeNotes3TupleUntilUnchanged(int button, int clicks, void* userData)
 
     bool hasChanged = true;
     while (hasChanged)
-        hasChanged = kUpletsSolve(grid, 3);
+        hasChanged = kUpletsSolve(grid, 3, output_file);
 }
 
 void resolveSudokuGrid(int button, int clicks, void* userData)
@@ -171,15 +171,15 @@ void resolveSudokuGrid(int button, int clicks, void* userData)
 
         if (!hasChanged)
         {
-            hasChanged |= kUpletsSolve(grid, 1);
+            hasChanged |= kUpletsSolve(grid, 1, output_file);
 
             if (!hasChanged)
             {
-                hasChanged |= kUpletsSolve(grid, 2);
+                hasChanged |= kUpletsSolve(grid, 2, output_file);
 
                 if (!hasChanged)
                 {
-                    hasChanged |= kUpletsSolve(grid, 3);
+                    hasChanged |= kUpletsSolve(grid, 3, output_file);
 
                     if (!hasChanged) 
                     {

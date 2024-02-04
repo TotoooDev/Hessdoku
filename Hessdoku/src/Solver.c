@@ -104,11 +104,11 @@ bool removeNotesInGridByZones(T_Grid grid)
 * 
 * @author Marie
 */
-int howManyTrue(T_Grid grid, unsigned char* baton)
+int howManyTrue(int size, unsigned char* baton)
 {
 	int nbValuesToTrue = 0;
 
-	for (unsigned int r = 0; r < getGridSize(grid); r++)
+	for (unsigned int r = 0; r < size; r++)
 		if (baton[r] == 1)
 			nbValuesToTrue += 1;
 
@@ -210,12 +210,14 @@ void nextSquare (int step, int* xSquare, int* ySquare)
 * 
 * @author Marie
 */
-bool removeNotesKUpletRows(T_Grid grid,int** coordsTuple, int* variable, int k, int x)
+bool removeNotesKUpletRows(T_Grid grid,int** coordsTuple, int* variable, int k, int x, unsigned char** noteRemoved, int** cooNoteRemoved)
 {
 	bool hasChanged = false;
+	bool tempoHasChanged = false;
 	bool theSame = false;
+	int count = 0;
 	
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < getGridSize(grid); i++)
 	{
 		for (int j = 0; j < k; j++)
 			if (coordsTuple[j][1] == i)
@@ -223,8 +225,19 @@ bool removeNotesKUpletRows(T_Grid grid,int** coordsTuple, int* variable, int k, 
 
 		if (!theSame)
 			for (int m = 0; m < k; m++)
-				hasChanged |= unsetNoteCell(getCell(grid, coordsTuple[0][0], i), variable[m]);
+			{
+				tempoHasChanged = unsetNoteCell(getCell(grid, x, i), variable[m]);
+				if (tempoHasChanged)
+				{
+					noteRemoved[count][variable[m]-1] = 1;
+					cooNoteRemoved[count][0] = x;
+					cooNoteRemoved[count][1] = i;
+				}
+				hasChanged |= tempoHasChanged;
+				tempoHasChanged = false;
+			}
 
+		count += 1;
 		theSame = false;
 	}
 
@@ -244,12 +257,14 @@ bool removeNotesKUpletRows(T_Grid grid,int** coordsTuple, int* variable, int k, 
 *
 * @author Marie
 */
-bool removeNotesKUpletColumns(T_Grid grid, int** cooTuple, int* variable, int k, int y)
+bool removeNotesKUpletColumns(T_Grid grid, int** cooTuple, int* variable, int k, int y, unsigned char** noteRemoved, int** cooNoteRemoved)
 {
 	bool hasChanged = false;
+	bool tempoHasChanged = false;
 	bool theSame = false;
+	int count = 0;
 
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < getGridSize(grid); i++)
 	{
 		for (int j = 0; j < k; j++)
 			if (cooTuple[j][0] == i)
@@ -257,8 +272,19 @@ bool removeNotesKUpletColumns(T_Grid grid, int** cooTuple, int* variable, int k,
 
 		if (!theSame)
 			for (int m = 0; m < k; m++)
-				hasChanged |= unsetNoteCell(getCell(grid, i, cooTuple[0][1]), variable[m]);
+			{
+				tempoHasChanged = unsetNoteCell(getCell(grid, i, y), variable[m]);
+				if (tempoHasChanged)
+				{
+					noteRemoved[count][variable[m]-1] = 1;
+					cooNoteRemoved[count][0] = i;
+					cooNoteRemoved[count][1] = y;
+				}
+				hasChanged |= tempoHasChanged;
+				tempoHasChanged = false;
+			}
 
+		count += 1;
 		theSame = false;
 	}
 
@@ -279,10 +305,12 @@ bool removeNotesKUpletColumns(T_Grid grid, int** cooTuple, int* variable, int k,
 *
 * @author Marie
 */
-bool removeNotesKUpletSquare(T_Grid grid, int** coordinatesTuple, int* variable, int k, int x, int y)
+bool removeNotesKUpletSquare(T_Grid grid, int** coordinatesTuple, int* variable, int k, int x, int y, unsigned char** noteRemoved, int** cooNoteRemoved)
 {
 	bool hasChanged = false;
+	bool tempoHasChanged = false;
 	bool theSame = false;
+	int count = 0;
 
 	int sqrtSize = getGridSqrtSize(grid);
 	
@@ -296,8 +324,19 @@ bool removeNotesKUpletSquare(T_Grid grid, int** coordinatesTuple, int* variable,
 
 			if (!theSame)
 				for (int m = 0; m < k; m++)
-					hasChanged |= unsetNoteCell(getCell(grid, i, j), variable[m]);
+				{
+					tempoHasChanged = unsetNoteCell(getCell(grid, i, j), variable[m]);
+					if (tempoHasChanged)
+					{
+						noteRemoved[count][variable[m]-1] = 1;
+						cooNoteRemoved[count][0] = i;
+						cooNoteRemoved[count][1] = j;
+					}
+					hasChanged |= tempoHasChanged;
+					tempoHasChanged = false;
+				}
 
+			count += 1;
 			theSame = false;
 		}
 	}
@@ -317,12 +356,14 @@ bool removeNotesKUpletSquare(T_Grid grid, int** coordinatesTuple, int* variable,
 *
 * @author Marie
 */
-bool removeNoteOnCell(T_Grid grid, int** cooTuple, int* tuple, int k)
+bool removeNoteOnCell(T_Grid grid, int** cooTuple, int* tuple, int k, unsigned char** noteRemoved, int** cooNoteRemoved)
 {
 	int size = getGridSize(grid);
+	int count = 0;
 
 	bool theSame = false;
 	bool hasChanged = false;
+	bool tempoHasChanged = false;
 
 	for (int w = 0; w < k; w++)
 	{
@@ -333,10 +374,20 @@ bool removeNoteOnCell(T_Grid grid, int** cooTuple, int* tuple, int k)
 					theSame = true;
 
 			if (!theSame)
-				hasChanged |= unsetNoteCell(getCell(grid, cooTuple[w][0], cooTuple[w][1]), t);
-
+			{
+				tempoHasChanged = unsetNoteCell(getCell(grid, cooTuple[w][0], cooTuple[w][1]), t);
+				if (tempoHasChanged)
+				{
+					noteRemoved[count][t-1] = 1;
+					cooNoteRemoved[count][0] = cooTuple[w][0];
+					cooNoteRemoved[count][1] = cooTuple[w][1];
+				}
+				hasChanged |= tempoHasChanged;
+				tempoHasChanged;
+			}
 			theSame = false;
 		}
+		count += 1;
 	}
 	
 	return hasChanged;
@@ -482,6 +533,23 @@ void initBaton(T_Grid grid, int* b, int xMin, int xMax, int yMin, int yMax)
 
 			k++;
 		}
+	}
+}
+
+/**
+* Initialize an array of coordinate to (-1,-1)
+*
+* @param size : the size of the array
+* @param coords : the array of coordinate
+*
+* @author Marie
+*/
+void initCoordinate(int size, int** coords)
+{
+	for (int i = 0; i < size; i++)
+	{
+		coords[i][0] = -1;
+		coords[i][1] = -1;
 	}
 }
 
@@ -661,14 +729,63 @@ void findCooTupleColumnNaked(int size, int* b, int** coo, int addY)
 	}
 }
 
-void writeInDoc(int* variable, FILE* output_file, const char* info1, const char* info2, int k)
+int countCoo(int** cooNoteRemoved)
+{
+	int res = 0;
+	for (int i = 0; i < 9; i++)
+	{
+		if (cooNoteRemoved[i][0] != -1)
+			res += 1;
+	}
+	return res;
+}
+
+void writeInDoc(int** cooTuple, int* variable, FILE* output_file, const char* info1, const char* info2, int k, unsigned char** noteRemoved, int** cooNoteRemoved)
 {
 	fprintf(output_file, "Find %d-uplet %s on a %s : {%d", k, info1, info2, variable[0]);
+
 	for (int i = 1; i < k; i++)
-	{
 		fprintf(output_file, ", %d", variable[i]);
+
+	fprintf(output_file, "} at the coordinate (%d,%d)", cooTuple[0][0], cooTuple[0][1]);
+
+	for (int i = 1; i < k; i++)
+		fprintf(output_file, " ; (%d,%d)", cooTuple[i][0], cooTuple[i][1]);
+
+	fprintf(output_file, "\n");
+
+	int howManyCell = countCoo(cooNoteRemoved);
+	int howManyNumber = 0;
+	int countCell = 0;
+	int countNumber = 0;
+
+	for (int i = 0; i < howManyCell; i++)
+	{
+		while (cooNoteRemoved[countCell][0] == -1)
+			countCell += 1;
+
+		howManyNumber = howManyTrue(9, noteRemoved[countCell]);
+
+		while (noteRemoved[countCell][countNumber] == 0)
+			countNumber += 1;
+
+		fprintf(output_file, "\t- Delete note(s) %d", countNumber+1);
+
+		for (int j = 1; j < howManyNumber; j++)
+		{
+			countNumber += 1;
+
+			while (noteRemoved[countCell][countNumber] == 0)
+				countNumber += 1;
+
+			fprintf(output_file, ", %d", countNumber+1);
+		}
+
+		fprintf(output_file, " at coordinate (%d,%d)\n", cooNoteRemoved[countCell][0], cooNoteRemoved[countCell][1]);
+		countCell += 1;
+		countNumber = 0;
 	}
-	fprintf(output_file, "}\n");
+	fprintf(output_file, "\n");
 }
 
 bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
@@ -688,6 +805,15 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
 
 	for (int i = 0; i < k; i++)
 		cooTuple[i] = malloc(sizeof(int) * 2);
+
+	unsigned char** noteRemoved = malloc(sizeof(unsigned char*) * size);
+	int** cooNoteRemoved = malloc(sizeof(int*) * size);
+
+	for (int i = 0; i < size; i++)
+	{
+		cooNoteRemoved[i] = malloc(sizeof(int) * 2);
+		noteRemoved[i] = malloc(sizeof(unsigned char) * size);
+	}
 
 	unsigned char* batonHidden = malloc(size * sizeof(unsigned char));
 	int* batonNaked = malloc(size * sizeof(int));
@@ -712,30 +838,30 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
 			createBaton(grid, batonHidden);
 			initBaton(grid, batonNaked, xSquare, xSquare + sqrtS - 1, ySquare, ySquare + sqrtS - 1);
 
+			for (int i = 0; i < size; i++)
+				createBaton(grid, noteRemoved[i]);
+			initCoordinate(size, cooNoteRemoved);
+
 			checkRectKUpletSolve(grid, batonHidden, batonNaked, xSquare, xSquare + sqrtS, ySquare, ySquare + sqrtS, k, variable);
 
-			howManyT = howManyTrue(grid, batonHidden);
+			howManyT = howManyTrue(size, batonHidden);
 			howManyZ = howManyZero(grid, batonNaked);
 
 			if (howManyT == k)
 			{
 				findCooTupleSquareHidden(sqrtS, batonHidden, cooTuple, xSquare, ySquare);
-				hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
+				hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k, noteRemoved, cooNoteRemoved);
 
 				if (hasChanged)
-				{
-					writeInDoc(variable, output_file, "hidden", "square", k);
-				}
+					writeInDoc(cooTuple, variable, output_file, "hidden", "square", k, noteRemoved, cooNoteRemoved);
 			}
 			if (howManyZ == k && !hasChanged)
 			{
 				findCooTupleSquareNaked(sqrtS, batonNaked, cooTuple, xSquare, ySquare);
-				hasChanged |= removeNotesKUpletSquare(grid, cooTuple, variable, k, xSquare, ySquare);
+				hasChanged |= removeNotesKUpletSquare(grid, cooTuple, variable, k, xSquare, ySquare, noteRemoved, cooNoteRemoved);
 
 				if (hasChanged)
-				{
-					writeInDoc(variable, output_file, "naked", "square", k);
-				}
+					writeInDoc(cooTuple, variable, output_file, "naked", "square", k, noteRemoved, cooNoteRemoved);
 			}
 
 			nextSquare(getGridSqrtSize(grid), &xSquare, &ySquare);
@@ -747,30 +873,30 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
 				createBaton(grid, batonHidden);
 				initBaton(grid, batonNaked, stopbis, stopbis, 0, size - 1);
 
+				for (int i = 0; i < size; i++)
+					createBaton(grid, noteRemoved[i]);
+				initCoordinate(size, cooNoteRemoved);
+
 				checkRectKUpletSolve(grid, batonHidden, batonNaked, stopbis, stopbis + 1, 0, size, k, variable);
 
-				howManyT = howManyTrue(grid, batonHidden);
+				howManyT = howManyTrue(size, batonHidden);
 				howManyZ = howManyZero(grid, batonNaked);
 
 				if (howManyT == k)
 				{
 					findCooTupleLineHidden(size, batonHidden, cooTuple, stopbis);
-					hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
+					hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k, noteRemoved, cooNoteRemoved);
 
 					if (hasChanged)
-					{
-						writeInDoc(variable, output_file, "hidden", "line", k);
-					}
+						writeInDoc(cooTuple, variable, output_file, "hidden", "line", k, noteRemoved, cooNoteRemoved);
 				}
 				if (howManyZ == k && !hasChanged)
 				{
 					findCooTupleLineNaked(size, batonNaked, cooTuple, stopbis);
-					hasChanged |= removeNotesKUpletRows(grid, cooTuple, variable, k, stopbis);
+					hasChanged |= removeNotesKUpletRows(grid, cooTuple, variable, k, stopbis, noteRemoved, cooNoteRemoved);
 
 					if (hasChanged)
-					{
-						writeInDoc(variable, output_file, "naked", "line", k);
-					}
+						writeInDoc(cooTuple, variable, output_file, "naked", "line", k, noteRemoved, cooNoteRemoved);
 				}
 				howManyT = 0;
 			}
@@ -782,30 +908,30 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
 				createBaton(grid, batonHidden);
 				initBaton(grid, batonNaked, 0, size - 1, stopbis, stopbis);
 
+				for (int i = 0; i < size; i++)
+					createBaton(grid, noteRemoved[i]);
+				initCoordinate(size, cooNoteRemoved);
+
 				checkRectKUpletSolve(grid, batonHidden, batonNaked, 0, size, stopbis, stopbis + 1, k, variable);
 
-				howManyT = howManyTrue(grid, batonHidden);
+				howManyT = howManyTrue(size, batonHidden);
 				howManyZ = howManyZero(grid, batonNaked);
 
 				if (howManyT == k)
 				{
 					findCooTupleColumnHidden(size, batonHidden, cooTuple, stopbis);
-					hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k);
+					hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k, noteRemoved, cooNoteRemoved);
 
 					if (hasChanged)
-					{
-						writeInDoc(variable, output_file, "hidden", "colonne", k);
-					}
+						writeInDoc(cooTuple, variable, output_file, "hidden", "colonne", k, noteRemoved, cooNoteRemoved);
 				}
 				if (howManyZ == k && !hasChanged)
 				{
 					findCooTupleColumnNaked(size, batonNaked, cooTuple, stopbis);
-					hasChanged |= removeNotesKUpletColumns(grid, cooTuple, variable, k, stopbis);
+					hasChanged |= removeNotesKUpletColumns(grid, cooTuple, variable, k, stopbis, noteRemoved, cooNoteRemoved);
 
 					if (hasChanged)
-					{
-						writeInDoc(variable, output_file, "naked", "colonne", k);
-					}
+						writeInDoc(cooTuple, variable, output_file, "naked", "colonne", k, noteRemoved, cooNoteRemoved);
 				}
 			}
 

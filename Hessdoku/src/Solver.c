@@ -210,7 +210,7 @@ void nextSquare (int step, int* xSquare, int* ySquare)
 * 
 * @author Marie
 */
-bool removeNotesKUpletRows(T_Grid grid,int** coordsTuple, int* variable, int k, int x, unsigned char** noteRemoved, int** cooNoteRemoved)
+bool removeNotesKUpletRows(T_Grid grid, int** coordsTuple, int* variable, int k, int x, unsigned char** noteRemoved, int** cooNoteRemoved)
 {
 	bool hasChanged = false;
 	bool tempoHasChanged = false;
@@ -729,39 +729,40 @@ void findCooTupleColumnNaked(int size, int* b, int** coo, int addY)
 	}
 }
 
-int countCoo(int** cooNoteRemoved)
+int countNbCoords(int** coordsNoteRemoved)
 {
 	int res = 0;
 	for (int i = 0; i < 9; i++)
 	{
-		if (cooNoteRemoved[i][0] != -1)
+		if (coordsNoteRemoved[i][0] != -1)
 			res += 1;
 	}
 	return res;
 }
 
-void writeInDoc(int** cooTuple, int* variable, FILE* output_file, const char* info1, const char* info2, int k, unsigned char** noteRemoved, int** cooNoteRemoved)
+/* TODO: documenter... */
+void writeInDoc(int** coordsTuple, int* variable, FILE* outputFile, const char* info1, const char* info2, int k, unsigned char** noteRemoved, int** coordsNoteRemoved)
 {
-	fprintf(output_file, "Find %d-uplet %s on a %s : {%d", k, info1, info2, variable[0]);
+	fprintf(outputFile, "Found a %d-uplet %s on a %s : {%d", k, info1, info2, variable[0]);
 
 	for (int i = 1; i < k; i++)
-		fprintf(output_file, ", %d", variable[i]);
+		fprintf(outputFile, ", %d", variable[i]);
 
-	fprintf(output_file, "} at the coordinate (%d,%d)", cooTuple[0][0], cooTuple[0][1]);
+	fprintf(outputFile, "} at coordinates (%d,%d)", coordsTuple[0][0], coordsTuple[0][1]);
 
 	for (int i = 1; i < k; i++)
-		fprintf(output_file, " ; (%d,%d)", cooTuple[i][0], cooTuple[i][1]);
+		fprintf(outputFile, " ; (%d,%d)", coordsTuple[i][0], coordsTuple[i][1]);
 
-	fprintf(output_file, "\n");
+	fprintf(outputFile, "\n");
 
-	int howManyCell = countCoo(cooNoteRemoved);
+	int howManyCell = countNbCoords(coordsNoteRemoved);
 	int howManyNumber = 0;
 	int countCell = 0;
 	int countNumber = 0;
 
 	for (int i = 0; i < howManyCell; i++)
 	{
-		while (cooNoteRemoved[countCell][0] == -1)
+		while (coordsNoteRemoved[countCell][0] == -1)
 			countCell += 1;
 
 		howManyNumber = howManyTrue(9, noteRemoved[countCell]);
@@ -769,7 +770,7 @@ void writeInDoc(int** cooTuple, int* variable, FILE* output_file, const char* in
 		while (noteRemoved[countCell][countNumber] == 0)
 			countNumber += 1;
 
-		fprintf(output_file, "\t- Delete note(s) %d", countNumber+1);
+		fprintf(outputFile, "\t- Deleted note(s) %d", countNumber+1);
 
 		for (int j = 1; j < howManyNumber; j++)
 		{
@@ -778,17 +779,17 @@ void writeInDoc(int** cooTuple, int* variable, FILE* output_file, const char* in
 			while (noteRemoved[countCell][countNumber] == 0)
 				countNumber += 1;
 
-			fprintf(output_file, ", %d", countNumber+1);
+			fprintf(outputFile, ", %d", countNumber+1);
 		}
 
-		fprintf(output_file, " at coordinate (%d,%d)\n", cooNoteRemoved[countCell][0], cooNoteRemoved[countCell][1]);
+		fprintf(outputFile, " at coordinates (%d,%d)\n", coordsNoteRemoved[countCell][0], coordsNoteRemoved[countCell][1]);
 		countCell += 1;
 		countNumber = 0;
 	}
-	fprintf(output_file, "\n");
+	fprintf(outputFile, "\n");
 }
 
-bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
+bool kUpletsSolve(T_Grid grid, const int k, FILE* outputFile) {
 
 	bool hasChanged = false;
 
@@ -801,10 +802,10 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
 	int size = getGridSize(grid);
 
 	int* variable = malloc(sizeof(int) * k);
-	int** cooTuple = malloc(sizeof(int*) * k);
+	int** coordsTuple = malloc(sizeof(int*) * k);
 
 	for (int i = 0; i < k; i++)
-		cooTuple[i] = malloc(sizeof(int) * 2);
+		coordsTuple[i] = malloc(sizeof(int) * 2);
 
 	unsigned char** noteRemoved = malloc(sizeof(unsigned char*) * size);
 	int** cooNoteRemoved = malloc(sizeof(int*) * size);
@@ -849,19 +850,19 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
 
 			if (howManyT == k)
 			{
-				findCooTupleSquareHidden(sqrtS, batonHidden, cooTuple, xSquare, ySquare);
-				hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k, noteRemoved, cooNoteRemoved);
+				findCooTupleSquareHidden(sqrtS, batonHidden, coordsTuple, xSquare, ySquare);
+				hasChanged |= removeNoteOnCell(grid, coordsTuple, variable, k, noteRemoved, cooNoteRemoved);
 
 				if (hasChanged)
-					writeInDoc(cooTuple, variable, output_file, "hidden", "square", k, noteRemoved, cooNoteRemoved);
+					writeInDoc(coordsTuple, variable, outputFile, "hidden", "square", k, noteRemoved, cooNoteRemoved);
 			}
 			if (howManyZ == k && !hasChanged)
 			{
-				findCooTupleSquareNaked(sqrtS, batonNaked, cooTuple, xSquare, ySquare);
-				hasChanged |= removeNotesKUpletSquare(grid, cooTuple, variable, k, xSquare, ySquare, noteRemoved, cooNoteRemoved);
+				findCooTupleSquareNaked(sqrtS, batonNaked, coordsTuple, xSquare, ySquare);
+				hasChanged |= removeNotesKUpletSquare(grid, coordsTuple, variable, k, xSquare, ySquare, noteRemoved, cooNoteRemoved);
 
 				if (hasChanged)
-					writeInDoc(cooTuple, variable, output_file, "naked", "square", k, noteRemoved, cooNoteRemoved);
+					writeInDoc(coordsTuple, variable, outputFile, "naked", "square", k, noteRemoved, cooNoteRemoved);
 			}
 
 			nextSquare(getGridSqrtSize(grid), &xSquare, &ySquare);
@@ -884,19 +885,19 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
 
 				if (howManyT == k)
 				{
-					findCooTupleLineHidden(size, batonHidden, cooTuple, stopbis);
-					hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k, noteRemoved, cooNoteRemoved);
+					findCooTupleLineHidden(size, batonHidden, coordsTuple, stopbis);
+					hasChanged |= removeNoteOnCell(grid, coordsTuple, variable, k, noteRemoved, cooNoteRemoved);
 
 					if (hasChanged)
-						writeInDoc(cooTuple, variable, output_file, "hidden", "line", k, noteRemoved, cooNoteRemoved);
+						writeInDoc(coordsTuple, variable, outputFile, "hidden", "line", k, noteRemoved, cooNoteRemoved);
 				}
 				if (howManyZ == k && !hasChanged)
 				{
-					findCooTupleLineNaked(size, batonNaked, cooTuple, stopbis);
-					hasChanged |= removeNotesKUpletRows(grid, cooTuple, variable, k, stopbis, noteRemoved, cooNoteRemoved);
+					findCooTupleLineNaked(size, batonNaked, coordsTuple, stopbis);
+					hasChanged |= removeNotesKUpletRows(grid, coordsTuple, variable, k, stopbis, noteRemoved, cooNoteRemoved);
 
 					if (hasChanged)
-						writeInDoc(cooTuple, variable, output_file, "naked", "line", k, noteRemoved, cooNoteRemoved);
+						writeInDoc(coordsTuple, variable, outputFile, "naked", "line", k, noteRemoved, cooNoteRemoved);
 				}
 				howManyT = 0;
 			}
@@ -919,19 +920,19 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
 
 				if (howManyT == k)
 				{
-					findCooTupleColumnHidden(size, batonHidden, cooTuple, stopbis);
-					hasChanged |= removeNoteOnCell(grid, cooTuple, variable, k, noteRemoved, cooNoteRemoved);
+					findCooTupleColumnHidden(size, batonHidden, coordsTuple, stopbis);
+					hasChanged |= removeNoteOnCell(grid, coordsTuple, variable, k, noteRemoved, cooNoteRemoved);
 
 					if (hasChanged)
-						writeInDoc(cooTuple, variable, output_file, "hidden", "colonne", k, noteRemoved, cooNoteRemoved);
+						writeInDoc(coordsTuple, variable, outputFile, "hidden", "colonne", k, noteRemoved, cooNoteRemoved);
 				}
 				if (howManyZ == k && !hasChanged)
 				{
-					findCooTupleColumnNaked(size, batonNaked, cooTuple, stopbis);
-					hasChanged |= removeNotesKUpletColumns(grid, cooTuple, variable, k, stopbis, noteRemoved, cooNoteRemoved);
+					findCooTupleColumnNaked(size, batonNaked, coordsTuple, stopbis);
+					hasChanged |= removeNotesKUpletColumns(grid, coordsTuple, variable, k, stopbis, noteRemoved, cooNoteRemoved);
 
 					if (hasChanged)
-						writeInDoc(cooTuple, variable, output_file, "naked", "colonne", k, noteRemoved, cooNoteRemoved);
+						writeInDoc(coordsTuple, variable, outputFile, "naked", "colonne", k, noteRemoved, cooNoteRemoved);
 				}
 			}
 
@@ -943,8 +944,8 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file) {
 	}
 
 	free(variable);
-	free(cooTuple);
-	//TODO mauvais free cooTuple
+	free(coordsTuple);
+	//TODO mauvais free coordsTuple
 	free(batonHidden);
 	free(batonNaked);
 	freeTuples(tuples, nbTuples);

@@ -6,6 +6,8 @@
 #include <stdlib.h>;
 
 
+// TODO: tests categories, and more advanced result handling (such as expected results returns)
+
 typedef struct T_TestDataStruct 
 {
 	bool (*testedFunction)();		// Pointer to a test function

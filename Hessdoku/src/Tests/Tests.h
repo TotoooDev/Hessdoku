@@ -1,9 +1,9 @@
 #ifndef TESTS_H
 #define TESTS_H
 
-#include <stdbool.h>;
-#include <stdio.h>;
-#include <stdlib.h>;
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 
 // TODO: tests categories, and more advanced result handling (such as expected results returns)

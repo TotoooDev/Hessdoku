@@ -1,5 +1,5 @@
 #include "Tests.h"
-#include <String.h>
+#include <string.h>
 
 #define SUCCESS_MESSAGE "OK : le test %s a ete passe avec succes.\n"
 #define ERROR_MESSAGE "KO : le test %s a echoue \n"

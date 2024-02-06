@@ -237,7 +237,7 @@ void addButtons()
     addButton(FrontendInstance->window, createButton(600, 450, "Check", buttoncheckValidityOfGrid, FrontendInstance));
     addButton(FrontendInstance->window, createButton(750, 540, "Quit", quit, FrontendInstance));
     addButton(FrontendInstance->window, createButton(400, 610, "Surprise motherfucker", getWhatHappened, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(500, 640, "Solve pointing K-tuples (EXPERIMENTAL)", buttonCheckPointingTuples, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(500, 640, "Solve pointing K-tuples", buttonCheckPointingTuples, FrontendInstance));
 }
 
 void drawWhatHappen()

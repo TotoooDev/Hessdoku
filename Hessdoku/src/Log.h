@@ -31,7 +31,7 @@
 	 /**
 	  * Terminates the program if x is false, and prints msg (disabled in release mode)
 	  */
-	#define ASSERT(x, msg, ...)
+	#define ASSERT(x, msg, ...) if (!(x)) { fprintf(stderr, msg, ##__VA_ARGS__); exit(-1); }
 
 #endif
 

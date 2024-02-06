@@ -1,5 +1,6 @@
 #include <PointingKTuples.h>
 #include <Cell.h>
+#include <Log.h>
 
 // Returns an array that contains the coordinates (represented as a array with two cells) of the cells contained in the current square.
 // Please free the returned table with `freeSquareCellIndices`.
@@ -167,6 +168,7 @@ unsigned int countValuesInIntersection(T_Grid grid, unsigned int** intersections
     return numValuesInIntersection;
 }
 
+// Loops through the exclusion array, and returns whether a note is in the array or not.
 bool isNoteInExclusion(T_Grid grid, unsigned int** zoneExclusions, unsigned int numExclusions, unsigned int noteValue)
 {
     bool inExclusion = false;
@@ -183,25 +185,38 @@ bool isNoteInExclusion(T_Grid grid, unsigned int** zoneExclusions, unsigned int 
     return inExclusion;
 }
 
-void removeNotes(T_Grid grid, unsigned int** exclusions, unsigned int numExclusions, unsigned int noteValue)
+// Removes a note in every cell of the exclusion array.
+// Returns true if the grid was modified.
+bool removeNotes(T_Grid grid, unsigned int** exclusions, unsigned int numExclusions, unsigned int noteValue)
 {
+    bool didSomething = false;
+
     for (unsigned int i = 0; i < numExclusions; i++)
     {
         unsigned int exclusionCellX = exclusions[i][0];
         unsigned int exclusionCellY = exclusions[i][1];
+
+        if (!isNoteInCell(getCell(grid, exclusionCellX, exclusionCellY), noteValue))
+            continue;
+
         unsetNoteCell(getCell(grid, exclusionCellX, exclusionCellY), noteValue);
+        didSomething = true;
     }
+
+    return didSomething;
 }
 
-void removePointingTuplesOfSquare(T_Grid grid, unsigned int noteValue, unsigned int** square, unsigned int** zone, unsigned int gridSize, unsigned int sqrtGridSize)
+// Returns true if the grid was modified.
+bool removePointingTuplesOfSquare(T_Grid grid, unsigned int noteValue, unsigned int** square, unsigned int** zone, unsigned int gridSize, unsigned int sqrtGridSize)
 {
+    bool didSomething = false;
+
     unsigned int** intersections = getIntersectionZoneSquare(square, zone, gridSize, sqrtGridSize);
+    unsigned int numValuesInIntersection = countValuesInIntersection(grid, intersections, noteValue, gridSize, sqrtGridSize);
     
     unsigned int numExclusions = gridSize - sqrtGridSize;
     unsigned int** squareExclusions = getSquareExclusionZoneSquare(square, zone, gridSize, sqrtGridSize);
     unsigned int** zoneExclusions = getZoneExclusionZoneSquare(square, zone, gridSize, sqrtGridSize);
-
-    unsigned int numValuesInIntersection = countValuesInIntersection(grid, intersections, noteValue, gridSize, sqrtGridSize);
 
     if (numValuesInIntersection >= sqrtGridSize - 1)
     {
@@ -214,14 +229,54 @@ void removePointingTuplesOfSquare(T_Grid grid, unsigned int noteValue, unsigned 
             isBox = false;
 
         if (isBox)
-            removeNotes(grid, squareExclusions, numExclusions, noteValue);
+            didSomething = removeNotes(grid, squareExclusions, numExclusions, noteValue);
+
         if (isPointing)
-            removeNotes(grid, zoneExclusions, numExclusions, noteValue);
+            didSomething = removeNotes(grid, zoneExclusions, numExclusions, noteValue);
     }
 
     freeExclusions(squareExclusions, gridSize, sqrtGridSize);
     freeExclusions(zoneExclusions, gridSize, sqrtGridSize);
     freeIntersections(intersections, sqrtGridSize);
+
+    return didSomething;
+}
+
+// Returns true if the grid was modified.
+bool checkLines(T_Grid grid, unsigned int** square, unsigned int squareIndex, unsigned int noteValue, unsigned int gridSize, unsigned int sqrtGridSize)
+{
+    bool didSomething = false;
+
+    for (unsigned int currentLine = 0; currentLine < sqrtGridSize; currentLine++)
+    {
+        // The y coordinate of the current line
+        unsigned int y = (squareIndex / sqrtGridSize) * sqrtGridSize + currentLine;
+
+        unsigned int** line = getLineIndices(gridSize, y);
+        didSomething = removePointingTuplesOfSquare(grid, noteValue, square, line, gridSize, sqrtGridSize);
+
+        freeZone(line, gridSize);
+    }
+
+    return didSomething;
+}
+
+// Returns true if the grid was modified.
+bool checkColumns(T_Grid grid, unsigned int** square, unsigned int squareIndex, unsigned int noteValue, unsigned int gridSize, unsigned int sqrtGridSize)
+{
+    bool didSomething = false;
+
+    for (unsigned int currentColumn = 0; currentColumn < sqrtGridSize; currentColumn++)
+    {
+        // The x coordinate of the current column
+        unsigned int x = (squareIndex % sqrtGridSize) * sqrtGridSize + currentColumn;
+
+        unsigned int** column = getColumnIndices(gridSize, x);
+        didSomething = removePointingTuplesOfSquare(grid, noteValue, square, column, gridSize, sqrtGridSize);
+        freeZone(column, gridSize);
+    }
+
+    return didSomething;
 }
 
 void solvePointingTuples(T_Grid grid)
@@ -237,26 +292,20 @@ void solvePointingTuples(T_Grid grid)
         // // Loop through every note value
         for (unsigned int noteValue = 0; noteValue < gridSize; noteValue++)
         {
-            // Loop through every line that intersects the current square
-            for (unsigned int currentLine = 0; currentLine < sqrtGridSize; currentLine++)
-            {
-                // The y coordinate of the current line
-                unsigned int y = (i / sqrtGridSize) * sqrtGridSize + currentLine;
+            bool didSomething = false;
 
-                unsigned int** line = getLineIndices(gridSize, y);
-                removePointingTuplesOfSquare(grid, noteValue, square, line, gridSize, sqrtGridSize);
-                freeZone(line, gridSize);
+            didSomething = checkLines(grid, square, i, noteValue, gridSize, sqrtGridSize);
+
+            if (didSomething) {
+                freeZone(square, gridSize);
+                return;
             }
 
-            // Loop through every column that intersects the current square
-            for (unsigned int currentColumn = 0; currentColumn < sqrtGridSize; currentColumn++)
-            {
-                // The x coordinate of the current column
-                unsigned int x = (i % sqrtGridSize) * sqrtGridSize + currentColumn;
+            didSomething = checkColumns(grid, square, i, noteValue, gridSize, sqrtGridSize);
 
-                unsigned int** column = getColumnIndices(gridSize, x);
-                removePointingTuplesOfSquare(grid, noteValue, square, column, gridSize, sqrtGridSize);
-                freeZone(column, gridSize);
+            if (didSomething) {
+                freeZone(square, gridSize);
+                return;
             }
         }
 

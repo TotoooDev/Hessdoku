@@ -1,6 +1,5 @@
 #include <PointingKTuples.h>
 #include <Cell.h>
-#include <Log.h>
 
 // Returns an array that contains the coordinates (represented as a array with two cells) of the cells contained in the current square.
 // Please free the returned table with `freeSquareCellIndices`.
@@ -115,7 +114,8 @@ unsigned int** getSquareExclusionZoneSquare(unsigned int** square, unsigned int*
     return exclusions;
 }
 
-// Same as `getSquareExclusionZoneSquare`, but returns the array of the exclusive coordinates of the zone. 
+// Same as `getSquareExclusionZoneSquare`, but returns the array of the exclusive coordinates of the zone.
+// Given how these two functions are similar, it should be possible to factor them into only one function.
 unsigned int** getZoneExclusionZoneSquare(unsigned int** square, unsigned int** zone, unsigned int gridSize, unsigned int sqrtGridSize)
 {
     unsigned int numExclusions = gridSize - sqrtGridSize;
@@ -190,8 +190,6 @@ void removeNotes(T_Grid grid, unsigned int** exclusions, unsigned int numExclusi
         unsigned int exclusionCellX = exclusions[i][0];
         unsigned int exclusionCellY = exclusions[i][1];
         unsetNoteCell(getCell(grid, exclusionCellX, exclusionCellY), noteValue);
-
-        LOG("Removing note %d at: %d, %d", noteValue, exclusionCellX, exclusionCellY);
     }
 }
 
@@ -202,10 +200,6 @@ void removePointingTuplesOfSquare(T_Grid grid, unsigned int noteValue, unsigned 
     unsigned int numExclusions = gridSize - sqrtGridSize;
     unsigned int** squareExclusions = getSquareExclusionZoneSquare(square, zone, gridSize, sqrtGridSize);
     unsigned int** zoneExclusions = getZoneExclusionZoneSquare(square, zone, gridSize, sqrtGridSize);
-
-    LOG("Intersection: %d, %d | %d, %d | %d, %d", intersections[0][0], intersections[0][1], intersections[1][0], intersections[1][1], intersections[2][0], intersections[2][1]);
-    LOG("Exclusion square: %d, %d | %d, %d | %d, %d | %d, %d | %d, %d | %d, %d", squareExclusions[0][0], squareExclusions[0][1], squareExclusions[1][0], squareExclusions[1][1], squareExclusions[2][0], squareExclusions[2][1], squareExclusions[3][0], squareExclusions[3][1], squareExclusions[4][0], squareExclusions[4][1], squareExclusions[5][0], squareExclusions[5][1]);
-    LOG("Exclusion zone: %d, %d | %d, %d | %d, %d | %d, %d | %d, %d | %d, %d", zoneExclusions[0][0], zoneExclusions[0][1], zoneExclusions[1][0], zoneExclusions[1][1], zoneExclusions[2][0], zoneExclusions[2][1], zoneExclusions[3][0], zoneExclusions[3][1], zoneExclusions[4][0], zoneExclusions[4][1], zoneExclusions[5][0], zoneExclusions[5][1]);
 
     unsigned int numValuesInIntersection = countValuesInIntersection(grid, intersections, noteValue, gridSize, sqrtGridSize);
 
@@ -218,8 +212,6 @@ void removePointingTuplesOfSquare(T_Grid grid, unsigned int noteValue, unsigned 
             isPointing = false;
         if (isNoteInExclusion(grid, zoneExclusions, numExclusions, noteValue))
             isBox = false;
-
-        LOG("isPointing: %s | isBox: %s", isPointing ? "true" : "false", isBox ? "true" : "false");
 
         if (isBox)
             removeNotes(grid, squareExclusions, numExclusions, noteValue);
@@ -240,7 +232,6 @@ void solvePointingTuples(T_Grid grid)
     // Loop through every square of the grid
     for (unsigned int i = 0; i < gridSize; i++)
     {
-        LOG("Square %d", i);
         unsigned int** square = getSquareCellIndices(gridSize, sqrtGridSize, i);
 
         // // Loop through every note value
@@ -251,7 +242,6 @@ void solvePointingTuples(T_Grid grid)
             {
                 // The y coordinate of the current line
                 unsigned int y = (i / sqrtGridSize) * sqrtGridSize + currentLine;
-                LOG("Line %d", y);
 
                 unsigned int** line = getLineIndices(gridSize, y);
                 removePointingTuplesOfSquare(grid, noteValue, square, line, gridSize, sqrtGridSize);
@@ -263,7 +253,6 @@ void solvePointingTuples(T_Grid grid)
             {
                 // The x coordinate of the current column
                 unsigned int x = (i % sqrtGridSize) * sqrtGridSize + currentColumn;
-                LOG("Column %d", x);
 
                 unsigned int** column = getColumnIndices(gridSize, x);
                 removePointingTuplesOfSquare(grid, noteValue, square, column, gridSize, sqrtGridSize);

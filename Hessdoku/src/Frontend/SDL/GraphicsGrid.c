@@ -224,12 +224,12 @@ void drawNotes(T_Frontend* frontend, T_GraphicsGrid* grid, int cellX, int cellY)
     int y = cellY * grid->squareSize + grid->y + grid->squareSize / 9;
     for (unsigned int i = 0; i < getGridSize(grid->grid); i++)
     {
-        if (!isNoteInCell(getCell(grid->grid, cellY, cellX), i + 1))
-            continue;
-        
         int x = cellX * grid->squareSize + grid->x + (i % 3) * 16 + grid->squareSize / 9;
         if (i % 3 == 0 && i != 0)
             y += 16;
+
+        if (!isNoteInCell(getCell(grid->grid, cellY, cellX), i + 1))
+            continue;
 
         char text[2];
         sprintf(text, "%d", i + 1);

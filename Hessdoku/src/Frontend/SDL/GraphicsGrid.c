@@ -233,7 +233,7 @@ void drawNotes(T_Frontend* frontend, T_GraphicsGrid* grid, int cellX, int cellY)
 
         char text[2];
         sprintf(text, "%d", i + 1);
-        drawText(getWindow(frontend), getFont(frontend), (T_Color){ 127, 127, 127 }, text, x, y, 0.5f);
+        drawText(getWindow(frontend), getFont(frontend), getTheme().notesColor, text, x, y, 0.5f);
     }
 }
 
@@ -249,16 +249,18 @@ void drawValue(T_Frontend* frontend, T_GraphicsGrid* grid, int value, int cellX,
     int y = cellY * grid->squareSize + grid->y - height / 2 + grid->squareSize / 2;
     if (grid->lockedCells[cellY * getGridSize(grid->grid) + cellX])
     {
-        drawText(getWindow(frontend), getFont(frontend), (T_Color) { 0, 0, 0 }, text, x, y, 1.0f);
+        drawText(getWindow(frontend), getFont(frontend), getTheme().textColor, text, x, y, 1.0f);
     }
     else
     {
-        drawText(getWindow(frontend), getFont(frontend), (T_Color) { 0, 0, 255 }, text, x, y, 1.0f);
+        drawText(getWindow(frontend), getFont(frontend), getTheme().changedColor, text, x, y, 1.0f);
     }
 }
 
 void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid)
 {
+    T_Theme theme = getTheme();
+
     for (unsigned int i = 0; i < getGridSize(grid->grid); i++)
     {
         for (unsigned int ii = 0; ii < getGridSize(grid->grid); ii++)
@@ -267,9 +269,9 @@ void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid)
             int y = i * grid->squareSize + grid->y;
 
             if (ii == grid->selectedCellX && i == grid->selectedCellY)
-                setDrawColor(getWindow(frontend), 221, 220, 220);
+                setDrawColor(getWindow(frontend), theme.selectionColor.r, theme.selectionColor.g, theme.selectionColor.b);
             else
-                setDrawColor(getWindow(frontend), 255, 255, 255);
+                setDrawColor(getWindow(frontend), theme.cellColor.r, theme.cellColor.g, theme.cellColor.b);
             drawRect(getWindow(frontend), x, y, grid->squareSize, grid->squareSize);
             
             unsigned int value = getValue(grid->grid, i, ii);
@@ -284,9 +286,9 @@ void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid)
     for (unsigned int i = 0; i < getGridSize(grid->grid) + 1; i++)
     {
         if (i % 3 == 0)
-            setDrawColor(getWindow(frontend), 0, 0, 0);
+            setDrawColor(getWindow(frontend), theme.gridBorderColor.r, theme.gridBorderColor.g, theme.gridBorderColor.b);
         else
-            setDrawColor(getWindow(frontend), 127, 127, 127);
+            setDrawColor(getWindow(frontend), theme.gridBorderLightColor.r, theme.gridBorderLightColor.g, theme.gridBorderLightColor.b);
 
         drawLine(getWindow(frontend), i * grid->squareSize + grid->x, grid->y, i * grid->squareSize + grid->x, grid->squareSize * getGridSize(grid->grid) + grid->y);
         drawLine(getWindow(frontend),  grid->x, i * grid->squareSize + grid->y, grid->squareSize * getGridSize(grid->grid) + grid->x, i * grid->squareSize + grid->y);

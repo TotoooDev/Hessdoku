@@ -38,6 +38,7 @@ typedef struct T_Frontend
     T_Window* window;
     T_Font* font;
     T_GraphicsGrid* grid;
+    T_Theme theme;
 
     bool isRunning;
 
@@ -46,7 +47,7 @@ typedef struct T_Frontend
 
 T_Frontend* FrontendInstance = NULL;
 
-void createFrontend(T_Grid grid)
+void createFrontend(T_Grid grid, T_ThemeType themeType)
 {
     ASSERT(FrontendInstance == NULL, "A frontend already exists!");
 
@@ -57,6 +58,14 @@ void createFrontend(T_Grid grid)
     FrontendInstance->grid = createGraphicsGrid(grid, 5, 5, 64);
     FrontendInstance->isRunning = true;
     FrontendInstance->drawNotes = false;
+
+    switch (themeType)
+    {
+    case THEME_DRACULA:
+    default:
+        FrontendInstance->theme = getDraculaTheme();
+        break;
+    }
 }
 
 void quit(int button, int clicks, void* userData)
@@ -256,13 +265,13 @@ void runFrontend()
     while (FrontendInstance->isRunning && isWindowOpen(FrontendInstance->window))
     {
         updateWindow(FrontendInstance->window, FrontendInstance->font);
-        clearWindow(FrontendInstance->window, 127, 127, 127);
+        clearWindow(FrontendInstance->window, FrontendInstance->theme.backgroudColor.r, FrontendInstance->theme.backgroudColor.g, FrontendInstance->theme.backgroudColor.b);
 
-        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color){ 0, 0, 0 }, "No grid loaded...", 40, 270, 1.0f);
+        drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.textColor, "No grid loaded...", 40, 270, 1.0f);
         if (isCheckPressed && isValid)
-            drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 255, 0 }, "Grid valid !", 600, 490, 1.0f);
+            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.validColor, "Grid valid !", 600, 490, 1.0f);
         else if (isCheckPressed && !isValid)
-            drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 255, 0, 0 }, "Grid invalid !", 600, 490, 1.0f);
+            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.invalidColor, "Grid invalid !", 600, 490, 1.0f);
         drawWhatHappen();
         drawGrid(FrontendInstance, FrontendInstance->grid);
 
@@ -287,4 +296,9 @@ T_Window* getWindow()
 T_Font* getFont()
 {
     return FrontendInstance->font;
+}
+
+T_Theme getTheme()
+{
+    return FrontendInstance->theme;
 }

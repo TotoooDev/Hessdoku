@@ -4,6 +4,7 @@
 
 #include <Frontend/Window.h>
 #include <Frontend/Button.h>
+#include <Frontend/Frontend.h>
 #include <Frontend/SDL/Font.h>
 #include <Log.h>
 #include <SDL2/SDL.h>
@@ -158,6 +159,8 @@ void presentWindow(T_Window* window)
 
 void drawButtons(T_Window* window, T_Font* font)
 {
+    T_Theme theme = getTheme();
+
     for (unsigned int i = 0; i < window->numButtons; i++) {
         T_Button* button = window->buttons[i];
 
@@ -167,6 +170,7 @@ void drawButtons(T_Window* window, T_Font* font)
         getButtonCoordinates(button, &x, &y);
         getTextDimensions(font, getButtonText(button), &width, &height, 0.5f);
 
+        // Draw the outline
         setDrawColor(window, 60, 60, 60);
         drawRect(window, x, y, width + border * 2 + padding * 2, height + border * 2 + padding * 2);
 
@@ -175,10 +179,10 @@ void drawButtons(T_Window* window, T_Font* font)
         else if (isButtonHovered(button))
             setDrawColor(window, 240, 240, 240);
         else
-            setDrawColor(window, 220, 220, 220);
+            setDrawColor(window, theme.buttonColor.r, theme.buttonColor.g, theme.buttonColor.b);
 
         drawRect(window, x + border, y + border, width + padding * 2, height + padding * 2);
-        drawText(window, font, (T_Color){ 10, 10, 10 }, getButtonText(window->buttons[i]), x + padding + border, y + padding + border, 0.5f);
+        drawText(window, font, theme.textColor, getButtonText(window->buttons[i]), x + padding + border, y + padding + border, 0.5f);
     }
 }
 

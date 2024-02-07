@@ -2,6 +2,7 @@
 #define FRONTEND_H
 
 #include <Frontend/Window.h>
+#include <Frontend/Theme.h>
 
 /**
  * A frontend structure that holds everything related to the graphical interface.
@@ -12,7 +13,7 @@ typedef struct T_Frontend T_Frontend;
  * Creates a frontend structure
  * @param game The game to display to the frontend.
 */
-void createFrontend(T_Grid grid);
+void createFrontend(T_Grid grid, T_ThemeType themeType);
 
 /**
  * Run the frontend. This executes the main loop of the frontend.
@@ -33,5 +34,7 @@ T_Window* getWindow();
  * @returns The font associated with the frontend.
  */
 T_Font* getFont();
+
+T_Theme getTheme();
 
 #endif

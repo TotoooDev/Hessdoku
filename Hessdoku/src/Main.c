@@ -10,7 +10,7 @@
 int main(int argc, char* argv[])
 {
     T_Grid grid = generateGrid(0, 0);
-    createFrontend(grid);
+    createFrontend(grid, THEME_DRACULA);
 
     runFrontend();
 

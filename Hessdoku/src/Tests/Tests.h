@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 
-// TODO: tests categories, and more advanced result handling (such as expected results returns)
+// TODO: run all tests function ,tests categories and more advanced result handling (such as expected results returns)
 
 typedef struct T_TestDataStruct 
 {

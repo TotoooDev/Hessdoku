@@ -311,7 +311,7 @@ void runFrontend()
         if (isCheckPressed && isValid)
             drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.validColor, "Grid valid !", 900, 400, 1.0f);
         else if (isCheckPressed && !isValid)
-            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.invalidColor, "Grid invalid !", 600, 490, 1.0f);
+            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.invalidColor, "Grid invalid !", 900, 400, 1.0f);
 
         drawGrid(FrontendInstance, FrontendInstance->grid, cooErrorValue, isValid);
 

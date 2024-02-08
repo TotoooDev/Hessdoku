@@ -248,11 +248,11 @@ void drawValue(T_Frontend* frontend, T_GraphicsGrid* grid, int value, int cellX,
     int x = cellX * grid->squareSize + grid->x - width / 2 + grid->squareSize / 2;
     int y = cellY * grid->squareSize + grid->y - height / 2 + grid->squareSize / 2;
     if (isValid)
-        drawText(getWindow(frontend), getFont(frontend), getTheme().validColor, text, x, y, 1.0f);
+        drawText(getWindow(frontend), getFont(frontend), getTheme().invalidColor, text, x, y, 1.0f);
     else if (grid->lockedCells[cellY * getGridSize(grid->grid) + cellX])
         drawText(getWindow(frontend), getFont(frontend), getTheme().textColor, text, x, y, 1.0f);
     else
-        drawText(getWindow(frontend), getFont(frontend), getTheme().invalidColor, text, x, y, 1.0f);
+        drawText(getWindow(frontend), getFont(frontend), getTheme().changedColor, text, x, y, 1.0f);
 }
 
 void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid, int** invalidValue, bool isValid)

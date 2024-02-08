@@ -1,6 +1,7 @@
 #ifndef POINTING_K_TUPLES_H
 #define POINTING_K_TUPLES_H
 
+#include <Solver.h>
 #include <Grid.h>
 
 /**

@@ -171,15 +171,15 @@ void drawButtons(T_Window* window, T_Font* font)
         getTextDimensions(font, getButtonText(button), &width, &height, 0.5f);
 
         // Draw the outline
-        setDrawColor(window, 60, 60, 60);
+        setDrawColor(window, theme.buttonColor);
         drawRect(window, x, y, width + border * 2 + padding * 2, height + border * 2 + padding * 2);
 
         if (isButtonClicked(button))
-            setDrawColor(window, 200, 200, 200);
+            setDrawColor(window, theme.selectionColor);
         else if (isButtonHovered(button))
-            setDrawColor(window, 240, 240, 240);
+            setDrawColor(window, theme.cellColor);
         else
-            setDrawColor(window, theme.buttonColor.r, theme.buttonColor.g, theme.buttonColor.b);
+            setDrawColor(window, theme.buttonColor);
 
         drawRect(window, x + border, y + border, width + padding * 2, height + padding * 2);
         drawText(window, font, theme.textColor, getButtonText(window->buttons[i]), x + padding + border, y + padding + border, 0.5f);
@@ -226,9 +226,9 @@ void removeButton(T_Window* window, T_Button* button)
     window->numButtons--;
 }
 
-void setDrawColor(T_Window* window, unsigned char r, unsigned char g, unsigned char b)
+void setDrawColor(T_Window* window, T_Color color)
 {
-    SDL_SetRenderDrawColor(window->renderer, r, g, b, 255);
+    SDL_SetRenderDrawColor(window->renderer, color.r, color.g, color.b, 255);
 }
 
 void drawLine(T_Window* window, int startX, int startY, int endX, int endY)

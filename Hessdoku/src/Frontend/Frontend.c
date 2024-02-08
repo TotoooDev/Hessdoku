@@ -251,7 +251,7 @@ void addButtons()
 
 void drawWhatHappen()
 {
-    drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 0, 0 }, "Click here when you are done solving -------->", 40, 610, 0.5f);
+    drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.textColor, "Click here when you are done solving -------->", 40, 610, 0.5f);
 }
 
 

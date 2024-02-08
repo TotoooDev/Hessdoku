@@ -156,6 +156,9 @@ void concludeTests(T_Test* test)
 	printf("  - Tests echoues : %d\n", test->failedAmount);
 	printf("  - Tests evites : %d\n\n", test->skippedAmount);
 
+	freeQueue(test->queue);
+	free(test);
+
 	printf("######################################################\n");
 	printf("#                  Fin des tests                     #\n");
 	printf("######################################################\n\n");

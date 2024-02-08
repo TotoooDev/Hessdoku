@@ -18,12 +18,14 @@ const char* openFileDialog()
 
 void openFileInDefaultApp(const char* filename)
 {
+    // Opening a file with the default program is OS dependant.
+
 #ifdef SUDOKU_WINDOWS
-    STARTUPINFO info={sizeof(info)};
-    PROCESS_INFORMATION processInfo;
-    if (!CreateProcess(NULL, start, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo))
-        LOG("Failed to open actions file!");
-    return;
+    // STARTUPINFO info={sizeof(info)};
+    // PROCESS_INFORMATION processInfo;
+    // if (!CreateProcess("C:\\Windows\\System32\\notepad.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo))
+    //     LOG("Failed to open actions file!");
+    // return;
 #endif
 
 #ifdef SUDOKU_LINUX

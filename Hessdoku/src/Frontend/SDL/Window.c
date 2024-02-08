@@ -27,18 +27,22 @@ typedef struct T_Window
     T_Button* buttons[WINDOW_MAX_BUTTONS];
     unsigned int numButtons;
 
+    // Button down event data
     T_ButtonDownFunction buttonDownFunctions[WINDOW_MAX_EVENT_FUNCTIONS];
     void* buttonDownUserData[WINDOW_MAX_EVENT_FUNCTIONS];
     unsigned int numButtonDownFunctions;
 
+    // Button up event data
     T_ButtonUpFunction buttonUpFunctions[WINDOW_MAX_EVENT_FUNCTIONS];
     void* buttonUpUserData[WINDOW_MAX_EVENT_FUNCTIONS];
     unsigned int numButtonUpFunctions;
 
+    // Mouse moved event data
     T_MouseMovedFunction mouseMovedFunctions[WINDOW_MAX_EVENT_FUNCTIONS];
     void* mouseMovedUserData[WINDOW_MAX_EVENT_FUNCTIONS];
     unsigned int numMouseMovedFunctions;
 
+    // Key down event data
     T_KeyDownFunction keyDownFunctions[WINDOW_MAX_EVENT_FUNCTIONS];
     void* keyDownUserData[WINDOW_MAX_EVENT_FUNCTIONS];
     unsigned int numKeyDownFunctions;
@@ -62,6 +66,7 @@ T_Window* createWindow(const char* title, int width, int height)
 
     T_Window* window = (T_Window*)malloc(sizeof(T_Window));
 
+    // Create the SDL window
     window->window = SDL_CreateWindow(
         title,
         SDL_WINDOWPOS_CENTERED,
@@ -72,6 +77,7 @@ T_Window* createWindow(const char* title, int width, int height)
     );
     ASSERT(window->window != NULL, "Failed to create window! SDL error: %s", SDL_GetError());
 
+    // Create the SDL renderer
     window->renderer = SDL_CreateRenderer(
         window->window,
         -1,

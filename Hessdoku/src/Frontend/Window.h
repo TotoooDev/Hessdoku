@@ -12,9 +12,37 @@
  */
 typedef struct T_Window T_Window;
 
+/**
+ * A function that is called when a mouse button press is detected.
+ * @param int The button that is pressed.
+ * @param int The number of clicks.
+ * @param void* A pointer to something you want to access.
+*/
 typedef void(*T_ButtonDownFunction)(int, int, void*);
+
+/**
+ * A function that is called when a mouse button release is detected.
+ * @param int The button that is pressed.
+ * @param int The number of clicks.
+ * @param void* A pointer to something you want to access.
+*/
+
 typedef void(*T_ButtonUpFunction)(int, void*);
+/**
+ * A function that is called when a mouse movement is detected.
+ * @param int The button that is pressed.
+ * @param int The number of clicks.
+ * @param void* A pointer to something you want to access.
+*/
+
 typedef void(*T_MouseMovedFunction)(int, int, void*);
+
+/**
+ * A function that is called when a key press is detected.
+ * @param int The button that is pressed.
+ * @param int The number of clicks.
+ * @param void* A pointer to something you want to access.
+*/
 typedef void(*T_KeyDownFunction)(int, void*);
 
 /**
@@ -122,9 +150,36 @@ void drawRect(T_Window* window, int x, int y, int width, int height);
 */
 void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, int x, int y, float sizeRatio);
 
+/**
+ * Adds an event function tied to a mouse button press.
+ * @param window The window you want the event to be detected on.
+ * @param func The function that is called when the event is triggered.
+ * @param userData A pointer to the data passed un `func`.
+*/
 void addButtonDownFunction(T_Window* window, T_ButtonDownFunction func, void* userData);
+
+/**
+ * Adds an event function tied to a mouse button release.
+ * @param window The window you want the event to be detected on.
+ * @param func The function that is called when the event is triggered.
+ * @param userData A pointer to the data passed un `func`.
+*/
 void addButtonUpFunction(T_Window* window, T_ButtonUpFunction func, void* userData);
+
+/**
+ * Adds an event function tied to a mouse movement.
+ * @param window The window you want the event to be detected on.
+ * @param func The function that is called when the event is triggered.
+ * @param userData A pointer to the data passed un `func`.
+*/
 void addMouseMovedFunction(T_Window* window, T_MouseMovedFunction func, void* userData);
+
+/**
+ * Adds an event function tied to a key press.
+ * @param window The window you want the event to be detected on.
+ * @param func The function that is called when the event is triggered.
+ * @param userData A pointer to the data passed un `func`.
+*/
 void addKeyDownFunction(T_Window* window, T_KeyDownFunction func, void* userData);
 
 #endif

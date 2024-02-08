@@ -35,6 +35,9 @@ T_Window* getWindow();
  */
 T_Font* getFont();
 
+/**
+ * @returns The currently used color theme.
+*/
 T_Theme getTheme();
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef SDL_FONT_H
 #define SDL_FONT_H
 
+#include <SDL2/SDL.h>
+
 /**
  * Returns the SDL_ttf font handler.
  * @param font The font to get the handler from.

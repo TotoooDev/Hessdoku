@@ -3,12 +3,18 @@
 
 #include <Frontend/Color.h>
 
+/**
+ * An enum to enumerate the different themes.
+*/
 typedef enum
 {
     THEME_DRACULA,
     THEME_NEO_BRUTALISM
 } T_ThemeType;
 
+/**
+ * A structure containing information about a color theme.
+*/
 typedef struct T_Theme 
 {
     T_Color backgroudColor;
@@ -29,7 +35,16 @@ typedef struct T_Theme
     float notesTransparency;
 } T_Theme;
 
+/**
+ * Get the dracula color palette defined at https://draculatheme.com/contribute.
+ * @return The dracula theme.
+*/
 T_Theme getDraculaTheme();
+
+/**
+ * Get the custom neo-brutalism color palette.
+ * @return The neo-brutalism theme.
+*/
 T_Theme getNeoBrutalismTheme();
 
 #endif

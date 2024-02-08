@@ -2,6 +2,7 @@
 #include <Frontend/Config.h>
 #include <Frontend/GraphicsGrid.h>
 #include <Frontend/FileDialog.h>
+#include <Frontend/Keyboard.h>
 #include <Solver.h>
 #include <PointingKTuples.h>
 #include <Log.h>
@@ -47,6 +48,14 @@ typedef struct T_Frontend
 
 T_Frontend* FrontendInstance = NULL;
 
+void changeTheme(int key, void* userData)
+{
+    if (key == KEY_D)
+        ((T_Frontend*)userData)->theme = getDraculaTheme();
+    if (key == KEY_N)
+        ((T_Frontend*)userData)->theme = getNeoBrutalismTheme();
+}
+
 void createFrontend(T_Grid grid, T_ThemeType themeType)
 {
     ASSERT(FrontendInstance == NULL, "A frontend already exists!");
@@ -61,11 +70,17 @@ void createFrontend(T_Grid grid, T_ThemeType themeType)
 
     switch (themeType)
     {
+    case THEME_NEO_BRUTALISM:
+        FrontendInstance->theme = getNeoBrutalismTheme();
+        break;
+
     case THEME_DRACULA:
     default:
         FrontendInstance->theme = getDraculaTheme();
         break;
     }
+
+    addKeyDownFunction(FrontendInstance->window, changeTheme, FrontendInstance);
 }
 
 void quit(int button, int clicks, void* userData)
@@ -283,9 +298,9 @@ void runFrontend()
         drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.textColor, "No grid loaded...", 60, 270, 1.0f);
 
         if (isCheckPressed && isValid)
-            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.validColor, "Grid valid !", 600, 490, 1.0f);
+            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.validColor, "Grid valid !", 900, 400, 1.0f);
         else if (isCheckPressed && !isValid)
-            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.invalidColor, "Grid invalid !", 600, 490, 1.0f);
+            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.invalidColor, "Grid invalid !", 900, 400, 1.0f);
 
         drawGrid(FrontendInstance, FrontendInstance->grid);
 

@@ -5,7 +5,8 @@
 
 typedef enum
 {
-    THEME_DRACULA
+    THEME_DRACULA,
+    THEME_NEO_BRUTALISM
 } T_ThemeType;
 
 typedef struct T_Theme 
@@ -29,5 +30,6 @@ typedef struct T_Theme
 } T_Theme;
 
 T_Theme getDraculaTheme();
+T_Theme getNeoBrutalismTheme();
 
 #endif

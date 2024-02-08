@@ -132,5 +132,15 @@ void createBaton(T_Grid grid, unsigned char* b);
  */
 bool checkValidityOfGrid(T_Grid grid, int* errorValue, int** cooErrorValue);
 
+/**
+* Returns true if the notes of two grids are equal, false else.
+*
+* @param g1 the first grid
+* @param g2 the second grid
+*
+* @return a boolean representing g1 == g2
+*/
+bool areGridEqual(T_Grid g1, T_Grid g2);
+
 
 #endif

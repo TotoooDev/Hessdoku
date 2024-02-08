@@ -171,13 +171,13 @@ void drawButtons(T_Window* window, T_Font* font)
         getTextDimensions(font, getButtonText(button), &width, &height, 0.5f);
 
         // Draw the outline
-        setDrawColor(window, theme.buttonColor);
+        setDrawColor(window, theme.buttonOutlineColor);
         drawRect(window, x, y, width + border * 2 + padding * 2, height + border * 2 + padding * 2);
 
         if (isButtonClicked(button))
-            setDrawColor(window, theme.selectionColor);
+            setDrawColor(window, theme.buttonClickedColor);
         else if (isButtonHovered(button))
-            setDrawColor(window, theme.cellColor);
+            setDrawColor(window, theme.buttonHoveredColor);
         else
             setDrawColor(window, theme.buttonColor);
 

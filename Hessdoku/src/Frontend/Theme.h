@@ -16,6 +16,9 @@ typedef struct T_Theme
     T_Color gridBorderLightColor;
     T_Color selectionColor;
     T_Color buttonColor;
+    T_Color buttonHoveredColor;
+    T_Color buttonClickedColor;
+    T_Color buttonOutlineColor;
     T_Color textColor;
     T_Color notesColor;
     T_Color validColor;

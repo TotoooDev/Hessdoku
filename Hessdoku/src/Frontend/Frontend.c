@@ -2,6 +2,7 @@
 #include <Frontend/Config.h>
 #include <Frontend/GraphicsGrid.h>
 #include <Frontend/FileDialog.h>
+#include <Frontend/FileDialog.h>
 #include <Solver.h>
 #include <PointingKTuples.h>
 #include <Log.h>
@@ -26,6 +27,11 @@ void openDoc()
 void writeDoc(const char* str)
 {
     fprintf(output_file, str);
+}
+
+void flushDoc()
+{
+    fflush(output_file);
 }
 
 void closeDoc()
@@ -211,7 +217,9 @@ void getWhatHappened(int button, int clicks, void* userData)
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
-    //TODO
+
+    flushDoc();
+    openFileInDefaultApp(FILENAME);
 }
 
 void buttonCheckPointingTuples(int button, int clicks, void* userData)

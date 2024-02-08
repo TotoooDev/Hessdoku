@@ -40,6 +40,7 @@ project "Hessdoku"
 	}
 	
 	filter "system:windows"
+		defines "SUDOKU_WINDOWS"
 		staticruntime "off"
 		runtime "Release"
 		systemversion "latest"
@@ -54,6 +55,7 @@ project "Hessdoku"
 		postbuildcommands ("xcopy ..\\dev-assets\\ ..\\bin\\" .. outputDir .. "\\%{prj.name}\\ /s /e /y /i")
 		
 	filter "system:linux"
+		defines "SUDOKU_LINUX"
 		staticruntime "off"
 		systemversion "latest"
 		links

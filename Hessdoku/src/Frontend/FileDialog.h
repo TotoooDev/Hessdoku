@@ -6,5 +6,6 @@
  * @returns The path to the selected file, or NULL if the user cancelled the open action.
 */
 const char* openFileDialog();
+void openFileInDefaultApp(const char* filename);
 
 #endif

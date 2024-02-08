@@ -215,7 +215,7 @@ void resolveSudokuGrid(int button, int clicks, void* userData)
 
                     if (!hasChanged)
                     {
-                        hasChanged |= solvePointingTuples(grid);
+                        hasChanged |= solvePointingTuples(grid, output_file);
 
                         if (!hasChanged) 
                             end = true; // Only set end to true if no changes occurred after all functions
@@ -262,7 +262,7 @@ void buttonCheckPointingTuples(int button, int clicks, void* userData)
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
-    solvePointingTuples(grid);
+    solvePointingTuples(grid, output_file);
 }
 
 void buttonCheckPointingTuplesUntil(int button, int clicks, void* userData)
@@ -271,7 +271,7 @@ void buttonCheckPointingTuplesUntil(int button, int clicks, void* userData)
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
 
-    while (solvePointingTuples(grid));
+    while (solvePointingTuples(grid, output_file));
 }
 
 void addButtons()

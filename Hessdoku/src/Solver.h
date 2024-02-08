@@ -27,6 +27,4 @@ bool removeNotesInGridByZones(T_Grid grid);
  */
 bool kUpletsSolve(T_Grid grid, const int k, FILE* output_file);
 
-void writeInDoc(int** coordsTuple, int* variable, FILE* outputFile, const char* info1, const char* info2, int k, unsigned char** noteRemoved, int** coordsNoteRemoved);
-
 #endif

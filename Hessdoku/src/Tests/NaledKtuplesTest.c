@@ -134,7 +134,7 @@ bool testHiddenZoneGrid()
 
 
 
-int main()
+int mainTestNaked()
 {
 	T_Test* test = initTest();
 

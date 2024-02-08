@@ -9,6 +9,6 @@
  * @param grid The grid to solve.
  * @return `true` if the grid has changed, `false` otherwise.
 */
-bool solvePointingTuples(T_Grid grid);
+bool solvePointingTuples(T_Grid grid, FILE* outputFile);
 
 #endif

@@ -817,21 +817,21 @@ void writeInDoc(int** coordsTuple, int* variable, FILE* outputFile, const char* 
 
 bool kUpletsSolve(T_Grid grid, const int k, FILE* outputFile) {
 
-	bool hasChanged = false; //variable d'arrêt principal, indique si il y a eu un changement dans la grille
+	bool hasChanged = false; //variable d'arrï¿½t principal, indique si il y a eu un changement dans la grille
 
-	int stop = 0; //variable d'arrêt si on excède la taille de la gille
-	int stopbis = 0; //de même pour le nombre de k-uplets existant
+	int stop = 0; //variable d'arrï¿½t si on excï¿½de la taille de la gille
+	int stopbis = 0; //de mï¿½me pour le nombre de k-uplets existant
 
 	int size = getGridSize(grid);
 
 	int* variable = malloc(sizeof(int) * k); //k-uplet que l'on cherche
-	int** coordsTuple = malloc(sizeof(int*) * k); //coordonnées du k-uplet trouvé
+	int** coordsTuple = malloc(sizeof(int*) * k); //coordonnï¿½es du k-uplet trouvï¿½
 
 	for (int i = 0; i < k; i++)
 		coordsTuple[i] = malloc(sizeof(int) * 2);
 
 	unsigned char** noteRemoved = malloc(sizeof(unsigned char*) * size); //pour stocker les notes enlever
-	int** cooNoteRemoved = malloc(sizeof(int*) * size); //coordonnées des notes suprrimées
+	int** cooNoteRemoved = malloc(sizeof(int*) * size); //coordonnï¿½es des notes suprrimï¿½es
 
 	for (int i = 0; i < size; i++)
 	{
@@ -839,7 +839,7 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* outputFile) {
 		noteRemoved[i] = malloc(sizeof(unsigned char) * size);
 	}
 
-	unsigned char* batonHidden = malloc(size * sizeof(unsigned char)); //pour rechercher les k-uplets cachés
+	unsigned char* batonHidden = malloc(size * sizeof(unsigned char)); //pour rechercher les k-uplets cachï¿½s
 	int* batonNaked = malloc(size * sizeof(int)); //pour rechercher les k-uplets nus
 
 	int howManyT = 0;
@@ -856,13 +856,13 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* outputFile) {
 		int sqrtS = getGridSqrtSize(grid);
 
 		for (int i = 0; i < k; i++)
-			variable[i] = tuples[stop][i]; //récupération de k-tuple à chercher
+			variable[i] = tuples[stop][i]; //rï¿½cupï¿½ration de k-tuple ï¿½ chercher
 
 		while (stopbis < size && hasChanged == false)
 		{
 			//SEARCH IN SQUARE
 
-			//initialisation des différents tableaux
+			//initialisation des diffï¿½rents tableaux
 			createBaton(grid, batonHidden);
 			initBaton(grid, batonNaked, xSquare, xSquare + sqrtS - 1, ySquare, ySquare + sqrtS - 1);
 
@@ -872,7 +872,7 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* outputFile) {
 
 			checkRectKUpletSolve(grid, batonHidden, batonNaked, xSquare, xSquare + sqrtS, ySquare, ySquare + sqrtS, k, variable);
 
-			//véréfication de si nous avons un k-uplet
+			//vï¿½rï¿½fication de si nous avons un k-uplet
 			howManyT = howManyTrue(size, batonHidden);
 			howManyZ = howManyZero(grid, batonNaked);
 
@@ -893,13 +893,13 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* outputFile) {
 					writeInDoc(coordsTuple, variable, outputFile, "naked", "square", k, noteRemoved, cooNoteRemoved);
 			}
 
-			nextSquare(getGridSqrtSize(grid), &xSquare, &ySquare); //pour les coordonnées du prochain carré
+			nextSquare(getGridSqrtSize(grid), &xSquare, &ySquare); //pour les coordonnï¿½es du prochain carrï¿½
 
 			if (!hasChanged)
 			{
 				// SEARCH IN LINE
 
-				//initialisation des différents tableaux
+				//initialisation des diffï¿½rents tableaux
 				createBaton(grid, batonHidden);
 				initBaton(grid, batonNaked, stopbis, stopbis, 0, size - 1);
 
@@ -909,7 +909,7 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* outputFile) {
 
 				checkRectKUpletSolve(grid, batonHidden, batonNaked, stopbis, stopbis + 1, 0, size, k, variable);
 
-				//véréfication de si nous avons un k-uplet
+				//vï¿½rï¿½fication de si nous avons un k-uplet
 				howManyT = howManyTrue(size, batonHidden);
 				howManyZ = howManyZero(grid, batonNaked);
 
@@ -935,7 +935,7 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* outputFile) {
 			{
 				//SEARCH IN COLUMN
 
-				//initialisation des différents tableaux
+				//initialisation des diffï¿½rents tableaux
 				createBaton(grid, batonHidden);
 				initBaton(grid, batonNaked, 0, size - 1, stopbis, stopbis);
 
@@ -945,7 +945,7 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* outputFile) {
 
 				checkRectKUpletSolve(grid, batonHidden, batonNaked, 0, size, stopbis, stopbis + 1, k, variable);
 
-				//véréfication de si nous avons un k-uplet
+				//vï¿½rï¿½fication de si nous avons un k-uplet
 				howManyT = howManyTrue(size, batonHidden);
 				howManyZ = howManyZero(grid, batonNaked);
 
@@ -980,7 +980,7 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* outputFile) {
 	free(batonNaked);
 	freeTuples(tuples, nbTuples);
 	freeTuples(noteRemoved, size);
-	free(cooNoteRemoved, size);
+	free(cooNoteRemoved);
 
 	return hasChanged;
 }

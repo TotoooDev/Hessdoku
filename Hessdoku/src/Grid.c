@@ -293,6 +293,8 @@ bool checkValidityOfCell(unsigned char* baton, int val)
  * @param baton : a table of 9 unsigned char
  *					baton[i-1] = 0 if we didn't see i in the zone
  *					baton[i-1] = 1 if we already see i
+ * @param errorValue : the value of the cell that causes an error
+ * @param cooErrorValue : the coordinates of the two cell that causes an error
  *
  * @return false if the zone isn't valid
  *			true if it is
@@ -307,6 +309,7 @@ bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, un
         {
             if (!checkValidityOfCell(baton, getValue(grid, i, j)))
             {
+                //to keep track of which and where we have an error
                 *errorValue = getValue(grid, i, j);
                 cooErrorValue[0] = cooCell[getValue(grid, i, j)-1];
                 cooErrorValue[1][0] = i;
@@ -326,6 +329,8 @@ bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, un
  * Verif if the lines of a sudoku are valid
  *
  * @param grid : the sudoku
+ * @param errorValue : the value of the cell that causes an error
+ * @param cooErrorValue : the coordinates of the two cell that causes an error
  *
  * @return false if it isn't valid
  *			true if it is
@@ -350,6 +355,8 @@ bool checkValidityOfLine(T_Grid grid, int* errorValue, int** cooErrorValue)
  * Verif if the columns of a sudoku are valid
  *
  * @param grid : the sudoku
+ * @param errorValue : the value of the cell that causes an error
+ * @param cooErrorValue : the coordinates of the two cell that causes an error
  *
  * @return false if it isn't valid
  *			true if it is
@@ -377,6 +384,8 @@ bool checkValidityOfColumn(T_Grid grid, int* errorValue, int** cooErrorValue)
  * Verif if the squares of a sudoku are valid
  *
  * @param grid : the sudoku
+ * @param errorValue : the value of the cell that causes an error
+ * @param cooErrorValue : the coordinates of the two cell that causes an error
  *
  * @return false if it isn't valid
  *			true if it is

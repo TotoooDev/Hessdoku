@@ -124,6 +124,8 @@ void createBaton(T_Grid grid, unsigned char* b);
  * Verif the sudoku entirely
  *
  * @param grid : the sudoku
+ * @param errorValue : the value of the cell that causes an error
+ * @param cooErrorValue : the coordinates of the two cell that causes an error
  *
  * @return false if it isn't valid
  *			true if it is

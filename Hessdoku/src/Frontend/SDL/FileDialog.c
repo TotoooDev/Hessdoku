@@ -21,7 +21,7 @@ void openFileInDefaultApp(const char* filename)
 #ifdef SUDOKU_WINDOWS
     STARTUPINFO info={sizeof(info)};
     PROCESS_INFORMATION processInfo;
-    if (!CreateProcess(NULL, start, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo))
+    if (!CreateProcess(NULL, "start", NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo))
         LOG("Failed to open actions file!");
     return;
 #endif

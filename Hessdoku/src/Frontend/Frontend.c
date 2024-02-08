@@ -8,9 +8,10 @@
 #include <stdlib.h>
 
 bool isCheckPressed = false;
-bool isValid = false;
+bool isValid = true;
 const char* FILENAME = "whatHappened.txt";
 FILE* output_file;
+int** cooErrorValue;
 
 void openDoc()
 {
@@ -180,9 +181,7 @@ void resolveSudokuGrid(int button, int clicks, void* userData)
                     hasChanged |= kUpletsSolve(grid, 3, output_file);
 
                     if (!hasChanged) 
-                    {
                         end = true; // Only set end to true if no changes occurred after all functions
-                    }
                 }
             }
         }
@@ -196,14 +195,18 @@ void buttoncheckValidityOfGrid(int button, int clicks, void* userData)
     T_Grid grid = getGrid(graphicsGrid);
     isCheckPressed = true;
 
-    if (checkValidityOfGrid(grid))
+    int errorValue = 0;
+    cooErrorValue = malloc(sizeof(int*) * 2);
+    for (int i = 0; i < 2; i++)
     {
+        int* tempo = malloc(sizeof(int) * 2);
+        cooErrorValue[i] = tempo;
+    }
+
+    if (checkValidityOfGrid(grid, &errorValue, cooErrorValue))
         isValid = true;
-    }
     else
-    {
         isValid = false;
-    }
 }
 
 void getWhatHappened(int button, int clicks, void* userData)
@@ -264,7 +267,7 @@ void runFrontend()
         else if (isCheckPressed && !isValid)
             drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 255, 0, 0 }, "Grid invalid !", 600, 490, 1.0f);
         drawWhatHappen();
-        drawGrid(FrontendInstance, FrontendInstance->grid);
+        drawGrid(FrontendInstance, FrontendInstance->grid, cooErrorValue, isValid);
 
         drawWidgets(FrontendInstance->window, FrontendInstance->font);
         presentWindow(FrontendInstance->window);

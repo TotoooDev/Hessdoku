@@ -249,6 +249,17 @@ void createBaton(T_Grid grid, unsigned char* b)
         b[i] = 0;
 }
 
+int** createCoo(int size)
+{
+    int** res = malloc(sizeof(int*) * size);
+    for (int i = 0; i < size; i++)
+    {
+        int* tempo = malloc(sizeof(int) * 2);
+        res[i] = tempo;
+    }
+    return res;
+}
+
 /**
  * Verify if the number of a cell has already been seen
  *
@@ -288,13 +299,26 @@ bool checkValidityOfCell(unsigned char* baton, int val)
  *
  * @author Marie
  */
-bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char* baton)
+bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, unsigned char* baton, int* errorValue, int** cooErrorValue)
 {
+    int** cooCell = createCoo(getGridSize(grid));
     for (int i = minX; i < maxX; i++)
         for (int j = minY; j < maxY; j++)
+        {
             if (!checkValidityOfCell(baton, getValue(grid, i, j)))
+            {
+                *errorValue = getValue(grid, i, j);
+                cooErrorValue[0] = cooCell[getValue(grid, i, j)-1];
+                cooErrorValue[1][0] = i;
+                cooErrorValue[1][1] = j;
                 return false;
-
+            }
+            if (getValue(grid, i, j) != 0)
+            {
+                cooCell[getValue(grid, i, j) - 1][0] = i;
+                cooCell[getValue(grid, i, j) - 1][1] = j;
+            }
+        }
     return true;
 }
 
@@ -308,18 +332,16 @@ bool checkValidityOfRect(T_Grid grid, int minX, int maxX, int minY, int maxY, un
  *
  * @author Marie
  */
-bool checkValidityOfLine(T_Grid grid)
+bool checkValidityOfLine(T_Grid grid, int* errorValue, int** cooErrorValue)
 {
     unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
     createBaton(grid, baton);
     for (unsigned int i = 0; i < getGridSize(grid); i++)
     {
-        if (!checkValidityOfRect(grid, i, i + 1, 0, getGridSize(grid), baton))
+        if (!checkValidityOfRect(grid, i, i + 1, 0, getGridSize(grid), baton, errorValue, cooErrorValue))
             return false;
-
         createBaton(grid, baton);
     }
-
     free(baton);
     return true;
 }
@@ -334,14 +356,14 @@ bool checkValidityOfLine(T_Grid grid)
  *
  * @author Marie
  */
-bool checkValidityOfColumn(T_Grid grid)
+bool checkValidityOfColumn(T_Grid grid, int* errorValue, int** cooErrorValue)
 {
     unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
     createBaton(grid, baton);
 
     for (unsigned int i = 0; i < getGridSize(grid); i++)
     {
-        if (!checkValidityOfRect(grid, 0, getGridSize(grid), i, i + 1, baton))
+        if (!checkValidityOfRect(grid, 0, getGridSize(grid), i, i + 1, baton, errorValue, cooErrorValue))
             return false;
 
         createBaton(grid, baton);
@@ -361,7 +383,7 @@ bool checkValidityOfColumn(T_Grid grid)
  *
  * @author Marie
  */
-bool checkValidityOfSquare(T_Grid grid)
+bool checkValidityOfSquare(T_Grid grid, int* errorValue, int** cooErrorValue)
 {
     unsigned char* baton = malloc(getGridSize(grid) * sizeof(unsigned char));
     createBaton(grid, baton);
@@ -369,7 +391,7 @@ bool checkValidityOfSquare(T_Grid grid)
     int Y = 0;
     for (unsigned int k = 0; k < getGridSize(grid); k++)
     {
-        if (!checkValidityOfRect(grid, X, X + getGridSqrtSize(grid), Y, Y + getGridSqrtSize(grid), baton))
+        if (!checkValidityOfRect(grid, X, X + getGridSqrtSize(grid), Y, Y + getGridSqrtSize(grid), baton, errorValue, cooErrorValue))
             return false;
 
         Y += getGridSqrtSize(grid);
@@ -379,9 +401,7 @@ bool checkValidityOfSquare(T_Grid grid)
             X += getGridSqrtSize(grid);
         }
         if (X == getGridSize(grid))
-        {
             X = 0;
-        }
         createBaton(grid, baton);
     }
 
@@ -389,7 +409,7 @@ bool checkValidityOfSquare(T_Grid grid)
     return true;
 }
 
-bool checkValidityOfGrid(T_Grid grid)
+bool checkValidityOfGrid(T_Grid grid, int* errorValue, int** cooErrorValue)
 {
-    return (checkValidityOfLine(grid) && checkValidityOfColumn(grid) && checkValidityOfSquare(grid));
+    return (checkValidityOfLine(grid, errorValue, cooErrorValue) && checkValidityOfColumn(grid, errorValue, cooErrorValue) && checkValidityOfSquare(grid, errorValue, cooErrorValue));
 }

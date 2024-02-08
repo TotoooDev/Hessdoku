@@ -237,7 +237,7 @@ void drawNotes(T_Frontend* frontend, T_GraphicsGrid* grid, int cellX, int cellY)
     }
 }
 
-void drawValue(T_Frontend* frontend, T_GraphicsGrid* grid, int value, int cellX, int cellY)
+void drawValue(T_Frontend* frontend, T_GraphicsGrid* grid, int value, int cellX, int cellY, bool isValid)
 {
     char text[2];
     sprintf(text, "%d", value);
@@ -247,17 +247,15 @@ void drawValue(T_Frontend* frontend, T_GraphicsGrid* grid, int value, int cellX,
 
     int x = cellX * grid->squareSize + grid->x - width / 2 + grid->squareSize / 2;
     int y = cellY * grid->squareSize + grid->y - height / 2 + grid->squareSize / 2;
-    if (grid->lockedCells[cellY * getGridSize(grid->grid) + cellX])
-    {
+    if (isValid)
+        drawText(getWindow(frontend), getFont(frontend), (T_Color) { 255, 0, 0 }, text, x, y, 1.0f);
+    else if (grid->lockedCells[cellY * getGridSize(grid->grid) + cellX])
         drawText(getWindow(frontend), getFont(frontend), (T_Color) { 0, 0, 0 }, text, x, y, 1.0f);
-    }
     else
-    {
         drawText(getWindow(frontend), getFont(frontend), (T_Color) { 0, 0, 255 }, text, x, y, 1.0f);
-    }
 }
 
-void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid)
+void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid, int** invalidValue, bool isValid)
 {
     for (unsigned int i = 0; i < getGridSize(grid->grid); i++)
     {
@@ -276,8 +274,17 @@ void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid)
             if (value == 0)
                 drawNotes(frontend, grid, ii, i);
             else
-                drawValue(frontend, grid, value, ii, i);
-            
+            {
+                if (!isValid)
+                {
+                    if (((invalidValue[0][0] == i) && (invalidValue[0][1] == ii)) || ((invalidValue[1][0] == i) && (invalidValue[1][1] == ii)))
+                        drawValue(frontend, grid, value, ii, i, true);
+                    else
+                        drawValue(frontend, grid, value, ii, i, false);
+                }
+                else
+                    drawValue(frontend, grid, value, ii, i, false);
+            }
         }
     }
 

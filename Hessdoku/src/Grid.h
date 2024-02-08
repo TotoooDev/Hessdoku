@@ -130,7 +130,7 @@ void createBaton(T_Grid grid, unsigned char* b);
  *
  * @author Marie
  */
-bool checkValidityOfGrid(T_Grid grid);
+bool checkValidityOfGrid(T_Grid grid, int* errorValue, int** cooErrorValue);
 
 
 #endif

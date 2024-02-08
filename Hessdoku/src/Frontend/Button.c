@@ -68,7 +68,7 @@ T_Button* createButton(int x, int y, const char* text, T_ButtonFunction function
     button->function = function;
     button->userData = userData;
 
-    button->text = malloc(sizeof(char) * strlen(text));
+    button->text = malloc(sizeof(char) * (strlen(text) + 1));
     strcpy(button->text, text);
 
     addButtonDownFunction(getWindow(), button_ButtonDownFunction, button);

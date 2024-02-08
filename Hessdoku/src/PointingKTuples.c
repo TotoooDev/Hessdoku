@@ -279,7 +279,7 @@ bool checkColumns(T_Grid grid, unsigned int** square, unsigned int squareIndex, 
     return didSomething;
 }
 
-void solvePointingTuples(T_Grid grid)
+bool solvePointingTuples(T_Grid grid)
 {
     unsigned int gridSize = getGridSize(grid);
     unsigned int sqrtGridSize = getGridSqrtSize(grid);
@@ -298,17 +298,19 @@ void solvePointingTuples(T_Grid grid)
 
             if (didSomething) {
                 freeZone(square, gridSize);
-                return;
+                return true;
             }
 
             didSomething = checkColumns(grid, square, i, noteValue, gridSize, sqrtGridSize);
 
             if (didSomething) {
                 freeZone(square, gridSize);
-                return;
+                return true;
             }
         }
 
         freeZone(square, gridSize);
     }
+
+    return false;
 }

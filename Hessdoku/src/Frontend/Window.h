@@ -88,7 +88,7 @@ void removeButton(T_Window* window, T_Button* button);
  * @param g The blue component of the clear color (0-255).
  * @param b The green component of the clear color (0-255).
  */
-void setDrawColor(T_Window* window, unsigned char r, unsigned char g, unsigned char b);
+void setDrawColor(T_Window* window, T_Color color);
 
 /**
  * Draws a line.

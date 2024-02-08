@@ -4,6 +4,7 @@
 
 #include <Frontend/Window.h>
 #include <Frontend/Button.h>
+#include <Frontend/Frontend.h>
 #include <Frontend/SDL/Font.h>
 #include <Log.h>
 #include <SDL2/SDL.h>
@@ -158,6 +159,8 @@ void presentWindow(T_Window* window)
 
 void drawButtons(T_Window* window, T_Font* font)
 {
+    T_Theme theme = getTheme();
+
     for (unsigned int i = 0; i < window->numButtons; i++) {
         T_Button* button = window->buttons[i];
 
@@ -167,18 +170,19 @@ void drawButtons(T_Window* window, T_Font* font)
         getButtonCoordinates(button, &x, &y);
         getTextDimensions(font, getButtonText(button), &width, &height, 0.5f);
 
-        setDrawColor(window, 60, 60, 60);
+        // Draw the outline
+        setDrawColor(window, theme.buttonOutlineColor);
         drawRect(window, x, y, width + border * 2 + padding * 2, height + border * 2 + padding * 2);
 
         if (isButtonClicked(button))
-            setDrawColor(window, 200, 200, 200);
+            setDrawColor(window, theme.buttonClickedColor);
         else if (isButtonHovered(button))
-            setDrawColor(window, 240, 240, 240);
+            setDrawColor(window, theme.buttonHoveredColor);
         else
-            setDrawColor(window, 220, 220, 220);
+            setDrawColor(window, theme.buttonColor);
 
         drawRect(window, x + border, y + border, width + padding * 2, height + padding * 2);
-        drawText(window, font, (T_Color){ 10, 10, 10 }, getButtonText(window->buttons[i]), x + padding + border, y + padding + border, 0.5f);
+        drawText(window, font, theme.textColor, getButtonText(window->buttons[i]), x + padding + border, y + padding + border, 0.5f);
     }
 }
 
@@ -222,9 +226,9 @@ void removeButton(T_Window* window, T_Button* button)
     window->numButtons--;
 }
 
-void setDrawColor(T_Window* window, unsigned char r, unsigned char g, unsigned char b)
+void setDrawColor(T_Window* window, T_Color color)
 {
-    SDL_SetRenderDrawColor(window->renderer, r, g, b, 255);
+    SDL_SetRenderDrawColor(window->renderer, color.r, color.g, color.b, 255);
 }
 
 void drawLine(T_Window* window, int startX, int startY, int endX, int endY)

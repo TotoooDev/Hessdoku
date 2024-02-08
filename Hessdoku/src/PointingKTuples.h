@@ -3,6 +3,6 @@
 
 #include <Grid.h>
 
-void solvePointingTuples(T_Grid grid);
+bool solvePointingTuples(T_Grid grid);
 
 #endif

@@ -3,6 +3,7 @@
 #include <Frontend/GraphicsGrid.h>
 #include <Frontend/FileDialog.h>
 #include <Frontend/FileDialog.h>
+#include <Frontend/Keyboard.h>
 #include <Solver.h>
 #include <PointingKTuples.h>
 #include <Log.h>
@@ -45,6 +46,7 @@ typedef struct T_Frontend
     T_Window* window;
     T_Font* font;
     T_GraphicsGrid* grid;
+    T_Theme theme;
 
     bool isRunning;
 
@@ -53,7 +55,15 @@ typedef struct T_Frontend
 
 T_Frontend* FrontendInstance = NULL;
 
-void createFrontend(T_Grid grid)
+void changeTheme(int key, void* userData)
+{
+    if (key == KEY_D)
+        ((T_Frontend*)userData)->theme = getDraculaTheme();
+    if (key == KEY_N)
+        ((T_Frontend*)userData)->theme = getNeoBrutalismTheme();
+}
+
+void createFrontend(T_Grid grid, T_ThemeType themeType)
 {
     ASSERT(FrontendInstance == NULL, "A frontend already exists!");
 
@@ -61,9 +71,23 @@ void createFrontend(T_Grid grid)
 
     FrontendInstance->window = createWindow(FRONTEND_WINDOW_TITLE, FRONTEND_WINDOW_WIDTH, FRONTEND_WINDOW_HEIGHT);
     FrontendInstance->font = loadFont("OpenSans-Regular.ttf", 32);
-    FrontendInstance->grid = createGraphicsGrid(grid, 5, 5, 64);
+    FrontendInstance->grid = createGraphicsGrid(grid, 16, 16, 64);
     FrontendInstance->isRunning = true;
     FrontendInstance->drawNotes = false;
+
+    switch (themeType)
+    {
+    case THEME_NEO_BRUTALISM:
+        FrontendInstance->theme = getNeoBrutalismTheme();
+        break;
+
+    case THEME_DRACULA:
+    default:
+        FrontendInstance->theme = getDraculaTheme();
+        break;
+    }
+
+    addKeyDownFunction(FrontendInstance->window, changeTheme, FrontendInstance);
 }
 
 void quit(int button, int clicks, void* userData)
@@ -233,27 +257,40 @@ void buttonCheckPointingTuples(int button, int clicks, void* userData)
     solvePointingTuples(grid);
 }
 
-void addButtons()
+void buttonCheckPointingTuplesUntil(int button, int clicks, void* userData)
 {
-    addButton(FrontendInstance->window, createButton(600, 50, "Open grid...", openGridFile, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 90, "Show/Hide notes", showHideNotes, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 130, "Clean notes", removeSomeNotes, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 170, "Remove singletons", removeNotes1Tuple, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 210, "Remove pairs", removeNotes2Tuple, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 250, "Remove triples", removeNotes3Tuple, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 290, "Remove singletons until...", removeNotes1TupleUntilUnchanged, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 330, "Remove pairs until...", removeNotes2TupleUntilUnchanged, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 370, "Remove triples until...", removeNotes3TupleUntilUnchanged, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 410, "Solve", resolveSudokuGrid, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(600, 450, "Check", buttoncheckValidityOfGrid, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(750, 540, "Quit", quit, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(400, 610, "Surprise motherfucker", getWhatHappened, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(500, 640, "Solve pointing K-tuples", buttonCheckPointingTuples, FrontendInstance));
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+
+    while (solvePointingTuples(grid));
 }
 
-void drawWhatHappen()
+void addButtons()
 {
-    drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 0, 0 }, "Click here when you are done solving -------->", 40, 610, 0.5f);
+    addButton(FrontendInstance->window, createButton(630, 50, "Open grid...", openGridFile, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(750, 50, "Show/Hide notes", showHideNotes, FrontendInstance));
+    
+    addButton(FrontendInstance->window, createButton(630, 130, "Clean notes", removeSomeNotes, FrontendInstance));
+    
+    addButton(FrontendInstance->window, createButton(630, 170, "Remove singletons", removeNotes1Tuple, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(900, 170, "Remove singletons until...", removeNotes1TupleUntilUnchanged, FrontendInstance));
+    
+    addButton(FrontendInstance->window, createButton(630, 210, "Remove pairs", removeNotes2Tuple, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(900, 210, "Remove pairs until...", removeNotes2TupleUntilUnchanged, FrontendInstance));
+    
+    addButton(FrontendInstance->window, createButton(630, 250, "Remove triples", removeNotes3Tuple, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(900, 250, "Remove triples until...", removeNotes3TupleUntilUnchanged, FrontendInstance));
+    
+    addButton(FrontendInstance->window, createButton(630, 290, "Remove pointing K-tuples", buttonCheckPointingTuples, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(900, 290, "Remove pointing K-tuples until...", buttonCheckPointingTuplesUntil, FrontendInstance));
+
+    addButton(FrontendInstance->window, createButton(630, 370, "Check the grid", buttoncheckValidityOfGrid, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(630, 410, "Solve", resolveSudokuGrid, FrontendInstance));
+
+    addButton(FrontendInstance->window, createButton(630, 490, "Open log file...", getWhatHappened, FrontendInstance));
+
+    addButton(FrontendInstance->window, createButton(1120, 570, "Quit", quit, FrontendInstance));
 }
 
 
@@ -267,14 +304,15 @@ void runFrontend()
     while (FrontendInstance->isRunning && isWindowOpen(FrontendInstance->window))
     {
         updateWindow(FrontendInstance->window, FrontendInstance->font);
-        clearWindow(FrontendInstance->window, 127, 127, 127);
+        clearWindow(FrontendInstance->window, FrontendInstance->theme.backgroudColor.r, FrontendInstance->theme.backgroudColor.g, FrontendInstance->theme.backgroudColor.b);
 
-        drawText(FrontendInstance->window, FrontendInstance->font, (T_Color){ 0, 0, 0 }, "No grid loaded...", 40, 270, 1.0f);
+        drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.textColor, "No grid loaded...", 60, 270, 1.0f);
+
         if (isCheckPressed && isValid)
-            drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 0, 255, 0 }, "Grid valid !", 600, 490, 1.0f);
+            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.validColor, "Grid valid !", 900, 400, 1.0f);
         else if (isCheckPressed && !isValid)
-            drawText(FrontendInstance->window, FrontendInstance->font, (T_Color) { 255, 0, 0 }, "Grid invalid !", 600, 490, 1.0f);
-        drawWhatHappen();
+            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.invalidColor, "Grid invalid !", 600, 490, 1.0f);
+
         drawGrid(FrontendInstance, FrontendInstance->grid, cooErrorValue, isValid);
 
         drawWidgets(FrontendInstance->window, FrontendInstance->font);
@@ -298,4 +336,9 @@ T_Window* getWindow()
 T_Font* getFont()
 {
     return FrontendInstance->font;
+}
+
+T_Theme getTheme()
+{
+    return FrontendInstance->theme;
 }

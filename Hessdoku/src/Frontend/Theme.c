@@ -2,6 +2,8 @@
 
 T_Theme getDraculaTheme()
 {
+    // From https://draculatheme.com/contribute
+
     T_Theme theme;
 
     theme.backgroudColor       = (T_Color){  40,  42,  54 };

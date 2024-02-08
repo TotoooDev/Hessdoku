@@ -22,6 +22,11 @@ typedef struct T_GridStruct {
  */
 T_Grid generateGrid(int size, int sqrtSize);
 
+/**
+ * Creates a grid by loading a sudoku file.
+ * @param path The path to the file to load.
+ * @return The new grid.
+*/
 T_Grid generateGridFromFile(const char* path);
 
 /**

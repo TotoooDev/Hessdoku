@@ -35,6 +35,8 @@ TTF_Font* getTTF(T_Font* font)
 
 void getTextDimensions(T_Font* font, const char* text, int* width, int* height, float sizeRatio)
 {
+    // For more info see https://wiki.libsdl.org/SDL2_ttf/TTF_SizeUTF8 and https://wiki.libsdl.org/SDL2_ttf/TTF_GlyphMetrics
+
     int textWidth = 0;
     int textHeight = 0;
     TTF_SizeUTF8(font->font, text, &textWidth, &textHeight);

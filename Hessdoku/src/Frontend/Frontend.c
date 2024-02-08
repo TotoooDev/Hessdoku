@@ -55,6 +55,7 @@ typedef struct T_Frontend
 
 T_Frontend* FrontendInstance = NULL;
 
+// This one is an easter egg :O
 void changeTheme(int key, void* userData)
 {
     if (key == KEY_D)
@@ -75,6 +76,7 @@ void createFrontend(T_Grid grid, T_ThemeType themeType)
     FrontendInstance->isRunning = true;
     FrontendInstance->drawNotes = false;
 
+    // Set the theme
     switch (themeType)
     {
     case THEME_NEO_BRUTALISM:
@@ -92,7 +94,7 @@ void createFrontend(T_Grid grid, T_ThemeType themeType)
 
 void quit(int button, int clicks, void* userData)
 { 
-    FrontendInstance->isRunning = false; // cool oneliner
+    FrontendInstance->isRunning = false;
 } 
 
 void openGridFile(int button, int clicks, void* userData)
@@ -107,7 +109,7 @@ void openGridFile(int button, int clicks, void* userData)
 
 void showHideNotes(int button, int clicks, void* userData) 
 {
-    setGraphicsGridDrawNotes(FrontendInstance->grid, getGraphicsGridDrawNotes(FrontendInstance->grid) ^ 1);  // even cooler oneliner
+    setGraphicsGridDrawNotes(FrontendInstance->grid, getGraphicsGridDrawNotes(FrontendInstance->grid) ^ 1);  // super cool oneliner
 }
 
 void removeSomeNotes(int button, int clicks, void* userData)
@@ -192,6 +194,7 @@ void resolveSudokuGrid(int button, int clicks, void* userData)
     bool hasChanged = false;
     bool end = false;
 
+    // https://www.youtube.com/watch?v=CFRhGnuXG-4
     while (!end) 
     {
         hasChanged = false;
@@ -210,8 +213,13 @@ void resolveSudokuGrid(int button, int clicks, void* userData)
                 {
                     hasChanged |= kUpletsSolve(grid, 3, output_file);
 
-                    if (!hasChanged) 
-                        end = true; // Only set end to true if no changes occurred after all functions
+                    if (!hasChanged)
+                    {
+                        hasChanged |= solvePointingTuples(grid);
+
+                        if (!hasChanged) 
+                            end = true; // Only set end to true if no changes occurred after all functions
+                    }
                 }
             }
         }
@@ -303,19 +311,22 @@ void runFrontend()
 
     while (FrontendInstance->isRunning && isWindowOpen(FrontendInstance->window))
     {
+        // Window stuff
         updateWindow(FrontendInstance->window, FrontendInstance->font);
         clearWindow(FrontendInstance->window, FrontendInstance->theme.backgroudColor.r, FrontendInstance->theme.backgroudColor.g, FrontendInstance->theme.backgroudColor.b);
-
+        
+        // Draw the "No grid found" text first so it gets overwritten by all the other draws
         drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.textColor, "No grid loaded...", 60, 270, 1.0f);
 
+        // Draw the validity text
         if (isCheckPressed && isValid)
             drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.validColor, "Grid valid !", 900, 400, 1.0f);
         else if (isCheckPressed && !isValid)
             drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.invalidColor, "Grid invalid !", 900, 400, 1.0f);
 
         drawGrid(FrontendInstance, FrontendInstance->grid, cooErrorValue, isValid);
-
         drawWidgets(FrontendInstance->window, FrontendInstance->font);
+
         presentWindow(FrontendInstance->window);
     }
 

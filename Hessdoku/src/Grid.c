@@ -422,3 +422,23 @@ bool checkValidityOfGrid(T_Grid grid, int* errorValue, int** cooErrorValue)
 {
     return (checkValidityOfLine(grid, errorValue, cooErrorValue) && checkValidityOfColumn(grid, errorValue, cooErrorValue) && checkValidityOfSquare(grid, errorValue, cooErrorValue));
 }
+
+bool areGridEqual(T_Grid g1, T_Grid g2)
+{
+    if (g1.size != g2.size)
+    {
+        return false;
+    }
+
+        
+    for (int i = 0; i < g1.size; i++)
+    {
+        for (int j = 0; j < g1.size; j++)
+        {
+            if (getCellArray(getCell(g1, i, j)) != getCellArray(getCell(g2, i, j)))
+                return false;
+        }
+    }
+
+    return true;
+}

@@ -25,8 +25,11 @@ typedef struct T_GraphicsGrid
     bool drawNotes;
 } T_GraphicsGrid;
 
+// Returns whether or not the mouse is in the graphics grid.
+// If not, cellX and cellY are set to -1.
 bool isMouseCursorInGraphicsGrid(T_GraphicsGrid* grid, int mouseX, int mouseY, int* cellX, int* cellY)
 {
+    // Loop through each cell of the graphics grid
     for (unsigned int i = 0; i < getGridSize(grid->grid); i++)
     {
         for (unsigned int ii = 0; ii < getGridSize(grid->grid); ii++)
@@ -46,6 +49,7 @@ bool isMouseCursorInGraphicsGrid(T_GraphicsGrid* grid, int mouseX, int mouseY, i
         }
     }
 
+    // If nothing was founc, return -1
     if (cellX != NULL)
         *cellX = -1;
     if (cellY != NULL)
@@ -90,8 +94,6 @@ void graphicsGrid_KeyDownFunction(int key, void* userData)
         return;
 
     unsigned int gridSize = getGridSize(grid->grid);
-    // if (grid->lockedCells[grid->selectedCellX * gridSize + grid->selectedCellY])
-    //     return;
 
     switch (key)
     {
@@ -160,12 +162,15 @@ T_GraphicsGrid* createGraphicsGrid(T_Grid grid, int x, int y, int squareSize)
 
 void freeGraphicsGrid(T_GraphicsGrid* grid)
 {
+    freeGrid(grid->grid);
     free(grid);
 }
 
 void setGrid(T_GraphicsGrid* graphicsGrid, T_Grid grid)
 {
     graphicsGrid->grid = grid;
+
+    // Re-lock the cells
     unsigned int gridSize = getGridSize(grid);
     graphicsGrid->lockedCells = (bool*)malloc(sizeof(bool) * gridSize * gridSize);
     lockCells(graphicsGrid, gridSize);
@@ -221,10 +226,11 @@ void drawNotes(T_Frontend* frontend, T_GraphicsGrid* grid, int cellX, int cellY)
     if (!grid->drawNotes)
         return;
 
-    int y = cellY * grid->squareSize + grid->y + grid->squareSize / 9;
+    int y = cellY * grid->squareSize + grid->y + grid->squareSize / getGridSize(grid->grid);
     for (unsigned int i = 0; i < getGridSize(grid->grid); i++)
     {
-        int x = cellX * grid->squareSize + grid->x + (i % 3) * 16 + grid->squareSize / 9;
+        // Coordinates shenanigans
+        int x = cellX * grid->squareSize + grid->x + (i % getGridSqrtSize(grid->grid)) * 16 + grid->squareSize / getGridSize(grid->grid);
         if (i % 3 == 0 && i != 0)
             y += 16;
 
@@ -247,6 +253,7 @@ void drawValue(T_Frontend* frontend, T_GraphicsGrid* grid, int value, int cellX,
 
     int x = cellX * grid->squareSize + grid->x - width / 2 + grid->squareSize / 2;
     int y = cellY * grid->squareSize + grid->y - height / 2 + grid->squareSize / 2;
+
     if (isValid)
         drawText(getWindow(frontend), getFont(frontend), getTheme().invalidColor, text, x, y, 1.0f);
     else if (grid->lockedCells[cellY * getGridSize(grid->grid) + cellX])
@@ -266,12 +273,14 @@ void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid, int** invalidValue, bo
             int x = ii * grid->squareSize + grid->x;
             int y = i * grid->squareSize + grid->y;
 
+            // Draw the background
             if (ii == grid->selectedCellX && i == grid->selectedCellY)
                 setDrawColor(getWindow(frontend), theme.selectionColor);
             else
                 setDrawColor(getWindow(frontend), theme.cellColor);
             drawRect(getWindow(frontend), x, y, grid->squareSize, grid->squareSize);
             
+            // Draw the value (or the notes)
             unsigned int value = getValue(grid->grid, i, ii);
             if (value == 0)
                 drawNotes(frontend, grid, ii, i);
@@ -290,6 +299,7 @@ void drawGrid(T_Frontend* frontend, T_GraphicsGrid* grid, int** invalidValue, bo
         }
     }
 
+    // Draw the grid outlines
     for (unsigned int i = 0; i < getGridSize(grid->grid) + 1; i++)
     {
         if (i % 3 == 0)

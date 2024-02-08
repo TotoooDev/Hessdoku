@@ -61,6 +61,7 @@ void quitSDL()
 
 T_Window* createWindow(const char* title, int width, int height)
 {
+    // Initialize SDL if this is the first window
     if (NumWindows == 0)
         initSDL();
 
@@ -89,8 +90,8 @@ T_Window* createWindow(const char* title, int width, int height)
 
     for (unsigned int i = 0; i < WINDOW_MAX_BUTTONS; i++)
         window->buttons[i] = NULL;
-    window->numButtons = 0;
 
+    window->numButtons = 0;
     window->numButtonDownFunctions = 0;
     window->numButtonUpFunctions = 0;
     window->numMouseMovedFunctions = 0;
@@ -110,6 +111,7 @@ void freeWindow(T_Window* window)
     SDL_DestroyWindow(window->window);
     free(window);
 
+    // Quit SDL if there is no window left
     NumWindows--;
     if (NumWindows == 0)
         quitSDL();
@@ -117,6 +119,9 @@ void freeWindow(T_Window* window)
 
 void updateWindow(T_Window* window, T_Font* font)
 {
+    // Everytime we receive a new event, we loop through every event function and call it with the right parameters
+    // Except for the quit event, with this event we just set the isOpen flag to false.
+
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
@@ -180,6 +185,7 @@ void drawButtons(T_Window* window, T_Font* font)
         setDrawColor(window, theme.buttonOutlineColor);
         drawRect(window, x, y, width + border * 2 + padding * 2, height + border * 2 + padding * 2);
 
+        // Select the correct background color
         if (isButtonClicked(button))
             setDrawColor(window, theme.buttonClickedColor);
         else if (isButtonHovered(button))
@@ -188,6 +194,8 @@ void drawButtons(T_Window* window, T_Font* font)
             setDrawColor(window, theme.buttonColor);
 
         drawRect(window, x + border, y + border, width + padding * 2, height + padding * 2);
+        
+        // Draw the text
         drawText(window, font, theme.textColor, getButtonText(window->buttons[i]), x + padding + border, y + padding + border, 0.5f);
     }
 }
@@ -211,6 +219,7 @@ void addButton(T_Window* window, T_Button* button)
 
 void removeButton(T_Window* window, T_Button* button)
 {
+    // Get the index of the button
     int index = -1;
     for (unsigned int i = 0; i < window->numButtons; i++) {
         if (window->buttons[i] == button) {
@@ -222,6 +231,7 @@ void removeButton(T_Window* window, T_Button* button)
     ASSERT(index != -1, "Failed to find button %p in array! It's not in the array.\n", button);
     ASSERT(index < window->numButtons, "Failed to remove button %p! The index was unused.\n", button);
 
+    // Remove the button from the list
     freeButton(window->buttons[index]);
     
     for (unsigned int i = index; i < window->numButtons; i++) {
@@ -250,11 +260,16 @@ void drawRect(T_Window* window, int x, int y, int width, int height)
 
 void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, int x, int y, float sizeRatio)
 {
+    // Due to retro-compatibility, SDL_ttf only provides a function to create an SDL_Surface* of a text.
+    // So we have to convert it to a texture to render the text.
+
+    // Create the text texture from a surface.
     SDL_Surface* surface = TTF_RenderText_Blended(getTTF(font), text, (SDL_Color){ color.r, color.g, color.b, 255 });
 	ASSERT(surface != NULL, "Failed to create surface! TTF error: %s\n", TTF_GetError());
 
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(window->renderer, surface);
 	
+    // Render the text texture
     SDL_Rect rect = { 
         x,
         y,

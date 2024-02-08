@@ -80,7 +80,8 @@ T_TestQueue* addNextQueue(T_TestQueue* queue, T_TestData* data)
 
 void freeQueue(T_TestQueue* queue)
 {
-	freeData(queue->data);
+	if (queue != NULL && queue->data != NULL)
+		freeData(queue->data);
 	free(queue);
 }
 

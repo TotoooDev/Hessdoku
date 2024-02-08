@@ -22,6 +22,11 @@ typedef struct T_GridStruct {
  */
 T_Grid generateGrid(int size, int sqrtSize);
 
+/**
+ * Creates a grid by loading a sudoku file.
+ * @param path The path to the file to load.
+ * @return The new grid.
+*/
 T_Grid generateGridFromFile(const char* path);
 
 /**
@@ -133,6 +138,16 @@ void createBaton(T_Grid grid, unsigned char* b);
  * @author Marie
  */
 bool checkValidityOfGrid(T_Grid grid, int* errorValue, int** cooErrorValue);
+
+/**
+* Returns true if the notes of two grids are equal, false else.
+*
+* @param g1 the first grid
+* @param g2 the second grid
+*
+* @return a boolean representing g1 == g2
+*/
+bool areGridEqual(T_Grid g1, T_Grid g2);
 
 
 #endif

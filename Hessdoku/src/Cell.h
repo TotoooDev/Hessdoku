@@ -68,6 +68,17 @@ bool unsetNoteCell(T_Cell* cell, unsigned int noteValue);
 unsigned int getValueOfCell(T_Cell* cell);
 
 /**
+* Returns the array (unsigned int) that describes the cell.
+* Warning : this function is useful for tests and should NOT be used in the solver.
+* Refer to getValueOfCell for the solver function
+* 
+ * @param cell The cell where to get the value from
+ *
+ * @returns Returns the cell "array".
+*/
+unsigned int getCellArray(T_Cell* cell);
+
+/**
  * Sets the value of a cell to a specific value.
  * 
  * @param cell The cell where to edit the value

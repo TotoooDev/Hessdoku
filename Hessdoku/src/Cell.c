@@ -46,6 +46,10 @@ void setValueOfCell(T_Cell* cell, unsigned int value)
     cell->notes = cell->notes << (value - 1);
 }
 
+unsigned int getCellArray(T_Cell* cell) {
+    return cell->notes;
+}
+
 static unsigned char isPowerOfTwo(unsigned int n)
 {
     return n && (!(n & (n - 1)));

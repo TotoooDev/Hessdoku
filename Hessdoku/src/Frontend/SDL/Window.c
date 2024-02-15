@@ -117,6 +117,11 @@ void freeWindow(T_Window* window)
         quitSDL();
 }
 
+unsigned long getTicks()
+{
+    return SDL_GetTicks64();
+}
+
 void updateWindow(T_Window* window, T_Font* font)
 {
     // Everytime we receive a new event, we loop through every event function and call it with the right parameters

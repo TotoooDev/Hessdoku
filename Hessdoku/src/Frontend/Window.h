@@ -61,6 +61,12 @@ T_Window* createWindow(const char* title, int width, int height);
 void freeWindow(T_Window* window);
 
 /**
+ * Returns the time since the window system was initialized.
+ * @return The number of milliseconds since the window system was initialized.
+*/
+unsigned long getTicks();
+
+/**
  * Polls the window events and update the window.
  * @param window The window to update
  */

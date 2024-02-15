@@ -51,6 +51,9 @@ typedef struct T_Frontend
     bool isRunning;
 
     bool drawNotes;
+
+    bool hasSolvedGrid;
+    double timeSpentSolving;
 } T_Frontend;
 
 T_Frontend* FrontendInstance = NULL;
@@ -75,6 +78,8 @@ void createFrontend(T_Grid grid, T_ThemeType themeType)
     FrontendInstance->grid = createGraphicsGrid(grid, 16, 16, 64);
     FrontendInstance->isRunning = true;
     FrontendInstance->drawNotes = false;
+    FrontendInstance->timeSpentSolving = 0.0f;
+    FrontendInstance->hasSolvedGrid = false;
 
     // Set the theme
     switch (themeType)
@@ -105,6 +110,7 @@ void openGridFile(int button, int clicks, void* userData)
 
     freeGrid(getGrid(FrontendInstance->grid));
     setGrid(FrontendInstance->grid, generateGridFromFile(filePath));
+    FrontendInstance->hasSolvedGrid = false;
 }
 
 void showHideNotes(int button, int clicks, void* userData) 
@@ -186,6 +192,8 @@ void removeNotes3TupleUntilUnchanged(int button, int clicks, void* userData)
 
 void resolveSudokuGrid(int button, int clicks, void* userData)
 {
+    unsigned long startTime = getTicks();
+
     writeDoc("\nBig solving !...\n\n");
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
@@ -224,6 +232,10 @@ void resolveSudokuGrid(int button, int clicks, void* userData)
             }
         }
     }
+
+    unsigned long endTime = getTicks();
+    FrontendInstance->timeSpentSolving = ((double)endTime - (double)startTime) * 0.001f;
+    FrontendInstance->hasSolvedGrid = true;
 }
 
 void buttoncheckValidityOfGrid(int button, int clicks, void* userData)
@@ -320,9 +332,17 @@ void runFrontend()
 
         // Draw the validity text
         if (isCheckPressed && isValid)
-            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.validColor, "Grid valid !", 900, 400, 1.0f);
+            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.validColor, "Grid valid!", 900, 400, 1.0f);
         else if (isCheckPressed && !isValid)
-            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.invalidColor, "Grid invalid !", 900, 400, 1.0f);
+            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.invalidColor, "Grid invalid!", 900, 400, 1.0f);
+
+        // Draw the time spent solving
+        if (FrontendInstance->hasSolvedGrid)
+        {
+            char str[512];
+            sprintf(str, "Solved in %.3f seconds!", FrontendInstance->timeSpentSolving);
+            drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.textColor, str, 800, 450, 1.0f);
+        }
 
         drawGrid(FrontendInstance, FrontendInstance->grid, cooErrorValue, isValid);
         drawWidgets(FrontendInstance->window, FrontendInstance->font);

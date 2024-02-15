@@ -1,8 +1,8 @@
-#include "Grid.h";
-#include "Cell.h";
+#include "Grid.h"
+#include "Cell.h"
 
-#include "Solver.h";
-#include "Tests.h";
+#include "Solver.h"
+#include "Tests.h"
 
 
 /*

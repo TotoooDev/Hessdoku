@@ -12,13 +12,13 @@
 int main(int argc, char* argv[])
 {
     T_Grid grid = generateGrid(0, 0);
-    //createFrontend(grid, THEME_DRACULA);
+    createFrontend(grid, THEME_DRACULA);
 
-    //runFrontend();
+    runFrontend();
 
-    //freeFrontend();
+    freeFrontend();
 
-    solveSwordfish(grid, 3, NULL);
+    //solveSwordfish(grid, 3, NULL);
 
     freeGrid(grid);
 

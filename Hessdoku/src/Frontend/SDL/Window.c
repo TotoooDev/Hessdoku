@@ -11,6 +11,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <stdlib.h>
 
+#define WINDOW_ICON_PATH "icon.bmp"
 // arbitrary number lol
 #define WINDOW_MAX_BUTTONS 1024
 #define WINDOW_MAX_EVENT_FUNCTIONS 2048
@@ -59,6 +60,13 @@ void quitSDL()
     SDL_Quit();
 }
 
+void loadWindowIcon(T_Window* window)
+{
+    SDL_Surface* iconSurface = SDL_LoadBMP(WINDOW_ICON_PATH);
+    ASSERT(iconSurface != NULL, "Failed to load icon! SDL error: %s", SDL_GetError());
+    SDL_SetWindowIcon(window->window, iconSurface);
+}
+
 T_Window* createWindow(const char* title, int width, int height)
 {
     // Initialize SDL if this is the first window
@@ -96,6 +104,8 @@ T_Window* createWindow(const char* title, int width, int height)
     window->numButtonUpFunctions = 0;
     window->numMouseMovedFunctions = 0;
     window->numKeyDownFunctions = 0;
+
+    loadWindowIcon(window);
 
     NumWindows++;
 

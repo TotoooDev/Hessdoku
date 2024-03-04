@@ -6,6 +6,7 @@
 #include <Frontend/Keyboard.h>
 #include <Solver.h>
 #include <PointingKTuples.h>
+#include <Swordfish.h>
 #include <Log.h>
 #include <stdlib.h>
 
@@ -286,6 +287,23 @@ void buttonCheckPointingTuplesUntil(int button, int clicks, void* userData)
     while (solvePointingTuples(grid, output_file));
 }
 
+void buttonSwordfish(int button, int clicks, void* userData)
+{
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+    solveSwordfish(grid, 3, output_file);
+}
+
+void buttonSwordfishUntil(int button, int clicks, void* userData)
+{
+    T_Frontend* frontend = (T_Frontend*)userData;
+    T_GraphicsGrid* graphicsGrid = frontend->grid;
+    T_Grid grid = getGrid(graphicsGrid);
+
+    while (solveSwordfish(grid, 3, output_file));
+}
+
 void addButtons()
 {
     addButton(FrontendInstance->window, createButton(630, 50, "Open grid...", openGridFile, FrontendInstance));
@@ -304,11 +322,14 @@ void addButtons()
     
     addButton(FrontendInstance->window, createButton(630, 290, "Remove pointing K-tuples", buttonCheckPointingTuples, FrontendInstance));
     addButton(FrontendInstance->window, createButton(900, 290, "Remove pointing K-tuples until...", buttonCheckPointingTuplesUntil, FrontendInstance));
+    
+    addButton(FrontendInstance->window, createButton(630, 330, "Remove with Swordfish", buttonSwordfish, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(900, 330, "Remove with Swordfish until...", buttonSwordfishUntil, FrontendInstance));
 
-    addButton(FrontendInstance->window, createButton(630, 370, "Check the grid", buttoncheckValidityOfGrid, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(630, 410, "Solve", resolveSudokuGrid, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(630, 410, "Check the grid", buttoncheckValidityOfGrid, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(630, 450, "Solve", resolveSudokuGrid, FrontendInstance));
 
-    addButton(FrontendInstance->window, createButton(630, 490, "Open log file...", getWhatHappened, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(630, 530, "Open log file...", getWhatHappened, FrontendInstance));
 
     addButton(FrontendInstance->window, createButton(1120, 570, "Quit", quit, FrontendInstance));
 }

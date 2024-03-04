@@ -1,8 +1,10 @@
 #ifndef SWORDFISH_H
 #define SWORDFISH_H
 
-#include "Grid.h"
 #include <assert.h>
+
+#include "Grid.h"
+#include "ArrayList.h"
 
 /**
  * Removes notes if a swordfish has been detected

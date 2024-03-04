@@ -6,8 +6,8 @@
 #include "Grid.h"
 #include "Solver.h"
 
-
 #include "Swordfish.h"
+
 
 int main(int argc, char* argv[])
 {
@@ -17,7 +17,6 @@ int main(int argc, char* argv[])
     runFrontend();
 
     freeFrontend();
-
     //solveSwordfish(grid, 3, NULL);
 
     freeGrid(grid);

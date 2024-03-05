@@ -4,7 +4,7 @@ T_ArrayList initArrayList(int maxLen, int sizeElt)
 {
 	T_ArrayList arrayList;
 
-	void** tab = (void**)malloc(sizeof(sizeElt) * maxLen);
+	void** tab = (void**)malloc(sizeof(void*) * maxLen);
 	assert(tab != NULL);
 
 	for (int i = 0; i < maxLen; i++)
@@ -26,7 +26,7 @@ T_ArrayList copyArrayList(T_ArrayList tab, int sizeElt)
 	newList.len = tab.len;
 	newList.maxLen = tab.maxLen;
 
-	newList.list = (void**)malloc(sizeof(sizeElt) * newList.maxLen);
+	newList.list = (void**)malloc(sizeof(void*) * newList.maxLen);
 	assert(newList.list != NULL);
 
 

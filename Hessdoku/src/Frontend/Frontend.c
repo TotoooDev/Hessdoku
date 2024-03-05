@@ -226,8 +226,18 @@ void resolveSudokuGrid(int button, int clicks, void* userData)
                     {
                         hasChanged |= solvePointingTuples(grid, output_file);
 
-                        if (!hasChanged) 
-                            end = true; // Only set end to true if no changes occurred after all functions
+                        if (!hasChanged)
+                        {
+                            hasChanged |= solveSwordfish(grid, 3, output_file);
+
+                            if (!hasChanged)
+                            {
+                                hasChanged |= solveSwordfish(grid, 4, output_file);
+
+                                if (!hasChanged)
+                                    end = true;
+                            }
+                        }
                     }
                 }
             }

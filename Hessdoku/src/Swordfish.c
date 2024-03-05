@@ -71,12 +71,23 @@ void printColumnFoundIndexes(T_ColumnFoundIndexes* item) {
 	printf("] ");
 }
 
+bool doesRowBelongToSwordFish(T_ColumnFoundIndexes* item, int value) {
+	return valueExistsArrayList(item->columnIndexes, value);
+}
+
 
 /* ************************************************
  *                 Columns Tab                    *
  ************************************************ */
 
 typedef T_ArrayList T_ColumnTab;
+
+void printColumnTab(T_ColumnTab tab) {
+	for (int i = 0; i < tab.len; i++) {
+		printColumnFoundIndexes(tab.list[i]);
+	}
+	printf("\n");
+}
 
 
 T_ColumnTab initColumnTab(int k) 
@@ -99,14 +110,6 @@ T_ColumnTab copyColumnTab(T_ColumnTab tab)
 void dumpColumnTab(T_ColumnTab source, T_ColumnTab* dest)
 {
 	dumpArrayList(source, dest);
-}
-
-// TODO
-bool canAddValueColumnTab(T_ColumnTab tab, int column) 
-{
-	T_ColumnFoundIndexes* col = initColumnFoundIndexes(tab.maxLen, column);
-
-	return canAddValueArrayList(tab, col);
 }
 
 bool valueExistsColumnTab(T_ColumnTab tab, int col) 
@@ -132,6 +135,7 @@ bool addValueColumnTab(T_ColumnTab* tab, int newVal)
 			return true;
 	}
 
+	freeColumnFoundIndexes(col);
 	return false;
 }
 
@@ -151,14 +155,6 @@ int getColumnIndexOnColumnTab(T_ColumnTab tab, int column) {
 
 	return i;
 }
-
-void printColumnTab(T_ColumnTab tab) {
-	for (int i = 0; i < tab.len; i++) {
-		printColumnFoundIndexes(tab.list[i]);
-	}
-	printf("\n");
-}
-
 
 /* Found column indexes integration */
 
@@ -192,14 +188,13 @@ bool searchLine(T_Grid grid, int value, int lineIndex, int k, T_ColumnTab* colum
 		{
 			int res = addValueColumnTab(&tempTab, i);
 
-			if (count <= k) {
-				printColumnTab(tempTab);
-				addColumnToColumnTab(tempTab, i, lineIndex);
-			}
-
 			if (!res) {
 				freeColumnTab(tempTab);
 				return false;
+			}
+
+			if (count <= k) {
+				addColumnToColumnTab(tempTab, i, lineIndex);
 			}
 
 			count++;
@@ -215,31 +210,62 @@ bool searchLine(T_Grid grid, int value, int lineIndex, int k, T_ColumnTab* colum
 	return false;
 }
 
-bool removeSwordfishNotes(T_Grid grid, T_ColumnTab columnTab, FILE* outputFile) {
-	return true;
+
+// TODO: logs into outputFile
+bool logAndRemoveSwordfishNotes(T_Grid grid, T_ColumnTab columnTab, int noteValue, FILE* outputFile)
+{
+	fprintf(outputFile, "\nFound a %d-swordfish at ", columnTab.maxLen);
+	for (int i = 0; i < columnTab.maxLen; i++)
+	{
+		for (int j = 0; j < ((T_ColumnFoundIndexes*)(columnTab.list[i]))->columnIndexes.len; j++)
+		{
+			fprintf(outputFile, "(%d %d) ", ((T_ColumnFoundIndexes*)(columnTab.list[i]))->columnIndexes.list[j], ((T_ColumnFoundIndexes*)(columnTab.list[i]))->column);
+		}
+	}
+	fprintf(outputFile, "\n");
+
+	bool hasGridChanged = false;
+
+	for (int columnTabIndex = 0; columnTabIndex < columnTab.len; columnTabIndex++)
+	{
+		for (int rowIndex = 0; rowIndex < getGridSize(grid); rowIndex++)
+		{
+			if (!doesRowBelongToSwordFish(columnTab.list[columnTabIndex], rowIndex))
+			{
+				if (unsetNoteCell(getCell(grid, rowIndex, ((T_ColumnFoundIndexes*)(columnTab.list[columnTabIndex]))->column), noteValue))
+				{
+					hasGridChanged = true;
+					fprintf(outputFile, "Deleted a %d-swordfish note in (%d %d)\n", columnTab.maxLen, rowIndex, ((T_ColumnFoundIndexes*)(columnTab.list[columnTabIndex]))->column);
+				}
+			}
+		}
+	}
+	fprintf(outputFile, "\n");
+
+
+	return hasGridChanged;
 }
 
 bool solveSwordfish(T_Grid grid, int k, FILE* outputFile) 
 {
-	T_ColumnTab columnTab = initColumnTab(k);
-
-	for (int value = 6; value <= getGridSize(grid); value++)
+	for (int value = 1; value <= getGridSize(grid); value++)
 	{
-		printf("\n\nValue : %d\n", value);
-
 		T_ColumnTab columnTab = initColumnTab(k);
+
 		int satisfactoryLinesCount = 0;
 
 		for (int lineIndex = 0; lineIndex < getGridSize(grid); lineIndex++)
 		{
+			// TODO: Le cas des swordfish si on en a deux à la meme valeur dans une seule grille
 			bool lineResult = searchLine(grid, value, lineIndex, k, &columnTab);
 
 			if (lineResult)
 				satisfactoryLinesCount++;
 		}
 
+		// A swordfish has been detected
 		if (satisfactoryLinesCount == k) {
-			bool haveNotesBeenRemoved = removeSwordfishNotes(grid, columnTab, outputFile);
+			bool haveNotesBeenRemoved = logAndRemoveSwordfishNotes(grid, columnTab, value, outputFile);
 			
 			if (haveNotesBeenRemoved) {
 				return true;

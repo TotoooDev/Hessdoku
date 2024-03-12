@@ -7,6 +7,7 @@
 #include <Solver.h>
 #include <PointingKTuples.h>
 #include <Swordfish.h>
+#include <Backtracking.h>
 #include <Log.h>
 #include <stdlib.h>
 
@@ -99,9 +100,9 @@ void createFrontend(T_Grid grid, T_ThemeType themeType)
 }
 
 void quit(int button, int clicks, void* userData)
-{ 
+{
     FrontendInstance->isRunning = false;
-} 
+}
 
 void openGridFile(int button, int clicks, void* userData)
 {
@@ -114,7 +115,7 @@ void openGridFile(int button, int clicks, void* userData)
     FrontendInstance->hasSolvedGrid = false;
 }
 
-void showHideNotes(int button, int clicks, void* userData) 
+void showHideNotes(int button, int clicks, void* userData)
 {
     setGraphicsGridDrawNotes(FrontendInstance->grid, getGraphicsGridDrawNotes(FrontendInstance->grid) ^ 1);  // super cool oneliner
 }
@@ -204,50 +205,52 @@ void resolveSudokuGrid(int button, int clicks, void* userData)
     bool end = false;
 
     // https://www.youtube.com/watch?v=CFRhGnuXG-4
-    while (!end) 
+    while (!end)
     {
         hasChanged = false;
 
         hasChanged |= removeNotesInGridByZones(grid);
 
-        if (!hasChanged)
-        {
-            hasChanged |= kUpletsSolve(grid, 1, output_file);
+        if (hasChanged)
+            continue;
 
-            if (!hasChanged)
-            {
-                hasChanged |= kUpletsSolve(grid, 2, output_file);
+        hasChanged |= kUpletsSolve(grid, 1, output_file);
+        if (hasChanged)
+            continue;
 
-                if (!hasChanged)
-                {
-                    hasChanged |= kUpletsSolve(grid, 3, output_file);
+        hasChanged |= kUpletsSolve(grid, 2, output_file);
+        if (hasChanged)
+            continue;
 
-                    if (!hasChanged)
-                    {
-                        hasChanged |= solvePointingTuples(grid, output_file);
+        hasChanged |= kUpletsSolve(grid, 3, output_file);
+        if (hasChanged)
+            continue;
 
-                        if (!hasChanged)
-                        {
-                            hasChanged |= solveSwordfish(grid, 3, output_file);
+        hasChanged |= solvePointingTuples(grid, output_file);
+        if (hasChanged)
+            continue;
 
-                            if (!hasChanged)
-                            {
-                                hasChanged |= solveSwordfish(grid, 4, output_file);
+        hasChanged |= solveSwordfish(grid, 3, output_file);
+        if (hasChanged)
+            continue;
 
-                                if (!hasChanged)
-                                    end = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        hasChanged |= solveSwordfish(grid, 4, output_file);
+        if (hasChanged)
+            continue;
+
+        // I tried so hard and got so far
+        // But in the end it doesn't even matter
+
+        // Let's bruteforce it then
+        backtrackingSolve(grid);
+        end = true;
     }
 
     unsigned long endTime = getTicks();
-    FrontendInstance->timeSpentSolving = ((double)endTime - (double)startTime) * 0.001f;
-    FrontendInstance->hasSolvedGrid = true;
+    frontend->timeSpentSolving = ((double)endTime - (double)startTime) * 0.001f;
+    frontend->hasSolvedGrid = true;
 }
+
 
 void buttoncheckValidityOfGrid(int button, int clicks, void* userData)
 {
@@ -318,21 +321,21 @@ void addButtons()
 {
     addButton(FrontendInstance->window, createButton(630, 50, "Open grid...", openGridFile, FrontendInstance));
     addButton(FrontendInstance->window, createButton(750, 50, "Show/Hide notes", showHideNotes, FrontendInstance));
-    
+
     addButton(FrontendInstance->window, createButton(630, 130, "Clean notes", removeSomeNotes, FrontendInstance));
-    
+
     addButton(FrontendInstance->window, createButton(630, 170, "Remove singletons", removeNotes1Tuple, FrontendInstance));
     addButton(FrontendInstance->window, createButton(900, 170, "Remove singletons until...", removeNotes1TupleUntilUnchanged, FrontendInstance));
-    
+
     addButton(FrontendInstance->window, createButton(630, 210, "Remove pairs", removeNotes2Tuple, FrontendInstance));
     addButton(FrontendInstance->window, createButton(900, 210, "Remove pairs until...", removeNotes2TupleUntilUnchanged, FrontendInstance));
-    
+
     addButton(FrontendInstance->window, createButton(630, 250, "Remove triples", removeNotes3Tuple, FrontendInstance));
     addButton(FrontendInstance->window, createButton(900, 250, "Remove triples until...", removeNotes3TupleUntilUnchanged, FrontendInstance));
-    
+
     addButton(FrontendInstance->window, createButton(630, 290, "Remove pointing K-tuples", buttonCheckPointingTuples, FrontendInstance));
     addButton(FrontendInstance->window, createButton(900, 290, "Remove pointing K-tuples until...", buttonCheckPointingTuplesUntil, FrontendInstance));
-    
+
     addButton(FrontendInstance->window, createButton(630, 330, "Remove with Swordfish", buttonSwordfish, FrontendInstance));
     addButton(FrontendInstance->window, createButton(900, 330, "Remove with Swordfish until...", buttonSwordfishUntil, FrontendInstance));
 
@@ -357,7 +360,7 @@ void runFrontend()
         // Window stuff
         updateWindow(FrontendInstance->window, FrontendInstance->font);
         clearWindow(FrontendInstance->window, FrontendInstance->theme.backgroudColor.r, FrontendInstance->theme.backgroudColor.g, FrontendInstance->theme.backgroudColor.b);
-        
+
         // Draw the "No grid found" text first so it gets overwritten by all the other draws
         drawText(FrontendInstance->window, FrontendInstance->font, FrontendInstance->theme.textColor, "No grid loaded...", 60, 270, 1.0f);
 

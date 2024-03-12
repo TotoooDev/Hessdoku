@@ -33,6 +33,10 @@ typedef struct T_Window
     void* buttonDownUserData[WINDOW_MAX_EVENT_FUNCTIONS];
     unsigned int numButtonDownFunctions;
 
+    T_ButtonRightDownFunction buttonRightDownFunctions[WINDOW_MAX_EVENT_FUNCTIONS];
+    void* buttonRightDownUserData[WINDOW_MAX_EVENT_FUNCTIONS];
+    unsigned int numButtonRightDownFunctions;
+
     // Button up event data
     T_ButtonUpFunction buttonUpFunctions[WINDOW_MAX_EVENT_FUNCTIONS];
     void* buttonUpUserData[WINDOW_MAX_EVENT_FUNCTIONS];
@@ -101,6 +105,7 @@ T_Window* createWindow(const char* title, int width, int height)
 
     window->numButtons = 0;
     window->numButtonDownFunctions = 0;
+    window->numButtonRightDownFunctions = 0;
     window->numButtonUpFunctions = 0;
     window->numMouseMovedFunctions = 0;
     window->numKeyDownFunctions = 0;
@@ -149,6 +154,11 @@ void updateWindow(T_Window* window, T_Font* font)
         case SDL_MOUSEBUTTONDOWN:
             for (unsigned int i = 0; i < window->numButtonDownFunctions; i++)
                 window->buttonDownFunctions[i](event.button.button, event.button.clicks, window->buttonDownUserData[i]);
+            break;
+
+        case SDL_MOUSEBUTTONRIGHTDOWN:
+            for (unsigned int i = 0; i < window->numButtonRightDownFunctions; i++)
+                window->buttonRightDownFunctions[i](event.button.button, event.button.clicks, window->buttonRightDownUserData[i]);
             break;
 
         case SDL_MOUSEBUTTONUP:
@@ -304,6 +314,13 @@ void addButtonDownFunction(T_Window* window, T_ButtonDownFunction func, void* us
     window->buttonDownFunctions[window->numButtonDownFunctions] = func;
     window->buttonDownUserData[window->numButtonDownFunctions] = userData;
     window->numButtonDownFunctions++;
+}
+void addButtonRightDownFunction(T_Window* window, T_ButtonRightDownFunction func, void* userData)
+{
+    ASSERT(window->numButtonRightDownFunctions < WINDOW_MAX_EVENT_FUNCTIONS, "Failed to add button down function! The array is not big enough.");
+    window->buttonRightDownFunctions[window->numButtonRightDownFunctions] = func;
+    window->buttonRightDownUserData[window->numButtonRightDownFunctions] = userData;
+    window->numButtonRightDownFunctions++;
 }
 void addButtonUpFunction(T_Window* window, T_ButtonUpFunction func, void* userData)
 {

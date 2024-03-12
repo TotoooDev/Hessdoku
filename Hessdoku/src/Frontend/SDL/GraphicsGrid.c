@@ -20,6 +20,8 @@ typedef struct T_GraphicsGrid
     int selectedCellX;
     int selectedCellY;
 
+    int button_click;
+
     bool* lockedCells;
 
     bool drawNotes;
@@ -65,6 +67,21 @@ void graphicsGrid_ButtonDownFunction(int button, int clicks, void* userData)
 
     T_GraphicsGrid* grid = (T_GraphicsGrid*)userData;
 
+    grid->button_click = BUTTON_LEFT;
+
+    grid->selectedCellX = grid->hoveredCellX;
+    grid->selectedCellY = grid->hoveredCellY;
+}
+
+void graphicsGrid_ButtonRightDownFunction(int button, int clicks, void* userData)
+{
+    if (button != BUTTON_RIGHT || clicks != 2)
+        return;
+
+    T_GraphicsGrid* grid = (T_GraphicsGrid*)userData;
+
+    grid->button_click = BUTTON_RIGHT;
+
     grid->selectedCellX = grid->hoveredCellX;
     grid->selectedCellY = grid->hoveredCellY;
 }
@@ -95,27 +112,98 @@ void graphicsGrid_KeyDownFunction(int key, void* userData)
 
     unsigned int gridSize = getGridSize(grid->grid);
 
-    switch (key)
-    {
-    // wtf
-    case KEY_0: case KEY_KP_0: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 0); break;
-    case KEY_1: case KEY_KP_1: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 1); break;
-    case KEY_2: case KEY_KP_2: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 2); break;
-    case KEY_3: case KEY_KP_3: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 3); break;
-    case KEY_4: case KEY_KP_4: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 4); break;
-    case KEY_5: case KEY_KP_5: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 5); break;
-    case KEY_6: case KEY_KP_6: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 6); break;
-    case KEY_7: case KEY_KP_7: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 7); break;
-    case KEY_8: case KEY_KP_8: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 8); break;
-    case KEY_9: case KEY_KP_9: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 9); break;
+    if (grid->button_click == BUTTON_LEFT)
+        switch (key)
+        {
+            // wtf
+            case KEY_0: case KEY_KP_0: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 0); break;
+            case KEY_1: case KEY_KP_1: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 1); break;
+            case KEY_2: case KEY_KP_2: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 2); break;
+            case KEY_3: case KEY_KP_3: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 3); break;
+            case KEY_4: case KEY_KP_4: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 4); break;
+            case KEY_5: case KEY_KP_5: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 5); break;
+            case KEY_6: case KEY_KP_6: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 6); break;
+            case KEY_7: case KEY_KP_7: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 7); break;
+            case KEY_8: case KEY_KP_8: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 8); break;
+            case KEY_9: case KEY_KP_9: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX]) setValueOfCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 9); break;
 
-    case KEY_UP:    if (grid->selectedCellY > 0)            grid->selectedCellY--; break;
-    case KEY_DOWN:  if (grid->selectedCellY < gridSize - 1) grid->selectedCellY++; break;
-    case KEY_LEFT:  if (grid->selectedCellX > 0)            grid->selectedCellX--; break;
-    case KEY_RIGHT: if (grid->selectedCellX < gridSize - 1) grid->selectedCellX++; break;
+            case KEY_UP:    if (grid->selectedCellY > 0)            grid->selectedCellY--; break;
+            case KEY_DOWN:  if (grid->selectedCellY < gridSize - 1) grid->selectedCellY++; break;
+            case KEY_LEFT:  if (grid->selectedCellX > 0)            grid->selectedCellX--; break;
+            case KEY_RIGHT: if (grid->selectedCellX < gridSize - 1) grid->selectedCellX++; break;
 
-    default: break;
-    }
+            default: break;
+        }
+    else
+        switch (key)
+        {
+            // wtf
+        case KEY_0: case KEY_KP_0: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX])
+            for (int i = 1; i <= 9; i++)
+                unsetNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), i);
+            break;
+        case KEY_1: case KEY_KP_1: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX])
+            if (isNoteInCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 1))
+                unsetNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 1);
+            else
+                setNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 1);
+            break;
+        case KEY_2: case KEY_KP_2: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX])
+            if (isNoteInCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 2))
+                unsetNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 2);
+            else
+                setNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 2);
+            break;
+        case KEY_3: case KEY_KP_3: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX])
+            if (isNoteInCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 3))
+                unsetNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 3);
+            else
+                setNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 3);
+            break;
+        case KEY_4: case KEY_KP_4: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX])
+            if (isNoteInCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 4))
+                unsetNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 4);
+            else
+                setNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 4);
+            break;
+        case KEY_5: case KEY_KP_5: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX])
+            if (isNoteInCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 5))
+                unsetNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 5);
+            else
+                setNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 5);
+            break;
+        case KEY_6: case KEY_KP_6: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX])
+            if (isNoteInCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 6))
+                unsetNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 6);
+            else
+                setNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 6);
+            break;
+        case KEY_7: case KEY_KP_7: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX])
+            if (isNoteInCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 7))
+                unsetNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 7);
+            else
+                setNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 7);
+            break;
+        case KEY_8: case KEY_KP_8: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX])
+            if (isNoteInCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 8))
+                unsetNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 8);
+            else
+                setNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 8);
+            break;
+        case KEY_9: case KEY_KP_9: if (!grid->lockedCells[grid->selectedCellY * gridSize + grid->selectedCellX])
+            if (isNoteInCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 9))
+                unsetNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 9);
+            else
+                setNoteCell(getCell(grid->grid, grid->selectedCellY, grid->selectedCellX), 9);
+            break;
+
+        case KEY_UP:    if (grid->selectedCellY > 0)            grid->selectedCellY--; break;
+        case KEY_DOWN:  if (grid->selectedCellY < gridSize - 1) grid->selectedCellY++; break;
+        case KEY_LEFT:  if (grid->selectedCellX > 0)            grid->selectedCellX--; break;
+        case KEY_RIGHT: if (grid->selectedCellX < gridSize - 1) grid->selectedCellX++; break;
+
+        default: break;
+        }
 }
 
 void lockCells(T_GraphicsGrid* grid, int gridSize)
@@ -154,6 +242,7 @@ T_GraphicsGrid* createGraphicsGrid(T_Grid grid, int x, int y, int squareSize)
     lockCells(graphicsGrid, gridSize);
 
     addButtonDownFunction(getWindow(), graphicsGrid_ButtonDownFunction, graphicsGrid);
+    addButtonRightDownFunction(getWindow(), graphicsGrid_ButtonRightDownFunction, graphicsGrid);
     addMouseMovedFunction(getWindow(), graphicsGrid_MouseMovedFunction, graphicsGrid);
     addKeyDownFunction(getWindow(), graphicsGrid_KeyDownFunction, graphicsGrid);
 

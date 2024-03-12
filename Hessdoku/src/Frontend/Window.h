@@ -19,6 +19,7 @@ typedef struct T_Window T_Window;
  * @param void* A pointer to something you want to access.
 */
 typedef void(*T_ButtonDownFunction)(int, int, void*);
+typedef void(*T_ButtonRightDownFunction)(int, int, void*);
 
 /**
  * A function that is called when a mouse button release is detected.
@@ -163,6 +164,7 @@ void drawText(T_Window* window, T_Font* font, T_Color color, const char* text, i
  * @param userData A pointer to the data passed un `func`.
 */
 void addButtonDownFunction(T_Window* window, T_ButtonDownFunction func, void* userData);
+void addButtonRightDownFunction(T_Window* window, T_ButtonRightDownFunction func, void* userData);
 
 /**
  * Adds an event function tied to a mouse button release.

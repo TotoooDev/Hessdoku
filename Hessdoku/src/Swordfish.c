@@ -176,16 +176,27 @@ void addColumnToColumnTab(T_ColumnTab tab, int columnNb, int value)
  *                  Algorithm                     *
  ************************************************ */
 
+T_Cell* getCellWithInversion(T_Grid grid, int i, int j, bool inverted)
+{
+	if (inverted)
+		return getCell(grid, j, i);
+	else
+		return getCell(grid, i, j);
+}
 
-bool searchLine(T_Grid grid, int value, int lineIndex, int k, T_ColumnTab* columnTab)
+bool searchLine(T_Grid grid, int value, int lineIndex, int k, T_ColumnTab* columnTab, bool inversion)
 {
 	int count = 0;
 	T_ColumnTab tempTab = copyColumnTab(*columnTab);
 
 	for (int i = 0; i < getGridSize(grid); i++)  
 	{
-		if (isNoteInCell(getCell(grid, lineIndex, i), value))
+		if (isNoteInCell(getCellWithInversion(grid, lineIndex, i, inversion), value))
 		{
+			if (inversion == 1 && value == 2)
+				printf("	Swordfish on columns : %d | value : %d | column index : %d \n", inversion, value, lineIndex);
+
+
 			int res = addValueColumnTab(&tempTab, i);
 
 			if (!res) {
@@ -210,9 +221,7 @@ bool searchLine(T_Grid grid, int value, int lineIndex, int k, T_ColumnTab* colum
 	return false;
 }
 
-
-// TODO: logs into outputFile
-bool logAndRemoveSwordfishNotes(T_Grid grid, T_ColumnTab columnTab, int noteValue, FILE* outputFile)
+bool logAndRemoveSwordfishNotes(T_Grid grid, T_ColumnTab columnTab, int noteValue, FILE* outputFile, bool inversion)
 {
 	fprintf(outputFile, "\nFound a %d-swordfish at ", columnTab.maxLen);
 	for (int i = 0; i < columnTab.maxLen; i++)
@@ -232,7 +241,7 @@ bool logAndRemoveSwordfishNotes(T_Grid grid, T_ColumnTab columnTab, int noteValu
 		{
 			if (!doesRowBelongToSwordFish(columnTab.list[columnTabIndex], rowIndex))
 			{
-				if (unsetNoteCell(getCell(grid, rowIndex, ((T_ColumnFoundIndexes*)(columnTab.list[columnTabIndex]))->column), noteValue))
+				if (unsetNoteCell(getCellWithInversion(grid, rowIndex, ((T_ColumnFoundIndexes*)(columnTab.list[columnTabIndex]))->column, inversion), noteValue))
 				{
 					hasGridChanged = true;
 					fprintf(outputFile, "Deleted a %d-swordfish note in (%d %d)\n", columnTab.maxLen, rowIndex, ((T_ColumnFoundIndexes*)(columnTab.list[columnTabIndex]))->column);
@@ -246,31 +255,51 @@ bool logAndRemoveSwordfishNotes(T_Grid grid, T_ColumnTab columnTab, int noteValu
 	return hasGridChanged;
 }
 
-bool solveSwordfish(T_Grid grid, int k, FILE* outputFile) 
+bool solveSwordfish(T_Grid grid, int k, FILE* outputFile, bool searchColumns) 
 {
 	for (int value = 1; value <= getGridSize(grid); value++)
 	{
-		T_ColumnTab columnTab = initColumnTab(k);
-
-		int satisfactoryLinesCount = 0;
-
-		for (int lineIndex = 0; lineIndex < getGridSize(grid); lineIndex++)
+		int lineStartIndex = 0;
+		while (lineStartIndex <= getGridSize(grid) - (k + 1))
 		{
-			// TODO: Le cas des swordfish si on en a deux à la meme valeur dans une seule grille
-			bool lineResult = searchLine(grid, value, lineIndex, k, &columnTab);
+			T_ColumnTab columnTab = initColumnTab(k);
 
-			if (lineResult)
-				satisfactoryLinesCount++;
-		}
+			int satisfactoryLinesCount = 0;
 
-		// A swordfish has been detected
-		if (satisfactoryLinesCount == k) {
-			bool haveNotesBeenRemoved = logAndRemoveSwordfishNotes(grid, columnTab, value, outputFile);
+			printf("Iteration ! LineIndex : %d | value : %d\n", lineStartIndex, value);
 			
-			if (haveNotesBeenRemoved) {
-				return true;
+			bool hasLineStartIndexBeenChanged = true;
+
+			for (int lineIndex = lineStartIndex; lineIndex < getGridSize(grid); lineIndex++)
+			{
+				bool lineResult = searchLine(grid, value, lineIndex, k, &columnTab, searchColumns);
+
+				if (lineResult)
+					satisfactoryLinesCount++;
+
+					if (hasLineStartIndexBeenChanged)
+					{
+						lineStartIndex = lineIndex + 1;
+						hasLineStartIndexBeenChanged = false;
+					}
 			}
+
+			// A swordfish has been detected
+			if (satisfactoryLinesCount == k) {
+				bool haveNotesBeenRemoved = logAndRemoveSwordfishNotes(grid, columnTab, value, outputFile, searchColumns);
+
+				if (haveNotesBeenRemoved)
+				{
+					freeColumnTab(columnTab);
+					return true;
+				}
+			}
+
+			freeColumnTab(columnTab);
+
 		}
+
+		
 	}
 
 	return false;

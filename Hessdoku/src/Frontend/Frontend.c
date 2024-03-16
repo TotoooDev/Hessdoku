@@ -225,16 +225,32 @@ void resolveSudokuGrid(int button, int clicks, void* userData)
         hasChanged |= kUpletsSolve(grid, 3, output_file);
         if (hasChanged)
             continue;
-
+        
         hasChanged |= solvePointingTuples(grid, output_file);
         if (hasChanged)
             continue;
 
-        hasChanged |= solveSwordfish(grid, 3, output_file);
+        hasChanged |= solveSwordfish(grid, 2, output_file, false);
         if (hasChanged)
             continue;
 
-        hasChanged |= solveSwordfish(grid, 4, output_file);
+        hasChanged |= solveSwordfish(grid, 2, output_file, true);
+        if (hasChanged)
+            continue;
+
+        hasChanged |= solveSwordfish(grid, 3, output_file, false);
+        if (hasChanged)
+            continue;
+
+        hasChanged |= solveSwordfish(grid, 3, output_file, true);
+        if (hasChanged)
+            continue;
+
+        hasChanged |= solveSwordfish(grid, 4, output_file, false);
+        if (hasChanged)
+            continue;
+
+        hasChanged |= solveSwordfish(grid, 4, output_file, true);
         if (hasChanged)
             continue;
 
@@ -300,21 +316,22 @@ void buttonCheckPointingTuplesUntil(int button, int clicks, void* userData)
     while (solvePointingTuples(grid, output_file));
 }
 
-void buttonSwordfish(int button, int clicks, void* userData)
+void buttonXWing(int button, int clicks, void* userData)
 {
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
-    solveSwordfish(grid, 3, output_file);
+    solveSwordfish(grid, 2, output_file, true);
+    solveSwordfish(grid, 2, output_file, false);
 }
 
-void buttonSwordfishUntil(int button, int clicks, void* userData)
+void buttonXWingUntil(int button, int clicks, void* userData)
 {
     T_Frontend* frontend = (T_Frontend*)userData;
     T_GraphicsGrid* graphicsGrid = frontend->grid;
     T_Grid grid = getGrid(graphicsGrid);
 
-    while (solveSwordfish(grid, 3, output_file));
+    while (solveSwordfish(grid, 2, output_file, true) || solveSwordfish(grid, 2, output_file, false));
 }
 
 void addButtons()
@@ -336,8 +353,8 @@ void addButtons()
     addButton(FrontendInstance->window, createButton(630, 290, "Remove pointing K-tuples", buttonCheckPointingTuples, FrontendInstance));
     addButton(FrontendInstance->window, createButton(900, 290, "Remove pointing K-tuples until...", buttonCheckPointingTuplesUntil, FrontendInstance));
 
-    addButton(FrontendInstance->window, createButton(630, 330, "Remove with Swordfish", buttonSwordfish, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(900, 330, "Remove with Swordfish until...", buttonSwordfishUntil, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(630, 330, "Remove with Swordfish", buttonXWing, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(900, 330, "Remove with Swordfish until...", buttonXWingUntil, FrontendInstance));
 
     addButton(FrontendInstance->window, createButton(630, 410, "Check the grid", buttoncheckValidityOfGrid, FrontendInstance));
     addButton(FrontendInstance->window, createButton(630, 450, "Solve", resolveSudokuGrid, FrontendInstance));

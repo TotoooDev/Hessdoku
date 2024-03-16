@@ -13,6 +13,6 @@
  * @param outputFile The logs file
  * @return `true` if the grid has changed, `false` otherwise.
 */
-bool solveSwordfish(T_Grid grid, int k, FILE* outputFile);
+bool solveSwordfish(T_Grid grid, int k, FILE* outputFile, bool searchColumns);
 
 #endif

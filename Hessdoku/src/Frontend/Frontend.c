@@ -353,8 +353,8 @@ void addButtons()
     addButton(FrontendInstance->window, createButton(630, 290, "Remove pointing K-tuples", buttonCheckPointingTuples, FrontendInstance));
     addButton(FrontendInstance->window, createButton(900, 290, "Remove pointing K-tuples until...", buttonCheckPointingTuplesUntil, FrontendInstance));
 
-    addButton(FrontendInstance->window, createButton(630, 330, "Remove with Swordfish", buttonXWing, FrontendInstance));
-    addButton(FrontendInstance->window, createButton(900, 330, "Remove with Swordfish until...", buttonXWingUntil, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(630, 330, "Remove with X-Wing", buttonXWing, FrontendInstance));
+    addButton(FrontendInstance->window, createButton(900, 330, "Remove with X-Wing until...", buttonXWingUntil, FrontendInstance));
 
     addButton(FrontendInstance->window, createButton(630, 410, "Check the grid", buttoncheckValidityOfGrid, FrontendInstance));
     addButton(FrontendInstance->window, createButton(630, 450, "Solve", resolveSudokuGrid, FrontendInstance));

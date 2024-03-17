@@ -223,7 +223,7 @@ bool searchLine(T_Grid grid, int value, int lineIndex, int k, T_ColumnTab* colum
 
 bool logAndRemoveSwordfishNotes(T_Grid grid, T_ColumnTab columnTab, int noteValue, FILE* outputFile, bool inversion)
 {
-	fprintf(outputFile, "\nFound a %d-swordfish at ", columnTab.maxLen);
+	fprintf(outputFile, "\nFound a %d-swordfish : {%d} at coordinates ", columnTab.maxLen, noteValue);
 	for (int i = 0; i < columnTab.maxLen; i++)
 	{
 		for (int j = 0; j < ((T_ColumnFoundIndexes*)(columnTab.list[i]))->columnIndexes.len; j++)

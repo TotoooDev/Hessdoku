@@ -979,7 +979,7 @@ bool kUpletsSolve(T_Grid grid, const int k, FILE* outputFile) {
 	free(batonHidden);
 	free(batonNaked);
 	freeTuples(tuples, nbTuples);
-	freeTuples(noteRemoved, size);
+	freeTuples((int**)noteRemoved, size);
 	free(cooNoteRemoved);
 
 	return hasChanged;

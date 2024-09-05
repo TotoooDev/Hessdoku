@@ -19,7 +19,7 @@ T_ColumnFoundIndexes* initColumnFoundIndexes(int k, int column)
 	newItem->columnIndexes = initArrayList(k, sizeof(int));
 
 	for (int i = 0; i < k; i++) {
-		newItem->columnIndexes.list[i] = -1;
+		newItem->columnIndexes.list[i] = (void*)-1;
 	}
 
 	return newItem;
@@ -36,7 +36,7 @@ bool addToColumnFoundIndexes(T_ColumnFoundIndexes* item, int value)
 
 		if (tab->list[i] == -1)
 		{
-			tab->list[i] = value;
+			tab->list[i] = (void*)value;
 			tab->len++;
 
 			return true;
@@ -72,7 +72,7 @@ void printColumnFoundIndexes(T_ColumnFoundIndexes* item) {
 }
 
 bool doesRowBelongToSwordFish(T_ColumnFoundIndexes* item, int value) {
-	return valueExistsArrayList(item->columnIndexes, value);
+	return valueExistsArrayList(item->columnIndexes, (void*)value);
 }
 
 
@@ -114,7 +114,7 @@ void dumpColumnTab(T_ColumnTab source, T_ColumnTab* dest)
 
 bool valueExistsColumnTab(T_ColumnTab tab, int col) 
 {
-	return valueExistsArrayList(tab, col);
+	return valueExistsArrayList(tab, (void*)col);
 }
 
 bool addValueColumnTab(T_ColumnTab* tab, int newVal) 
@@ -305,7 +305,7 @@ bool solveSwordfish(T_Grid grid, int k, FILE* outputFile, bool searchColumns)
 	return false;
 }
 
-// TODO: Tester les fuites de mémoire
+// TODO: Tester les fuites de mï¿½moire
 
 
 
